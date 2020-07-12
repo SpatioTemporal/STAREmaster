@@ -1,0 +1,5 @@
+<map id="Modis09L2GeoFile" name="Modis09L2GeoFile">
+<area shape="rect" id="node1" title="This class reads HDF4 data files." alt="" coords="5,155,147,181"/>
+<area shape="rect" id="node2" href="$class_modis_l2_geo_file.html" title="This class contains the main functionality for reading a MODIS L2 file, which will read with HDF4 and..." alt="" coords="13,80,139,107"/>
+<area shape="rect" id="node3" href="$class_geo_file.html" title="This is the base class for a data file with geolocation." alt="" coords="41,5,111,32"/>
+</map>

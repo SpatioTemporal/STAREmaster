@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$class_geo_file.html" title="This is the base class for a data file with geolocation." alt="" coords="5,5,76,32"/>
+<area shape="rect" id="node2" href="$class_modis_l2_geo_file.html" title="This class contains the main functionality for reading a MODIS L2 file, which will read with HDF4 and..." alt="" coords="124,5,249,32"/>
+<area shape="rect" id="node3" href="$class_modis09_l2_geo_file.html" title="This class reads HDF4 data files." alt="" coords="297,5,439,32"/>
+</map>
