@@ -1,0 +1,4 @@
+
+
+#define STAREmaster_VERSION_MAJOR @STAREmaster_VERSION_MAJOR@
+#define STAREmaster_VERSION_MINOR @STAREmaster_VERSION_MINOR@
