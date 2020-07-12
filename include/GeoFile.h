@@ -5,6 +5,9 @@
 
 /// Ed Hartnett 4/4/20
 
+#ifndef GEO_FILE_H_ /**< Protect file from double include. */
+#define GEO_FILE_H_
+
 #include <config.h>
 #include <string>
 #include <sstream>
@@ -14,10 +17,7 @@
 #include "ssc.h"
 using namespace std;
 
-#ifndef GEO_FILE_H_
-#define GEO_FILE_H_
-
-#define MAX_NUM_INDEX 5
+#define MAX_NUM_INDEX 5 /**< Max number of STARE index vars in a file. */
 
 /**
  * This is the base class for a data file with geolocation.
@@ -38,7 +38,7 @@ public:
     double **geo_lat1; /**< Array of latitude values. */
     double **geo_lon1; /**< Array of longitude values. */
     unsigned long long **geo_index1; /**< Array of STARE index. */
-    vector<string> var_name[MAX_NUM_INDEX]; 
+    vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
 };
 
 #endif /* GEO_FILE_H_ */

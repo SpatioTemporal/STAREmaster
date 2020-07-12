@@ -14,7 +14,7 @@
 
 using namespace std;
 
-/* This macro prints an error message with line number and name of
+/** This macro prints an error message with line number and name of
  * test program. */
 #define NCERR(ret) do {							\
         fflush(stdout); /* Make sure our stdout is synced with stderr. */ \

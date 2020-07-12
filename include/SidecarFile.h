@@ -21,9 +21,11 @@ public:
 		  int quiet, int build_level, int i, int j,
 		  double *geo_lat, double *geo_lon,
 		  unsigned long long *index);
+    /** Write a STARE index. */
     int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon,
 			unsigned long long *stare_index);
+    /** Close the file. */
     int closeFile();
 };
 
