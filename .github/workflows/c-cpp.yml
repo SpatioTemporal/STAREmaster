@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: SM2 CI
 
 on:
   push:
@@ -11,8 +11,46 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      CPPFLAGS: "-I/usr/include -I/usr/local/include"
+        
     steps:
     - uses: actions/checkout@v2
+    - name: Installs
+      run: |
+        sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+    - name: HDF4 setup
+      run: |
+        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
+        tar zxf hdf-4.2.13.tar.gz
+        cd hdf-4.2.13
+        ./configure --disable-netcdf --prefix=/usr/local
+        make all 
+        sudo make install clean
+        cd ..
+    - name: HDF-EOS2 setup
+      run: |
+        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
+        tar zxf HDF-EOS2.20v1.00.tar.Z
+        cd hdfeos
+        ./configure  --enable-install-include --prefix=/usr/local
+        make
+        sudo make install
+        cd ..
+    - name: STARE setup
+      run: |
+        wget https://github.com/captainkirk99/STARE/archive/0.11.3-beta.tar.gz
+        tar zxf 0.11.3-beta.tar.gz
+        cd STARE-0.11.3-beta/
+        mkdir build
+        cd build
+        cmake ..
+        make all
+        sudo make install
+        cd ../..
+        
+    - name: autoreconf
+      run: autoreconf -i
     - name: configure
       run: ./configure
     - name: make
@@ -21,3 +59,5 @@ jobs:
       run: make check
     - name: make distcheck
       run: make distcheck
+
+
