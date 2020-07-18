@@ -30,9 +30,13 @@ find_package(HDF5 1.8.15)
 cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
 
 # Find HDF4.
-include(FindHDF4)
-find_package(HDF4 4.2.5)
-cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
+#include(FindHDF4)
+#find_package(HDF4 4.2.5)
+#cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
+find_path(HDF4_INCLUDE_DIR NAMES hdf.h PATH_SUFFIXES hdf)
+find_library(MFHDF4
+   NAMES "mfhdf")
+cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
 
 # Find STARE.
 include(FindSTARE)
