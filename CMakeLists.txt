@@ -21,7 +21,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
 
 # Find netCDF.
 include(FindNetCDF)
-find_package(NetCDF)
+find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
 
@@ -30,9 +30,19 @@ find_package(HDF5 1.8.15)
 cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
 
 # Find HDF4.
-include(FindHDF4)
-find_package(HDF4 4.2.5)
-cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
+#include(FindHDF4)
+#find_package(HDF4 4.2.5)
+#cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
+find_path(HDF4_INCLUDE_DIR NAMES hdf.h PATH_SUFFIXES hdf)
+find_library(MFHDF4 NAMES "mfhdf")
+find_library(DF NAMES "df")
+cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
+
+# Find HDFEOS2
+find_path(HDFEOS2_INCLUDE_DIR NAMES HdfEosDef.h) 
+find_library(HDFEOS2
+  NAMES "hdfeos")
+cmake_print_variables(HDFEOS2_INCLUDE_DIR HDFEOS2)
 
 # Find STARE.
 include(FindSTARE)
@@ -55,6 +65,11 @@ ENDMACRO()
 
 # Create a config.h.
 configure_file(config.h.cmake.in config.h)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  "${HDF4_INCLUDE_DIR}"
+  "${HDFEOS2_INCLUDE_DIR}"
+  "${STARE_INCLUDE_DIR}")
 
 # Turn on testing.
 enable_testing()
