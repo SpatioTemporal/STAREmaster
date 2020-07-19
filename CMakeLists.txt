@@ -35,8 +35,12 @@ cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
 #cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
 find_path(HDF4_INCLUDE_DIR NAMES hdf.h PATH_SUFFIXES hdf)
 find_library(MFHDF4
-   NAMES "mfhdf")
+  NAMES "mfhdf")
 cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
+
+# Find HDFEOS2
+find_path(HDFEOS2_INCLUDE_DIR NAMES HdfEosDef.h) 
+cmake_print_variables(HDFEOS2_INCLUDE_DIR)
 
 # Find STARE.
 include(FindSTARE)
@@ -59,6 +63,7 @@ ENDMACRO()
 
 # Create a config.h.
 configure_file(config.h.cmake.in config.h)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/include" "${HDF4_INCLUDE_DIR}" "${HDFEOS2_INCLUDE_DIR}" "${STARE_INCLUDE_DIR}")
 
 # Turn on testing.
 enable_testing()
