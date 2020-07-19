@@ -63,7 +63,11 @@ ENDMACRO()
 
 # Create a config.h.
 configure_file(config.h.cmake.in config.h)
-include_directories("${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/include" "${HDF4_INCLUDE_DIR}" "${HDFEOS2_INCLUDE_DIR}" "${STARE_INCLUDE_DIR}")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  "${HDF4_INCLUDE_DIR}"
+  "${HDFEOS2_INCLUDE_DIR}"
+  "${STARE_INCLUDE_DIR}")
 
 # Turn on testing.
 enable_testing()
