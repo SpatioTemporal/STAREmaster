@@ -15,6 +15,7 @@ target_link_libraries(createSidecarFile netcdf)
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
+target_link_libraries(createSidecarFile ${DF} ${MFHDF4})
 
 # Install the execuatable in the bin directory.
 install(TARGETS createSidecarFile RUNTIME DESTINATION bin)

@@ -34,8 +34,8 @@ cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
 #find_package(HDF4 4.2.5)
 #cmake_print_variables(HDF4_FOUND HDF4_INCLUDE_DIRS HDF4_LIBRARIES)
 find_path(HDF4_INCLUDE_DIR NAMES hdf.h PATH_SUFFIXES hdf)
-find_library(MFHDF4
-  NAMES "mfhdf")
+find_library(MFHDF4 NAMES "mfhdf")
+find_library(DF NAMES "df")
 cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
 
 # Find HDFEOS2
