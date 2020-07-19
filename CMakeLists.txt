@@ -21,7 +21,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
 
 # Find netCDF.
 include(FindNetCDF)
-find_package(NetCDF)
+find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
 
@@ -40,7 +40,9 @@ cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
 
 # Find HDFEOS2
 find_path(HDFEOS2_INCLUDE_DIR NAMES HdfEosDef.h) 
-cmake_print_variables(HDFEOS2_INCLUDE_DIR)
+find_library(HDFEOS2
+  NAMES "hdfeos")
+cmake_print_variables(HDFEOS2_INCLUDE_DIR HDFEOS2)
 
 # Find STARE.
 include(FindSTARE)
