@@ -53,6 +53,9 @@ if (NOT STARE_LIBRARY)
   message(fatal_error " STARE library is required.")
 endif()
 
+# STARE requires C++11
+add_compile_options( -std=c++11 )
+
 #TARGET_LINK_LIBRARIES ( myDSO PUBLIC ${HDF5_LIBRARIES} )
 #TARGET_INCLUDE_DIRECTORIES ( myDSO PUBLIC ${HDF5_INCLUDE_DIRS} )
 
