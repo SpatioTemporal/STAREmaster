@@ -1,4 +1,4 @@
-name: Autotools build
+name: CMake build
 
 on:
   push:
@@ -50,15 +50,14 @@ jobs:
         cd ../..
 
         
-    - name: autoreconf
-      run: autoreconf -i
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    - name: cmake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make
+        make tests
+        make test
+
 
 
