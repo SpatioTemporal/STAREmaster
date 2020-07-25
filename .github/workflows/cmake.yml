@@ -54,7 +54,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ..
+        cmake -DSTARE_INCLUDE_DIR=/usr/local -DSTARE_LIBRARY=/usr/local/lib ..
         make
         make tests
         make test
