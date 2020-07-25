@@ -25,6 +25,13 @@ find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
 
+# Get extra netCDF libraries.
+execute_process(COMMAND "nc-config" "--libs" OUTPUT_VARIABLE CMD_OUTPUT)
+IF(CMD_OUTPUT)
+	string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
+ENDIF()
+message(STATUS ${CMD_OUTPUT})
+
 # Find HDF5. CMake already includes FindHDF5.
 find_package(HDF5 1.8.15)
 cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)

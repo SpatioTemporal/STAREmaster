@@ -17,13 +17,6 @@ add_executable(createSidecarFile createSidecarFile.cpp)
 target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
 
-execute_process(COMMAND "nc-config" "--libs" OUTPUT_VARIABLE CMD_OUTPUT)
-IF(CMD_OUTPUT)
-	string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
-ENDIF()
-message(STATUS ${CMD_OUTPUT})
-
-
 # The executable depends on these libraries.
 target_link_libraries(createSidecarFile ssc)
 target_link_libraries(createSidecarFile netcdf)
