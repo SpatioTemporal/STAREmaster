@@ -17,7 +17,7 @@ add_executable(createSidecarFile createSidecarFile.cpp)
 target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
 
-execute_process(COMMAND "nc-config --libs" OUTPUT_FILE CMD_OUTPUT)
+execute_process(COMMAND "nc-config --libs" OUTPUT_VARIABLE CMD_OUTPUT)
 message(STATUS ${CMD_OUTPUT})
 
 # The executable depends on these libraries.
@@ -26,6 +26,7 @@ target_link_libraries(createSidecarFile netcdf)
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
 target_link_libraries(createSidecarFile ${DF} ${MFHDF4})
+target_link_libraries(createSidecarFile ${CMD_OUTPUT})
 
 # Install the execuatable in the bin directory.
 install(TARGETS createSidecarFile RUNTIME DESTINATION bin)
