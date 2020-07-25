@@ -12,6 +12,7 @@ target_link_libraries(t1 netcdf)
 target_link_libraries(t1 STARE)
 target_link_libraries(t1 ${HDFEOS2})
 target_link_libraries(t1 ${MFHDF4} ${DF} ${JPEG_LIB})
+target_link_libraries(t2 ${CMD_OUTPUT})
 
 add_test(NAME t1 COMMAND t1)
 
