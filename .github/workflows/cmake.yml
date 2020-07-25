@@ -1,4 +1,4 @@
-name: Autotools build
+name: CMake build
 
 on:
   push:
@@ -50,15 +50,15 @@ jobs:
         cd ../..
 
         
-    - name: autoreconf
-      run: autoreconf -i
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    - name: cmake
+      run: |
+        mkdir build
+        cd build
+        nc-config --libs
+        export LIBS=`nc-config --libs`
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DSTARE_INCLUDE_DIR=/usr/local -DSTARE_LIBRARY=/usr/local/lib ..
+        make VERBOSE=1
+        make VERBOSE=1 test
+
 
 
