@@ -29,7 +29,7 @@ target_link_libraries(createSidecarFile ssc)
 target_link_libraries(createSidecarFile netcdf)
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
-target_link_libraries(createSidecarFile ${DF} ${MFHDF4} ${JPEG_LIB})
+target_link_libraries(createSidecarFile ${MFHDF4} ${DF} ${JPEG_LIB})
 target_link_libraries(createSidecarFile ${CMD_OUTPUT})
 
 # Install the execuatable in the bin directory.
