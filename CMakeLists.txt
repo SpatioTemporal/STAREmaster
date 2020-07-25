@@ -36,7 +36,8 @@ cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
 find_path(HDF4_INCLUDE_DIR NAMES hdf.h PATH_SUFFIXES hdf)
 find_library(MFHDF4 NAMES "mfhdf")
 find_library(DF NAMES "df")
-cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4)
+find_library(JPEG_LIB NAMES jpeg libjpeg)
+cmake_print_variables(HDF4_INCLUDE_DIR MFHDF4 JPEG_LIB)
 
 # Find HDFEOS2
 find_path(HDFEOS2_INCLUDE_DIR NAMES HdfEosDef.h) 
