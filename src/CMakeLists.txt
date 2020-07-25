@@ -18,7 +18,7 @@ target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
 
 execute_process(COMMAND "nc-config --libs" OUTPUT_FILE CMD_OUTPUT)
-message(${CMD_OUTPUT})
+message(STATUS ${CMD_OUTPUT})
 
 # The executable depends on these libraries.
 target_link_libraries(createSidecarFile ssc)
