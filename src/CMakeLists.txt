@@ -13,14 +13,18 @@ add_library(ssc SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile
 # This is the executable we create.
 add_executable(createSidecarFile createSidecarFile.cpp)
 
-# The executable depends on these libraries.
+# Add these directories to those searched during linking.
 target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
-target_link_libraries(createSidecarFile netcdf)
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
+
+execute_process(COMMAND "nc-config --libs")
+
+# The executable depends on these libraries.
+target_link_libraries(createSidecarFile ssc)
+target_link_libraries(createSidecarFile netcdf)
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
 target_link_libraries(createSidecarFile ${DF} ${MFHDF4})
-target_link_libraries(createSidecarFile ssc)
 
 # Install the execuatable in the bin directory.
 install(TARGETS createSidecarFile RUNTIME DESTINATION bin)
