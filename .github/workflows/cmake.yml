@@ -58,7 +58,6 @@ jobs:
         export LIBS=`nc-config --libs`
         cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DSTARE_INCLUDE_DIR=/usr/local -DSTARE_LIBRARY=/usr/local/lib ..
         make VERBOSE=1
-        make VERBOSE=1 tests
         make VERBOSE=1 test
 
 
