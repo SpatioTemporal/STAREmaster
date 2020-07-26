@@ -26,7 +26,7 @@ cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
 
 # Get extra netCDF libraries.
-execute_process(COMMAND "nc-config" "--libs" OUTPUT_VARIABLE CMD_OUTPUT)
+execute_process(COMMAND nc-config --libs --static OUTPUT_VARIABLE CMD_OUTPUT)
 IF(CMD_OUTPUT)
 	string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
 ENDIF()
