@@ -25,8 +25,33 @@ find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
 
+###
+# Allow the user to specify libraries
+# to link against, similar to automakes 'LIBS' variable.
+###
+SET(SM_EXTRA_DEPS "" CACHE STRING "Additional libraries to link against.")
+IF(SM_EXTRA_DEPS)
+  STRING(REPLACE " " ";" DEPS_LIST ${SM_EXTRA_DEPS})
+  FOREACH(_DEP ${DEPS_LIST})
+    STRING(REGEX REPLACE "^-l" "" _LIB ${_DEP})
+    FIND_LIBRARY("${_LIB}_DEP" NAMES "${_LIB}" "lib${_LIB}")
+    # MESSAGE(${${_LIB}_DEP})
+    IF(${_LIB}_DEP STREQUAL "")
+      MESSAGE(FATAL_ERROR "Error finding ${_LIB}.")
+    ELSE()
+      MESSAGE(STATUS "Found ${_LIB}: ${${_LIB}_DEP}")
+    ENDIF()
+    SET(EXTRA_DEPS ${EXTRA_DEPS} "${${_LIB}_DEP}")
+  ENDFOREACH()
+  MESSAGE("Extra deps: ${EXTRA_DEPS}")
+  LIST(REMOVE_DUPLICATES EXTRA_DEPS)
+ENDIF()
+###
+# End user-specified dependent libraries.
+###
+
 # Get extra netCDF libraries.
-execute_process(COMMAND "nc-config" "--libs" OUTPUT_VARIABLE CMD_OUTPUT)
+execute_process(COMMAND nc-config --libs OUTPUT_VARIABLE CMD_OUTPUT)
 IF(CMD_OUTPUT)
 	string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
 ENDIF()
