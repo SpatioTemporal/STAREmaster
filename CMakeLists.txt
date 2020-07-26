@@ -29,9 +29,9 @@ include_directories("${NETCDF_INCLUDES}")
 # Allow the user to specify libraries
 # to link against, similar to automakes 'LIBS' variable.
 ###
-SET(NC_EXTRA_DEPS "" CACHE STRING "Additional libraries to link against.")
-IF(NC_EXTRA_DEPS)
-  STRING(REPLACE " " ";" DEPS_LIST ${NC_EXTRA_DEPS})
+SET(SM_EXTRA_DEPS "" CACHE STRING "Additional libraries to link against.")
+IF(SM_EXTRA_DEPS)
+  STRING(REPLACE " " ";" DEPS_LIST ${SM_EXTRA_DEPS})
   FOREACH(_DEP ${DEPS_LIST})
     STRING(REGEX REPLACE "^-l" "" _LIB ${_DEP})
     FIND_LIBRARY("${_LIB}_DEP" NAMES "${_LIB}" "lib${_LIB}")
