@@ -45,15 +45,15 @@ AM_CONDITIONAL(LARGE_FILE_TESTS, [test "x$enable_large_file_tests" = xyes])
 # --with-temp-large=<directory>, use it as a place for the large
 # (i.e. > 2 GiB) files created during the large file testing.
 AC_MSG_CHECKING([where to find large test files])
-AC_ARG_WITH([temp-large],
-            [AS_HELP_STRING([--with-temp-large=<directory>],
+AC_ARG_WITH([large-test-files],
+            [AS_HELP_STRING([--with-large-test-files=<directory>],
                             [specify directory where large test files \
                             can be found, and run extra tests on those files \
 			    (defaults to data).])],
-            [TEST_LARGE=$with_test_large])
+            [TEST_LARGE=$with_large_test_files])
 TEST_LARGE=${TEST_LARGE-data}
 AC_MSG_RESULT($TEST_LARGE)
-#AC_SUBST(TEST_LARGE)
+AC_SUBST(TEST_LARGE)
 AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test files.])
 
 # Does the user want to build documentation?
@@ -155,6 +155,8 @@ fi
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 #AC_CONFIG_LINKS([test/data/goes10.2005.349.003015.BAND_05.nc.gz:test/data/goes10.2005.349.003015.BAND_05.nc.gz])
 
+# Create test script.
+AC_CONFIG_FILES([test/run_large_file_tests.sh], [chmod ugo+x test/run_large_file_tests.sh])
 
 # Create the config.h file.
 AC_CONFIG_HEADERS([config.h])
