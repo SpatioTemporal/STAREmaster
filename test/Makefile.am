@@ -17,7 +17,12 @@ TESTS = t1 t2
 # The script runs the command line utility and checks results.
 TESTS += run_tests.sh
 
-EXTRA_DIST = CMakeLists.txt run_tests.sh
+# If large test files are available this will run those tests.
+if LARGE_FILE_TESTS
+TESTS += run_large_file_tests.sh
+endif
+
+EXTRA_DIST = CMakeLists.txt run_tests.sh run_large_file_tests.sh
 
 CLEANFILES = *.nc
 

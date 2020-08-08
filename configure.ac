@@ -48,9 +48,10 @@ AC_MSG_CHECKING([where to find large test files])
 AC_ARG_WITH([temp-large],
             [AS_HELP_STRING([--with-temp-large=<directory>],
                             [specify directory where large test files \
-                            can be found, and run extra tests on those files.])],
+                            can be found, and run extra tests on those files \
+			    (defaults to data).])],
             [TEST_LARGE=$with_test_large])
-TEST_LARGE=${TEST_LARGE-.}
+TEST_LARGE=${TEST_LARGE-data}
 AC_MSG_RESULT($TEST_LARGE)
 #AC_SUBST(TEST_LARGE)
 AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test files.])
