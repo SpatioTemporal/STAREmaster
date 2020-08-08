@@ -31,6 +31,31 @@ AC_PROG_INSTALL
 # Check to see if any macros must be set to enable large (>2GB) files.
 AC_SYS_LARGEFILE
 
+# Does the user want to run tests based on large data files? (Files
+# must be obtained separately.)
+AC_MSG_CHECKING([whether extra large files tests should be run (requires STAREmaster large test files)])
+AC_ARG_ENABLE([large-file-tests],
+              [AS_HELP_STRING([--enable-large-file-tests],
+                              [enable running of tests based on large data files.])])
+test "x$enable_large_file_tests" = xyes || enable_large_file_tests=no
+AC_MSG_RESULT([$enable_large_file_tests])
+AM_CONDITIONAL(LARGE_FILE_TESTS, [test "x$enable_large_file_tests" = xyes])
+
+# If the env. variable TEST_LARGE is set, or if
+# --with-temp-large=<directory>, use it as a place for the large
+# (i.e. > 2 GiB) files created during the large file testing.
+AC_MSG_CHECKING([where to find large test files])
+AC_ARG_WITH([large-test-files],
+            [AS_HELP_STRING([--with-large-test-files=<directory>],
+                            [specify directory where large test files \
+                            can be found, and run extra tests on those files \
+			    (defaults to data).])],
+            [TEST_LARGE=$with_large_test_files])
+TEST_LARGE=${TEST_LARGE-data}
+AC_MSG_RESULT($TEST_LARGE)
+AC_SUBST(TEST_LARGE)
+AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test files.])
+
 # Does the user want to build documentation?
 AC_MSG_CHECKING([whether documentation should be build (requires doxygen)])
 AC_ARG_ENABLE([docs],
@@ -130,6 +155,8 @@ fi
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 #AC_CONFIG_LINKS([test/data/goes10.2005.349.003015.BAND_05.nc.gz:test/data/goes10.2005.349.003015.BAND_05.nc.gz])
 
+# Create test script.
+AC_CONFIG_FILES([test/run_large_file_tests.sh], [chmod ugo+x test/run_large_file_tests.sh])
 
 # Create the config.h file.
 AC_CONFIG_HEADERS([config.h])
