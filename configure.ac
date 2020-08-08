@@ -31,10 +31,20 @@ AC_PROG_INSTALL
 # Check to see if any macros must be set to enable large (>2GB) files.
 AC_SYS_LARGEFILE
 
+# Does the user want to run tests based on large data files? (Files
+# must be obtained separately.)
+AC_MSG_CHECKING([whether extra large files tests should be run (requires STAREmaster large test files)])
+AC_ARG_ENABLE([large-file-tests],
+              [AS_HELP_STRING([--enable-large-file-tests],
+                              [enable running of tests based on large data files.])])
+test "x$enable_large_file_tests" = xyes || enable_large_file_tests=no
+AC_MSG_RESULT([$enable_large_file_tests])
+AM_CONDITIONAL(LARGE_FILE_TESTS, [test "x$enable_large_file_tests" = xyes])
+
 # If the env. variable TEST_LARGE is set, or if
 # --with-temp-large=<directory>, use it as a place for the large
 # (i.e. > 2 GiB) files created during the large file testing.
-AC_MSG_CHECKING([where to put large temp files if large file tests are run])
+AC_MSG_CHECKING([where to find large test files])
 AC_ARG_WITH([temp-large],
             [AS_HELP_STRING([--with-temp-large=<directory>],
                             [specify directory where large test files \
