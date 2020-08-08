@@ -39,7 +39,7 @@ jobs:
         cd ..
     - name: STARE setup
       run: |
-        wget https://github.com/captainkirk99/STARE/archive/0.15.6-beta.tar.gz
+        wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz
         tar zxf 0.15.6-beta.tar.gz
         cd STARE-0.15.6-beta/
         mkdir build
