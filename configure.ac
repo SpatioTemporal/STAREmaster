@@ -31,6 +31,20 @@ AC_PROG_INSTALL
 # Check to see if any macros must be set to enable large (>2GB) files.
 AC_SYS_LARGEFILE
 
+# If the env. variable TEST_LARGE is set, or if
+# --with-temp-large=<directory>, use it as a place for the large
+# (i.e. > 2 GiB) files created during the large file testing.
+AC_MSG_CHECKING([where to put large temp files if large file tests are run])
+AC_ARG_WITH([temp-large],
+            [AS_HELP_STRING([--with-temp-large=<directory>],
+                            [specify directory where large test files \
+                            can be found, and run extra tests on those files.])],
+            [TEST_LARGE=$with_test_large])
+TEST_LARGE=${TEST_LARGE-.}
+AC_MSG_RESULT($TEST_LARGE)
+#AC_SUBST(TEST_LARGE)
+AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test files.])
+
 # Does the user want to build documentation?
 AC_MSG_CHECKING([whether documentation should be build (requires doxygen)])
 AC_ARG_ENABLE([docs],
