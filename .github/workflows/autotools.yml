@@ -21,6 +21,9 @@ jobs:
         sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
     - name: HDF4 setup
       run: |
+        pushd ~
+        pwd
+        popd
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
