@@ -26,7 +26,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdf4
-        key: pfunit-${{ runner.os }}-4.2.13
+        key: hdf4-${{ runner.os }}-4.2.13
 
     - name: build-hdf4
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
@@ -45,7 +45,15 @@ jobs:
         make all 
         sudo make install clean
         cd ..
-    - name: HDF-EOS2 setup
+    - name: cache-hdfeos2
+      id: cache-hdfeos2
+      uses: actions/cache@v2
+      with:
+        path: ~/hdfeos2
+        key: hdfeos2-${{ runner.os }}-20v1.00
+
+    - name: build-hdfeos2
+      if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
         set -x
         wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
@@ -53,7 +61,7 @@ jobs:
         cd hdfeos
         ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
-        sudo make install
+        sudo make install clean
         cd ..
     - name: STARE setup
       run: |
