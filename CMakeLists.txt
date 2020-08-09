@@ -19,6 +19,13 @@ include(CMakePrintHelpers)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
   CACHE INTERNAL "Location of our custom CMake modules.")
 
+# Handle user build options.
+OPTION(ENABLE_LARGE_FILE_TESTS "Enable large file tests." OFF)
+if (NOT TEST_LARGE)
+  set(TEST_LARGE "data")
+endif ()
+cmake_print_variables(ENABLE_LARGE_FILE_TESTS TEST_LARGE)
+
 # Find netCDF.
 include(FindNetCDF)
 find_package(NetCDF REQUIRED)
