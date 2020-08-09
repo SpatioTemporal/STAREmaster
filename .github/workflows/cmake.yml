@@ -84,7 +84,7 @@ jobs:
         cd build
         nc-config --libs
         export LIBS=`nc-config --libs`
-        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/home/runner/hdf4;/home/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare -DSTARE_LIBRARY=~/stare/lib ..
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/home/runner/hdf4;/home/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
         make VERBOSE=1
         make VERBOSE=1 test
 
