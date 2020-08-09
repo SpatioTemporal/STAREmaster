@@ -14,7 +14,7 @@ jobs:
     env:
       CPPFLAGS: "-I/usr/include -I/usr/local/include -I~/hdf4"
       LDFLAGS: "-L~/hdf4"
-      PWD_DIR: `pwd`
+      PWD_DIR: /home/runner
         
     steps:
     - uses: actions/checkout@v2
