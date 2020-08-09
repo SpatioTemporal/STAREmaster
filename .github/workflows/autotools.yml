@@ -13,8 +13,8 @@ jobs:
 
     env:
       PWD_DIR: /home/runner
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4"
-      LDFLAGS: "-L/home/runner/hdf4"
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4/include"
+      LDFLAGS: "-L/home/runner/hdf4/lib"
         
     steps:
     - uses: actions/checkout@v2
@@ -39,8 +39,6 @@ jobs:
     - name: HDF-EOS2 setup
       run: |
         set -x
-        export CPPFLAGS="-I/home/runner/hdf4/include"
-        export LDFLAGS="-L/home/runner/hdf4/lib"
         wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
