@@ -32,12 +32,6 @@ jobs:
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
       run: |
         set -x
-        pushd ~
-        echo $HOME
-        pwd
-        echo $CPPFLAGS
-        echo $LDFLAGS
-        popd
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13

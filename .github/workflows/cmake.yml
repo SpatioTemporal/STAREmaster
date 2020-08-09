@@ -1,4 +1,4 @@
-name: CMake build
+name: CMake ununtu-latest
 
 on:
   push:
@@ -12,39 +12,66 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CPPFLAGS: "-I/usr/include -I/usr/local/include"
+      PWD_DIR: /home/runner
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4/include -I/home/runner/stare/include -I/home/runner/hdfeos2/include"
+      LDFLAGS: "-L/home/runner/hdf4/lib -L/home/runner/stare/lib -L/home/runner/hdfeos2/lib"
         
     steps:
     - uses: actions/checkout@v2
     - name: Installs
       run: |
         sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
-    - name: HDF4 setup
+    - name: cache-hdf4
+      id: cache-hdf4
+      uses: actions/cache@v2
+      with:
+        path: ~/hdf4
+        key: hdf4-${{ runner.os }}-4.2.13
+
+    - name: build-hdf4
+      if: steps.cache-hdf4.outputs.cache-hit != 'true'
       run: |
-        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
+        set -x
+        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
-        ./configure --disable-netcdf --prefix=/usr/local
+        ./configure --disable-netcdf --prefix=${PWD_DIR}/hdf4
         make all 
         sudo make install clean
         cd ..
-    - name: HDF-EOS2 setup
+    - name: cache-hdfeos2
+      id: cache-hdfeos2
+      uses: actions/cache@v2
+      with:
+        path: ~/hdfeos2
+        key: hdfeos2-${{ runner.os }}-20v1.00
+
+    - name: build-hdfeos2
+      if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
-        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
+        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
-        ./configure  --enable-install-include --prefix=/usr/local
+        ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install
         cd ..
-    - name: STARE setup
+    - name: cache-stare
+      id: cache-stare
+      uses: actions/cache@v2
+      with:
+        path: ~/stare
+        key: stare-${{ runner.os }}-0.15.6
+
+    - name: build-stare
+      if: steps.cache-stare.outputs.cache-hit != 'true'
       run: |
-        wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz
+        wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz &> /dev/null
         tar zxf 0.15.6-beta.tar.gz
         cd STARE-0.15.6-beta/
         mkdir build
         cd build
-        cmake ..
+        cmake -DCMAKE_INSTALL_PREFIX=~/stare ..
         make all
         sudo make install
         cd ../..
@@ -52,11 +79,12 @@ jobs:
         
     - name: cmake
       run: |
+        set -x
         mkdir build
         cd build
         nc-config --libs
         export LIBS=`nc-config --libs`
-        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DSTARE_INCLUDE_DIR=/usr/local -DSTARE_LIBRARY=/usr/local/lib ..
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/home/runner/hdf4;/home/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
         make VERBOSE=1
         make VERBOSE=1 test
 
