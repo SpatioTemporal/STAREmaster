@@ -79,6 +79,7 @@ jobs:
         
     - name: cmake
       run: |
+        set -x
         mkdir build
         cd build
         nc-config --libs
