@@ -13,8 +13,8 @@ jobs:
 
     env:
       PWD_DIR: /home/runner
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4"
-      LDFLAGS: "-L${PWD_DIR}/hdf4"
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4"
+      LDFLAGS: "-L/home/runner/hdf4"
         
     steps:
     - uses: actions/checkout@v2
@@ -29,7 +29,7 @@ jobs:
         echo $CPPFLAGS
         echo $LDFLAGS
         popd
-        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
+        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
         ./configure --disable-netcdf --prefix=${PWD_DIR}/hdf4
@@ -38,7 +38,8 @@ jobs:
         cd ..
     - name: HDF-EOS2 setup
       run: |
-        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
+        set -x
+        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
         ./configure  --enable-install-include --prefix=/usr/local
@@ -47,7 +48,8 @@ jobs:
         cd ..
     - name: STARE setup
       run: |
-        wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz
+        set -x
+        wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz  &> /dev/null
         tar zxf 0.15.6-beta.tar.gz
         cd STARE-0.15.6-beta/
         mkdir build
