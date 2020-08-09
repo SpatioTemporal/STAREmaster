@@ -63,7 +63,15 @@ jobs:
         make
         sudo make install clean
         cd ..
-    - name: STARE setup
+    - name: cache-stare
+      id: cache-stare
+      uses: actions/cache@v2
+      with:
+        path: ~/stare
+        key: stare-${{ runner.os }}-0.15.6
+
+    - name: build-stare
+      if: steps.cache-stare.outputs.cache-hit != 'true'
       run: |
         set -x
         wget https://github.com/SpatioTemporal/STARE/archive/0.15.6-beta.tar.gz  &> /dev/null
