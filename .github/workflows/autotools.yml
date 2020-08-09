@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I~/hdf4"
-      LDFLAGS: "-L~/hdf4"
       PWD_DIR: /home/runner
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4"
+      LDFLAGS: "-L${PWD_DIR}/hdf4"
         
     steps:
     - uses: actions/checkout@v2
