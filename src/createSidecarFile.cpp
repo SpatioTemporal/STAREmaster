@@ -28,6 +28,7 @@ void usage(char *name) {
         << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
         << "  " << " -d, --data_type   : Allows specification of data type." << endl
         << "  " << " -o, --output_file : Provide file name for output file." << endl
+        << "  " << " -r, --output_dir  : Provide output directory name." << endl
         << endl;
     exit(0);
 };
@@ -38,6 +39,7 @@ struct Arguments {
     int build_level = SSC_DEFAULT_BUILD_LEVEL;
     char data_type[SSC_MAX_NAME] = "";
     char output_file[SSC_MAX_NAME] = "";
+    char output_dir[SSC_MAX_NAME] = "";
 };
 
 Arguments parseArguments(int argc, char *argv[]) {
@@ -50,12 +52,13 @@ Arguments parseArguments(int argc, char *argv[]) {
         {"build_level", required_argument, 0, 'b'},
         {"data_type", required_argument, 0, 'd'},
         {"output_file", required_argument, 0, 'o'},
+        {"output_directory", required_argument, 0, 'r'},
         {0, 0, 0, 0}
     };
 
     int long_index = 0;
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "hvqb:d:o:", long_options, &long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hvqb:d:o:r:", long_options, &long_index)) != -1) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
@@ -63,16 +66,18 @@ Arguments parseArguments(int argc, char *argv[]) {
         case 'b': arguments.build_level = atoi(optarg); break;
         case 'd': strcpy(arguments.data_type, optarg); break;
         case 'o': strcpy(arguments.output_file, optarg); break;
+        case 'r': strcpy(arguments.output_dir, optarg); break;
         }
     }
     return arguments;
 };
 
 string
-pickOutputName(char *file_in_char)
+pickOutputName(char *file_in_char, char *output_dir_char)
 {
     string file_in(file_in_char);
     string file_out(file_in_char);
+    string output_dir(output_dir_char);
 
     // Is there a file extension?
     size_t f = file_in.rfind(".");
@@ -80,6 +85,17 @@ pickOutputName(char *file_in_char)
 	file_out = file_in.substr(0, f) + "_stare.nc";
     else
 	file_out.append("_stare.nc");
+
+    // Do we want this in a different directory?
+    if (strlen(output_dir_char))
+    {
+	size_t f = file_out.rfind("/");
+	if (f != string::npos)
+	    file_out = output_dir + file_out.substr(f, string::npos);
+	else
+	    file_out = output_dir + file_out;
+    }
+    
     return file_out;
 }
 
@@ -104,7 +120,7 @@ main(int argc, char *argv[])
     if (strlen(arg.output_file))
 	file_out = arg.output_file;
     else
-	file_out = pickOutputName(argv[optind]);
+	file_out = pickOutputName(argv[optind], arg.output_dir);
 
     if (arg.data_type == MOD09)
     {
