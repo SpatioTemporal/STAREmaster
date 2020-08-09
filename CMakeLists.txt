@@ -21,7 +21,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
 
 # Handle user build options.
 OPTION(ENABLE_LARGE_FILE_TESTS "Enable large file tests." OFF)
-if (not TEST_LARGE)
+if (NOT TEST_LARGE)
   set(TEST_LARGE "data")
 endif ()
 cmake_print_variables(ENABLE_LARGE_FILE_TESTS TEST_LARGE)
