@@ -39,8 +39,8 @@ jobs:
     - name: HDF-EOS2 setup
       run: |
         set -x
-        export CPPFLAGS="-I/home/runner/hdf4"
-        export LDFLAGS="-L/home/runner/hdf4"
+        export CPPFLAGS="-I/home/runner/hdf4/include"
+        export LDFLAGS="-L/home/runner/hdf4/libs"
         wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
