@@ -24,6 +24,8 @@ jobs:
       run: |
         pushd ~
         pwd
+        echo $CPPFLAGS
+        echo $LDFLAGS
         popd
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
         tar zxf hdf-4.2.13.tar.gz
