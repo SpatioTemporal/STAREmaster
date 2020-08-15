@@ -88,20 +88,23 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 						   sizeof(unsigned long long))))
 	return SSC_ENOMEM;
 
-    int level = 5;
+    int level = 27;
     STARE index(level, build_level);
     
     // Calculate STARE index for each point. 
     for (int i = 0; i < MAX_ALONG; i++)
+    {
     	for (int j = 0; j < MAX_ACROSS; j++)
 	{
 	    geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
-	    geo_lon1[0][i * MAX_ACROSS + j] = latitude[i][j];
+	    geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
 	    
 	    // Calculate the stare indicies.
 	    geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i][j],
 									 (double)longitude[i][j], level);
 	}
+	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+    }
     
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
