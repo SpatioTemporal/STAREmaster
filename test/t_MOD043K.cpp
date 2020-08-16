@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include "ModisL2GeoFile.h"
+#include "Modis043KGeoFile.h"
 #include "NetcdfSidecarFile.h"
 
 #define MAX_STR 256
@@ -16,22 +17,17 @@
 int
 main()
 {
-    ModisL2GeoFile gf;
-    NetcdfSidecarFile sf;
+    Modis043KGeoFile gf;
+//    NetcdfSidecarFile sf;
     std::string fileName = "data/MYD04_3K.A2020001.0040.061.2020002235147.hdf";
     std::string fileNameOut = "t2_MOD043K_sidecar.nc";
-    int gf_format;
+//    int gf_format;
     
     std::cout << "Howdy!\n";
 
-    // // What type of file is this?
-    // if (gf.determineFormat(fileName, &gf_format))
-    // 	return ERR;
-    // if (gf_format != SSC_FORMAT_MODIS_L2) return 1;
-
-    // // Read the file.
-    // if (gf.readFile(fileName, 1, 0, 5))
-    // 	return ERR;
+    // Read the file.
+    if (gf.readFile(fileName, 1, 0, 5))
+    	return ERR;
 
     // // Create the sidecar file.
     // if (sf.createFile(fileNameOut, 1))
