@@ -8,7 +8,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 # Create a library for STARE sidecar functionality.
 noinst_LTLIBRARIES = libssc.la
 libssc_la_SOURCES = SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp	\
-NetcdfSidecarFile.cpp Modis09L2GeoFile.cpp
+NetcdfSidecarFile.cpp Modis09L2GeoFile.cpp Modis043KGeoFile.cpp
 
 # This is the command line utility to create STARE sidecar files for
 # data files.
