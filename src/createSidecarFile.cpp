@@ -9,6 +9,7 @@
 #include "ssc.h"
 #include "ModisL2GeoFile.h"
 #include "Modis09L2GeoFile.h"
+#include "Modis043KGeoFile.h"
 #include "NetcdfSidecarFile.h"
 
 using namespace std;
@@ -107,6 +108,7 @@ main(int argc, char *argv[])
     NetcdfSidecarFile sf;
     string file_out;
     const std::string MOD09 = "MOD09";
+    const std::string MOD043K = "MOD043K";
     vector<string> stare_index_name;
 
     // Input file must be provided.
@@ -126,6 +128,12 @@ main(int argc, char *argv[])
     {
 	gf = new Modis09L2GeoFile();
 	if (((Modis09L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	    return 99;
+    }
+    else if (arg.data_type == MOD043K)
+    {
+	gf = new Modis043KGeoFile();
+	if (((Modis043KGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
 	    return 99;
     }
     else

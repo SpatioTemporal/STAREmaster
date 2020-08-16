@@ -9,10 +9,11 @@ LDADD = ${top_builddir}/src/libssc.la
 SUBDIRS = data
 
 # This is the test program.
-check_PROGRAMS = t1 t2
+check_PROGRAMS = t1 t2 t_MOD043K
 t1_SOURCES = t1.cpp
 t2_SOURCES = t2.cpp
-TESTS = t1 t2
+t_MOD043K_SOURCES = t_MOD043K.cpp
+TESTS = t1 t2 t_MOD043K
 
 # The script runs the command line utility and checks results.
 TESTS += run_tests.sh

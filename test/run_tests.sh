@@ -7,5 +7,5 @@ set -e
 
 # Check the sidecar file here!
 
-#../src/createSidecarFile data/MYD04_3K.A2020001.0040.061.2020002235147.hdf
+#../src/createSidecarFile -d MOD043K data/MYD04_3K.A2020001.0040.061.2020002235147.hdf
 

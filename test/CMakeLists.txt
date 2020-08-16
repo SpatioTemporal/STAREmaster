@@ -30,6 +30,20 @@ target_link_libraries(t2 ${CMD_OUTPUT})
 
 add_test(NAME t2 COMMAND t2)
 
+add_executable(t_MOD043K t_MOD043K.cpp)
+
+target_link_directories(t_MOD043K PUBLIC ${NETCDF_LIBRARIES})
+target_link_directories(t_MOD043K PUBLIC ${STARE_LIBRARY})
+
+target_link_libraries(t_MOD043K ssc)
+target_link_libraries(t_MOD043K netcdf)
+target_link_libraries(t_MOD043K STARE)
+target_link_libraries(t_MOD043K ${HDFEOS2})
+target_link_libraries(t_MOD043K ${MFHDF4} ${DF} ${JPEG_LIB})
+target_link_libraries(t_MOD043K ${CMD_OUTPUT})
+
+add_test(NAME t_MOD043K COMMAND t_MOD043K)
+
 # Make sure the necessary data file is present in the build directory.
 configure_file(data/MOD05_L2.A2005349.2125.061.2017294065400.hdf data/MOD05_L2.A2005349.2125.061.2017294065400.hdf COPYONLY)
 
