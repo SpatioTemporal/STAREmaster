@@ -9,9 +9,9 @@ site](https://github.com/SpatioTemporal/STARE)
 
 ## Supported Datasets
 
-Dataset | STAREmaster ID | Full Name | Notes
-------- | -------------- | --------- | -----
-MYD09   | MOD09          | \
+Dataset        | STAREmaster ID | Full Name | Notes
+-------        | -------------- | --------- | -----
+MODIS MYD09    | MOD09          | \
 Atmospherically Corrected Surface Reflectance 5-Min L2 Swath 250m, 500m, 1km | \
 LAADS DAAC https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD09
 
