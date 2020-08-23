@@ -54,6 +54,14 @@ make VERBOSE=1 test
 
 ## Using STAREmaster
 
+The STAREmaster package installs a binary createSidecarFile, whcih may
+be used to create a sidecar file for any of the supported datasets. To
+use:
+
+<pre>
+createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
+</pre>
+
 ## Supported Datasets
 
 Dataset | STAREmaster ID | Full Name | Notes
