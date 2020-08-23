@@ -7,6 +7,12 @@ https://spatiotemporal.github.io/STAREmaster/
 For more info about STARE, see [the STARE GitHub
 site](https://github.com/SpatioTemporal/STARE)
 
+## Supported Datasets
+
+Dataset | STAREmaster ID | Full Name | Notes
+------- | -------------- | --------- | -----
+MYD09   | MOD09          | Atmospherically Corrected Surface Reflectance 5-Min L2 Swath 250m, 500m, 1km | LAADS DAAC https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD09
+
 ## Building STAREmaster
 
 STAREmaster has both autotools and CMake build systems. The
@@ -62,8 +68,3 @@ use:
 createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
 
-## Supported Datasets
-
-Dataset | STAREmaster ID | Full Name | Notes
-------- | -------------- | --------- | -----
-MYD09   | MOD09          | Atmospherically Corrected Surface Reflectance 5-Min L2 Swath 250m, 500m, 1km | LAADS DAAC https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD09
