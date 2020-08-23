@@ -11,6 +11,7 @@ site](https://github.com/SpatioTemporal/STARE)
 
 Dataset        | STAREmaster ID | Full Name | Notes
 -------        | -------------- | --------- | -----
+MODIS MYD05    | MOD05          | Total Precipitable Water Vapor 5-Min L2 Swath 1km and 5km | https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MYD05_L2
 MODIS MYD09    | MOD09          | Atmospherically Corrected Surface Reflectance 5-Min L2 Swath 250m, 500m, 1km | LAADS DAAC https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD09
 
 ## Building STAREmaster
