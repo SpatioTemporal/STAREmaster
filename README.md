@@ -22,7 +22,35 @@ netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
 
 ### Building with Autotools
 
+When building with autotools locations of all required header files
+and libraries must be provided via the CPPFLAGS and LDFLAGS
+environmental variable. For example:
+
+<pre>
+export CPPFLAGS="-I/usr/local/hdfeos/include -I/usr/local/hdf-4.2.15/include -I/usr/local/STARE-0.15.6/include -I/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/include"
+export LDFLAGS="-L/usr/local/hdfeos/lib -L/usr/local/hdf-4.2.15/lib -L/usr/local/STARE-0.15.6/lib -L/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/lib"
+</pre>
+
+Configure and make in the standard way:
+
+<pre>
+./configure
+make check
+make install
+make clean
+</pre>
+
 ### Building with CMake
+
+CMake finds the necessary library using CMake variables:
+
+<pre>
+mkdir build
+cd build
+cmake  -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.15.6/include -DSTARE_LIBRARY=/usr/local/STARE-0.15.6/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" .. 
+make VERBOSE=1
+make VERBOSE=1 test
+</pre>
 
 ## Using STAREmaster
 
