@@ -22,7 +22,8 @@ if LARGE_FILE_TESTS
 TESTS += run_large_file_tests.sh
 endif
 
-EXTRA_DIST = CMakeLists.txt run_tests.sh run_large_file_tests.sh
+EXTRA_DIST = CMakeLists.txt run_tests.sh run_large_file_tests.sh	\
+MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl
 
 CLEANFILES = *.nc
 
