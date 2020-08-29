@@ -2,7 +2,7 @@
 /// This class contains the main functionality for reading a file for
 /// which STARE sidecar files may be constructed.
 
-/// @author Ed Hartnett @date 4/4/20
+// Ed Hartnett 4/4/20
 
 /**
  * @mainpage
@@ -11,9 +11,55 @@
  *
  * The STAREmaster utility computes STARE indicies for common NASA
  * datasets.
+ *
+ * STAREmaster consists of:
+ * - a command line utility to create STARE sidecar files
+ * - a C++ library to read geo-location information from selected data sets.
+ *
+ * STAREmaster also uses the STARE library, which computes the
+ * spacio-temporal indicies for the geo-location data that STAREmaster
+ * reads from the data file.
+ * 
+ * @section createSidecarFile Command Line Tool createSidecarFile
+ *
+ * The command line tool creates a sidecar file for a scienfic data
+ * set.
+ *
+ * Use the command line tool like this:
+ *
+ * createSidecarFile -d dataset_code data_file
+ *
+ * The full set of options is listed with --help:
+ * <pre>
+STARE spatial create sidecar file. 
+Usage: ./createSidecarFile [options] [filename]} 
+Examples:
+  ./createSidecarFile data.nc
+  ./createSidecarFile data.h5
+
+Options:
+   -h, --help        : print this help
+   -v, --verbose     : verbose: print all
+   -q, --quiet       : don't chat, just give back index
+   -b, --build_level : Higher levels -> longer initialization time. (default is 5)
+   -d, --data_type   : Allows specification of data type.
+   -o, --output_file : Provide file name for output file.
+   -r, --output_dir  : Provide output directory name.
+</pre>
+ *
+ * @section STAREmasterLibrary STAREmaster Library
+ *
+ * The STAREmaster library is a C++ library which can read targeted
+ * data sets and determine their geo-location information.
+ *
+ * Each data set which is understood by the STAREmaster library has a class file with full documentation.
+ *
+ * Data Set | Library Class
+ * ---------|--------------
+ * MOD05    | ModisL2GeoFile
+ * MOD09    | Modis09L2GeoFile
  * 
  * @section refs References
- *
  * 
  * MODIS HDF4 Level 2 Documentation: Ocean Level-2 Data Products,
  * March 22, 2010
