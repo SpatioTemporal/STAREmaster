@@ -2,7 +2,7 @@
 /// This class contains the main functionality for reading a file for
 /// which STARE sidecar files may be constructed.
 
-/// @author Ed Hartnett @date 4/4/20
+// Ed Hartnett 4/4/20
 
 /**
  * @mainpage
