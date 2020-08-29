@@ -1,0 +1,37 @@
+netcdf MYD09.A2020058.1515.006.2020060020205_stare {
+dimensions:
+	i_1km = 2030 ;
+	j_1km = 1354 ;
+	i_500m = 4060 ;
+	j_500m = 2708 ;
+	i_250m = 8120 ;
+	j_250m = 5416 ;
+variables:
+	double Latitude_1km(i_1km, j_1km) ;
+		Latitude_1km:long_name = "latitude" ;
+		Latitude_1km:units = "degrees_north" ;
+	double Longitude_1km(i_1km, j_1km) ;
+		Longitude_1km:long_name = "longitude" ;
+		Longitude_1km:units = "degrees_east" ;
+	uint64 STARE_index_1km(i_1km, j_1km) ;
+		STARE_index_1km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
+		STARE_index_1km:variables = "1km Atmospheric Optical Depth Band 1, 1km Atmospheric Optical Depth Band 3, 1km Atmospheric Optical Depth Band 8, 1km Atmospheric Optical Depth Model, 1km water_vapor, 1km Atmospheric Optical Depth Band QA, 1km Atmospheric Optical Depth Band CM" ;
+	double Latitude_500m(i_500m, j_500m) ;
+		Latitude_500m:long_name = "latitude" ;
+		Latitude_500m:units = "degrees_north" ;
+	double Longitude_500m(i_500m, j_500m) ;
+		Longitude_500m:long_name = "longitude" ;
+		Longitude_500m:units = "degrees_east" ;
+	uint64 STARE_index_500m(i_500m, j_500m) ;
+		STARE_index_500m:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
+		STARE_index_500m:variables = "500m Surface Reflectance Band 1, 500m Surface Reflectance Band 2, 500m Surface Reflectance Band 3, 500m Surface Reflectance Band 4, 500m Surface Reflectance Band 5, 500m Surface Reflectance Band 6, 500m Surface Reflectance Band 7" ;
+	double Latitude_250m(i_250m, j_250m) ;
+		Latitude_250m:long_name = "latitude" ;
+		Latitude_250m:units = "degrees_north" ;
+	double Longitude_250m(i_250m, j_250m) ;
+		Longitude_250m:long_name = "longitude" ;
+		Longitude_250m:units = "degrees_east" ;
+	uint64 STARE_index_250m(i_250m, j_250m) ;
+		STARE_index_250m:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
+		STARE_index_250m:variables = "250m Surface Reflectance Band 1, 250m Surface Reflectance Band 2, 250m Surface Reflectance Band 3, 250m Surface Reflectance Band 4, 250m Surface Reflectance Band 5, 250m Surface Reflectance Band 6, 250m Surface Reflectance Band 7" ;
+}
