@@ -20,8 +20,22 @@
  * spacio-temporal indicies for the geo-location data that STAREmaster
  * reads from the data file.
  * 
- * @section refs References
+ * @section createSidecarFile Command Line Tool createSidecarFile
  *
+ *
+ * @section STAREmaster Library
+ *
+ * The STAREmaster library is a C++ library which can read targeted
+ * data sets and determine their geo-location information.
+ *
+ * Each data set which is understood by the STAREmaster library has a class file with full documentation.
+ *
+ * Data Set | Library Class
+ * ---------|--------------
+ * MOD05    | ModisL2GeoFile
+ * MOD09    | Modis09L2GeoFile
+ * 
+ * @section refs References
  * 
  * MODIS HDF4 Level 2 Documentation: Ocean Level-2 Data Products,
  * March 22, 2010
