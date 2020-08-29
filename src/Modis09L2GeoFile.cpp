@@ -22,7 +22,14 @@ using namespace std;
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
 
 /**
- * Read a HDF4 MODIS L2 file.
+ * Read a HDF4 MODIS L2 MOD09 file.
+ *
+ * @param fileName the data file name.
+ * @param verbose non-zero for verbose output to stdout.
+ * @param quiet non-zero for no output.
+ * @param build_level STARE build level.
+ *
+ * @return 0 for no error, error code otherwise.
  */
 int
 Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
