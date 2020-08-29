@@ -11,6 +11,14 @@
  *
  * The STAREmaster utility computes STARE indicies for common NASA
  * datasets.
+ *
+ * STAREmaster consists of:
+ * - a command line utility to create STARE sidecar files
+ * - a C++ library to read geo-location information from selected data sets.
+ *
+ * STAREmaster also uses the STARE library, which computes the
+ * spacio-temporal indicies for the geo-location data that STAREmaster
+ * reads from the data file.
  * 
  * @section refs References
  *
