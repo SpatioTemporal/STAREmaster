@@ -66,11 +66,44 @@ $(function() {
 <div class="title">STAREmaster Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Ed Hartnett </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>4/4/20</dd></dl>
-<h1><a class="anchor" id="intro"></a>
+<div class="textblock"><h1><a class="anchor" id="intro"></a>
 Introduction</h1>
 <p>The STAREmaster utility computes STARE indicies for common NASA datasets.</p>
+<p>STAREmaster consists of:</p><ul>
+<li>a command line utility to create STARE sidecar files</li>
+<li>a C++ library to read geo-location information from selected data sets.</li>
+</ul>
+<p>STAREmaster also uses the STARE library, which computes the spacio-temporal indicies for the geo-location data that STAREmaster reads from the data file.</p>
+<h1><a class="anchor" id="createSidecarFile"></a>
+Command Line Tool createSidecarFile</h1>
+<p>The command line tool creates a sidecar file for a scienfic data set.</p>
+<p>Use the command line tool like this:</p>
+<p>createSidecarFile -d dataset_code data_file</p>
+<p>The full set of options is listed with &ndash;help: </p><pre>
+STARE spatial create sidecar file. 
+Usage: ./createSidecarFile [options] [filename]} 
+Examples:
+  ./createSidecarFile data.nc
+  ./createSidecarFile data.h5</pre><pre>Options:
+   -h, --help        : print this help
+   -v, --verbose     : verbose: print all
+   -q, --quiet       : don't chat, just give back index
+   -b, --build_level : Higher levels -&gt; longer initialization time. (default is 5)
+   -d, --data_type   : Allows specification of data type.
+   -o, --output_file : Provide file name for output file.
+   -r, --output_dir  : Provide output directory name.
+</pre><h1><a class="anchor" id="STAREmasterLibrary"></a>
+STAREmaster Library</h1>
+<p>The STAREmaster library is a C++ library which can read targeted data sets and determine their geo-location information.</p>
+<p>Each data set which is understood by the STAREmaster library has a class file with full documentation.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Data Set </th><th class="markdownTableHeadNone">Library Class  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">MOD05 </td><td class="markdownTableBodyNone"><a class="el" href="class_modis_l2_geo_file.html" title="This class contains the main functionality for reading a MODIS L2 file, which will read with HDF4 and...">ModisL2GeoFile</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">MOD09 </td><td class="markdownTableBodyNone"><a class="el" href="class_modis09_l2_geo_file.html" title="This class reads HDF4 data files.">Modis09L2GeoFile</a>  </td></tr>
+</table>
 <h1><a class="anchor" id="refs"></a>
 References</h1>
 <p>MODIS HDF4 Level 2 Documentation: Ocean Level-2 Data Products, March 22, 2010 <a href="https://oceancolor.gsfc.nasa.gov/docs/format/Ocean_Level-2_Data_Products.pdf">https://oceancolor.gsfc.nasa.gov/docs/format/Ocean_Level-2_Data_Products.pdf</a></p>
@@ -79,7 +112,7 @@ References</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 12 2020 14:39:14 for STAREmaster by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Aug 29 2020 16:06:23 for STAREmaster by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
