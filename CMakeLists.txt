@@ -10,7 +10,7 @@ if (${CMAKE_VERSION} VERSION_LESS 3.12)
 endif()
 
 # set the project name
-project(STAREmaster VERSION 1.0)
+project(STAREmaster VERSION 1.0.0)
 
 # This provides cmake_print_variables() function for debugging.
 include(CMakePrintHelpers)
