@@ -153,7 +153,8 @@ fi
 
 # Move data files into build directory so it can be found by tests.
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
-#AC_CONFIG_LINKS([test/data/goes10.2005.349.003015.BAND_05.nc.gz:test/data/goes10.2005.349.003015.BAND_05.nc.gz])
+AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])
+AC_CONFIG_LINKS([test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl:test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl])
 
 # Create test script.
 AC_CONFIG_FILES([test/run_large_file_tests.sh], [chmod ugo+x test/run_large_file_tests.sh])
