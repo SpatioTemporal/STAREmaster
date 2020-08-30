@@ -1,0 +1,15 @@
+netcdf MOD05_L2.A2005349.2125.061.2017294065400_stare {
+dimensions:
+	i_1km = 406 ;
+	j_1km = 270 ;
+variables:
+	double Latitude_1km(i_1km, j_1km) ;
+		Latitude_1km:long_name = "latitude" ;
+		Latitude_1km:units = "degrees_north" ;
+	double Longitude_1km(i_1km, j_1km) ;
+		Longitude_1km:long_name = "longitude" ;
+		Longitude_1km:units = "degrees_east" ;
+	uint64 STARE_index_1km(i_1km, j_1km) ;
+		STARE_index_1km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
+		STARE_index_1km:variables = "" ;
+}
