@@ -8,7 +8,7 @@ set(CSF_FILES SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile.c
 
 # This is the library we create.
 add_library(ssc SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile.cpp
-  Modis09L2GeoFile.cpp)
+  Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp)
 
 # This is the executable we create.
 add_executable(createSidecarFile createSidecarFile.cpp)
