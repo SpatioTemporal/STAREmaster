@@ -98,6 +98,7 @@ add_compile_options( -std=c++11 )
 
 # Ensure that ncdump is available for testing.
 find_program(NCDUMP NAMES ncdump)
+cmake_print_variables(NCDUMP)
 if (NOT NCDUMP)
   MESSAGE(FATAL_ERROR "Error finding ncdump")  
 endif ()
