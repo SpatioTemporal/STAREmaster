@@ -151,6 +151,10 @@ if test "$USE_HDF5" = no -a "$USE_NETCDF" = no -a "$USE_HDF4" = no; then
    AC_MSG_ERROR([Cannot find netCDF, HDF4, or HDF5. Set CPPFLAGS/LDFLAGS.])
 fi
 
+# We need ncdump for testing.
+AC_CHECK_PROG(NCDUMP,[ncdump],[ncdump],[no])
+test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
+
 # Move data files into build directory so it can be found by tests.
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])

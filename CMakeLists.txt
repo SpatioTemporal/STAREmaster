@@ -96,6 +96,13 @@ endif()
 # STARE requires C++11
 add_compile_options( -std=c++11 )
 
+# Ensure that ncdump is available for testing.
+find_program(NCDUMP NAMES ncdump)
+cmake_print_variables(NCDUMP)
+if (NOT NCDUMP)
+  MESSAGE(FATAL_ERROR "Error finding ncdump")  
+endif ()
+
 #TARGET_LINK_LIBRARIES ( myDSO PUBLIC ${HDF5_LIBRARIES} )
 #TARGET_INCLUDE_DIRECTORIES ( myDSO PUBLIC ${HDF5_INCLUDE_DIRS} )
 
