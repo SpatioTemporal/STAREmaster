@@ -107,8 +107,9 @@ main(int argc, char *argv[])
     ModisL2GeoFile *gf;
     NetcdfSidecarFile sf;
     string file_out;
-    const std::string MOD09 = "MOD09";
-    const std::string MOD09GA = "MOD09GA";
+    const string MOD09 = "MOD09";
+    const string MOD09GA = "MOD09GA";
+    const string SIN_TABLE = "sn_bound_10deg.txt";
     vector<string> stare_index_name;
 
     // Input file must be provided.

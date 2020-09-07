@@ -60,6 +60,7 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     const int V_POS = 21;
     const int LEN = 2;
     const string FILE_PREFIX = "MOD09GA_";
+    const string TABLE_NAME = "sn_bound_10deg.txt";
     string fileOut;
     int h, v;
 
@@ -86,6 +87,15 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     // Open the table file and get the lat/lons for this v/h.
     cout << "creating " << fileOut << "\n";
+    fstream newfile;
+    newfile.open(TABLE_NAME, ios::in);
+    if (newfile.is_open()) { 
+	string tp;
+	while (getline(newfile, tp)) {
+	    cout << tp << "\n";
+	}
+	newfile.close();
+    }
 
     // Calculate the rest of the lat/lons.
 
