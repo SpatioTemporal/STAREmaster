@@ -40,14 +40,18 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
-    string base_name;
+    string dir_name, base_name;
     string h_str, v_str;
     const int FILE_NAME_LEN = 45;
     const int H_POS = 18;
     const int V_POS = 21;
     const int LEN = 2;
+    const string FILE_PREFIX = "MOD09GA_";
+    string fileOut;
     int h, v;
 
+    dir_name = fileName.substr(0, fileName.rfind("/") + 1);
+    cout << "dir_name " << dir_name << "\n";
     base_name = fileName.substr(fileName.rfind("/") + 1, FILE_NAME_LEN);
     cout << "base_name " << base_name << "\n";
     h_str = base_name.substr(H_POS, LEN);
@@ -56,6 +60,8 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     h = stoi(h_str);
     v = stoi(v_str);
     cout << "h " << h << " v " << v << "\n";
+    fileOut = dir_name + FILE_PREFIX + "h" + h_str + "v" + v_str + "_stare.nc";
+    cout << "fileOut = " << fileOut << "\n";
     return 0;
 }
 
