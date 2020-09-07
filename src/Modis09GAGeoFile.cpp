@@ -40,6 +40,22 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
+    string base_name;
+    string h_str, v_str;
+    const int FILE_NAME_LEN = 45;
+    const int H_POS = 18;
+    const int V_POS = 21;
+    const int LEN = 2;
+    int h, v;
+
+    base_name = fileName.substr(fileName.rfind("/") + 1, FILE_NAME_LEN);
+    cout << "base_name " << base_name << "\n";
+    h_str = base_name.substr(H_POS, LEN);
+    v_str = base_name.substr(V_POS, LEN);
+    cout << "h " << h_str << " v " << v_str << "\n";
+    h = stoi(h_str);
+    v = stoi(v_str);
+    cout << "h " << h << " v " << v << "\n";
     return 0;
 }
 
