@@ -69,4 +69,12 @@ use:
 createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
 
+## References
 
+HDF-EOS Library User's Guide Volume 1: Overview and Examples, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_UG.pdf
+
+HDF-EOS Library User's Guide Volume 2: Function Reference Guide,  retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_REF.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 1: Overview and Examples, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_UG.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 2: Function Reference Guide, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_REF.pdf
