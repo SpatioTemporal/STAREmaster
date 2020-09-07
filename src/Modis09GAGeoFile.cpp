@@ -78,8 +78,14 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     cout << "fileOut = " << fileOut << "\n";
 
     // If this file already exists, assume we are done. ;-)
+    if (fileExists(fileOut))
+    {
+	cout << fileOut << " exists\n";
+	return 0;
+    }
 
     // Open the table file and get the lat/lons for this v/h.
+    cout << "creating " << fileOut << "\n";
 
     // Calculate the rest of the lat/lons.
 
