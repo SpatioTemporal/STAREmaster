@@ -25,6 +25,8 @@
 class Modis09GAGeoFile: public ModisL2GeoFile
 {
 public:
+    bool fileExists(const std::string& name);
+
     int readFile(const std::string fileName, int verbose, int quiet, int build_level);
 };
 

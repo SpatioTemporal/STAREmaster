@@ -21,6 +21,19 @@ using namespace std;
 #define MAX_ALONG_250 (MAX_ALONG_500 * 2)
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
 
+
+/** Does a file exist? */
+bool
+Modis09GAGeoFile::fileExists(const std::string& name)
+{
+    if (FILE *file = fopen(name.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }   
+}
+
 /**
  * Read a HDF4 MODIS MOD09 GA file.
  *
@@ -50,6 +63,7 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     string fileOut;
     int h, v;
 
+    // Create the output file name and find the h and v tile numbers.
     dir_name = fileName.substr(0, fileName.rfind("/") + 1);
     cout << "dir_name " << dir_name << "\n";
     base_name = fileName.substr(fileName.rfind("/") + 1, FILE_NAME_LEN);
@@ -62,6 +76,16 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     cout << "h " << h << " v " << v << "\n";
     fileOut = dir_name + FILE_PREFIX + "h" + h_str + "v" + v_str + "_stare.nc";
     cout << "fileOut = " << fileOut << "\n";
+
+    // If this file already exists, assume we are done. ;-)
+
+    // Open the table file and get the lat/lons for this v/h.
+
+    // Calculate the rest of the lat/lons.
+
+    // Calculate the STARE indexes.
+
+    
     return 0;
 }
 
