@@ -3,7 +3,7 @@ set -e
 set -x
 
 #echo "*** creating sidecar file for MOD09GA..."
-#../src/createSidecarFile -d MOD09GA data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf
+../src/createSidecarFile -d MOD09GA data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf
 
 #echo "*** creating CDL of MOD05 sidecar file header..."
 #ncdump -h data/MOD09GA.h00v08_stare.nc > MOD09GA.h00v08_stare_out.cdl
