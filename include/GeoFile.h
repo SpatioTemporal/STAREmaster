@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <vector>
 #include "ssc.h"
+#include "STARE.h"
 using namespace std;
 
 #define MAX_NUM_INDEX 5 /**< Max number of STARE index vars in a file. */
@@ -38,6 +39,11 @@ public:
     double **geo_lat1; /**< Array of latitude values. */
     double **geo_lon1; /**< Array of longitude values. */
     unsigned long long **geo_index1; /**< Array of STARE index. */
+
+    int num_cover;
+    unsigned long long **geo_cover1; /**< Array of STARE index intervals. */
+    int *geo_num_cover_values1;
+    STARE_SpatialIntervals *cover1;
     vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
 };
 

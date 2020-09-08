@@ -108,6 +108,7 @@ main(int argc, char *argv[])
     string file_out;
     const std::string MOD09 = "MOD09";
     vector<string> stare_index_name;
+    vector<string> stare_cover_name;
 
     // Input file must be provided.
     if (!argv[optind])
@@ -138,6 +139,7 @@ main(int argc, char *argv[])
     stare_index_name.push_back("500m");
     stare_index_name.push_back("250m");
 
+    stare_cover_name.push_back("1km");
 
     // Create the sidecar file.
     sf.createFile(file_out, arg.verbose);
@@ -147,6 +149,15 @@ main(int argc, char *argv[])
 	if (sf.writeSTAREIndex(arg.verbose, arg.quiet, arg.build_level, gf->geo_num_i1[i], gf->geo_num_j1[i],
 			       gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i], gf->var_name[i], stare_index_name.at(i)))
 	    return 99;
+
+    std::cout << "writing covers" << std::endl;
+    for (int i = 0; i < gf->num_cover; i++) {
+      std::cout << "writing cover i = " << i << ", name = " << stare_cover_name.at(i)  << std::endl;
+      if (sf.writeSTARECover(arg.verbose, arg.quiet,
+			     gf->geo_num_cover_values1[i], gf->geo_cover1[i],
+			     stare_cover_name.at(i)))
+	return 99;
+    }
 
     // Close the sidecar file.
     sf.closeFile();

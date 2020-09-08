@@ -74,6 +74,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (!(geo_index1 = (unsigned long long **)malloc(num_index * sizeof(unsigned long long *))))
 	return SSC_ENOMEM;
 
+    if (!(geo_num_cover_values1 = (int *)malloc(num_index * sizeof(int))))
+	return SSC_ENOMEM;	    
+
     var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 3");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 8");
@@ -117,19 +120,32 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     int level = 5;
     STARE index(level, build_level);
+
+    int finest_resolution = 0;
     
     // Calculate STARE index for each point. 
-    for (int i = 0; i < MAX_ALONG; i++)
-    	for (int j = 0; j < MAX_ACROSS; j++)
+    for (int i = 0; i < MAX_ALONG; i++) {
+      for (int j = 0; j < MAX_ACROSS; j++)
 	{
-	    geo_lat1[0][i * MAX_ACROSS + j] = latitude[i * MAX_ACROSS + j];
-	    geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
-	    
-	    // Calculate the stare indicies.
-	    geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
-									 (double)longitude[i * MAX_ACROSS + j], level);
+	  geo_lat1[0][i * MAX_ACROSS + j] = latitude[i * MAX_ACROSS + j];
+	  geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
+	  
+	  // Calculate the stare indicies.
+	  geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
+									   (double)longitude[i * MAX_ACROSS + j], level);
 	}
 
+	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+
+	for (int j = 0; j < MAX_ACROSS; j++) {
+	  int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
+	  if ( test_resolution > finest_resolution ) {
+	    finest_resolution = test_resolution;
+	  }
+	}
+    }
+
+    
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
 	return SSC_EHDF4ERR;

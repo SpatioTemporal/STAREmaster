@@ -25,6 +25,10 @@ public:
     int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon,
 			unsigned long long *stare_index);
+    /** Write a STARE cover */
+    int writeSTARECover(int verbose, int quiet,
+			int stare_cover_size, unsigned long long *stare_cover);
+    
     /** Close the file. */
     int closeFile();
 };

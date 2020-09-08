@@ -139,6 +139,53 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
     return 0;
 }
 
+
+/**
+ * Write a cover to the file.
+ */
+int
+NetcdfSidecarFile::writeSTARECover(int verbose, int quiet,
+				   int stare_cover_size, unsigned long long *stare_cover,
+				   string stare_cover_name) {
+  
+  if (verbose) std::cout << "Writing NETCDF sidecar cover." << "\n";
+
+    string dim_name;
+
+    int cover_dimid[SSC_NDIM1];
+    int cover_varid;
+
+    int ret;
+
+    // Define STARE cover.
+    
+    dim_name.clear();
+    dim_name.append(SSC_COVER_NAME);
+    dim_name.append("_");
+    dim_name.append(stare_cover_name);
+    if ((ret = nc_def_dim(ncid, dim_name.c_str(), stare_cover_size, &cover_dimid[0])))
+	NCERR(ret);
+
+    string cover_name;
+    cover_name.append(SSC_COVER_NAME);
+    cover_name.append("_");
+    cover_name.append(stare_cover_name);
+
+    // SSC_NDIM?
+    if ((ret = nc_def_var(ncid, cover_name.c_str(), NC_UINT64, SSC_NDIM1, cover_dimid, &cover_varid)))
+	NCERR(ret);
+    if ((ret = nc_def_var_deflate(ncid, cover_varid, 1, 1, 3)))
+	NCERR(ret);
+    if ((ret = nc_put_att_text(ncid, cover_varid, SSC_LONG_NAME, sizeof(SSC_COVER_LONG_NAME),
+			       SSC_COVER_LONG_NAME)))
+	NCERR(ret);
+
+    if ((ret = nc_put_var(ncid, cover_varid, stare_cover)))
+    	NCERR(ret);
+  
+    return 0;
+}
+
 /**
  * Close a sidecar file.
  */
