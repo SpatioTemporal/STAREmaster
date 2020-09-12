@@ -88,10 +88,15 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     // Open the table file and get the lat/lons for this v/h.
     cout << "creating " << fileOut << "\n";
     fstream newfile;
+    const int SKIP_LINES = 7;
+    
     newfile.open(TABLE_NAME, ios::in);
     if (newfile.is_open()) { 
 	string tp;
+	int c = 0;
 	while (getline(newfile, tp)) {
+	    if (c++ <= SKIP_LINES)
+		continue;
 	    cout << tp << "\n";
 	}
 	newfile.close();
