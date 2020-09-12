@@ -159,6 +159,7 @@ test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])
 AC_CONFIG_LINKS([test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl:test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl])
+AC_CONFIG_LINKS([test/data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf:test/data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf])
 
 # Create test script.
 AC_CONFIG_FILES([test/run_large_file_tests.sh], [chmod ugo+x test/run_large_file_tests.sh])

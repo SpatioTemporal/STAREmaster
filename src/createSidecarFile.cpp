@@ -9,6 +9,7 @@
 #include "ssc.h"
 #include "ModisL2GeoFile.h"
 #include "Modis09L2GeoFile.h"
+#include "Modis09GAGeoFile.h"
 #include "NetcdfSidecarFile.h"
 
 using namespace std;
@@ -106,7 +107,9 @@ main(int argc, char *argv[])
     ModisL2GeoFile *gf;
     NetcdfSidecarFile sf;
     string file_out;
-    const std::string MOD09 = "MOD09";
+    const string MOD09 = "MOD09";
+    const string MOD09GA = "MOD09GA";
+    const string SIN_TABLE = "sn_bound_10deg.txt";
     vector<string> stare_index_name;
 
     // Input file must be provided.
@@ -126,6 +129,12 @@ main(int argc, char *argv[])
     {
 	gf = new Modis09L2GeoFile();
 	if (((Modis09L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	    return 99;
+    }
+    else if (arg.data_type == MOD09GA)
+    {
+	gf = new Modis09GAGeoFile();
+	if (((Modis09GAGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
 	    return 99;
     }
     else
