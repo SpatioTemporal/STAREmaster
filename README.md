@@ -27,6 +27,37 @@ HDFEOS2 | 1.00                  | https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos
 HDF5    | 1.8.x, 1.10.x, 1.12.x | https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.6/src/hdf5-1.10.6.tar.gz
 netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
 
+### Build Notes
+
+When building HDF4 and HDFEOS2, there are some build issues. As
+demonstrated in the GitHub workflow
+builds(ex. https://github.com/SpatioTemporal/STAREmaster/blob/master/.github/workflows/autotools.yml),
+set the CFLAGS to -fPIC.
+
+When building HDF4, the --disable-netcdf option must be used.
+
+Building HDF4 can be accomplished with these commands:
+
+<pre>
+export CFLAGS=-fPIC
+./configure --prefix=/usr/local/hdf-4.2.15_fPIC --disable-netcdf
+make all
+make check
+sudo make install
+</pre>
+
+When building hdfeos, the --enable-install-include option must be used
+with configure. Building hdfeos can be accomplished with these commands:
+
+<pre>
+export CPPFLAGS=-I/usr/local/hdf-4.2.15_fPIC/include LDFLAGS=-L/usr/local/hdf-4.2.15_fPIC/lib
+export CFLAGS=-fPIC
+./configure --prefix=/usr/local/hdfeos_fPIC --enable-install-include
+make all
+make check
+sudo make install
+</pre>
+
 ### Building with Autotools
 
 When building with autotools locations of all required header files
