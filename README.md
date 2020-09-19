@@ -5,7 +5,9 @@ files. For full documentation, see
 https://spatiotemporal.github.io/STAREmaster/
 
 For more info about STARE, see [the STARE GitHub
-site](https://github.com/SpatioTemporal/STARE)
+site](https://github.com/SpatioTemporal/STARE) and [STARE - TOWARD
+UNPRECEDENTED GEO-DATA
+INTEROPERABILITY](https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY).
 
 ## Supported Datasets
 
@@ -102,10 +104,29 @@ createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 
 ## References
 
-HDF-EOS Library User's Guide Volume 1: Overview and Examples, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_UG.pdf
+Kuo, K-S and ML Rilee, “STARE – Toward unprecedented geo-data
+interoperability,” 2017 Conference on Big Data from Space. Toulouse,
+France. 28-30 November 2017, retrieved on Sep 19,2020 from
+https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY.
 
-HDF-EOS Library User's Guide Volume 2: Function Reference Guide,  retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_REF.pdf
+Kuo, K-S, H. YuYu, and ML Rilee, "Leveraging STARE for Co-aligned Data
+Locality with netCDF and Python MPI", 2019 IEEE International
+Geoscience and Remote Sensing Symposium, June 2019, retrieved on Sep
+19, 2020 from
+https://www.researchgate.net/publication/337504144_Leveraging_STARE_for_Co-aligned_Data_Locality_with_netCDF_and_Python_MPI.
 
-HDF-EOS Interface Based on HDF5, Volume 1: Overview and Examples, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_UG.pdf
+HDF-EOS Library User's Guide Volume 1: Overview and Examples,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_UG.pdf
 
-HDF-EOS Interface Based on HDF5, Volume 2: Function Reference Guide, retrieved Sep 7, 2020 from http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_REF.pdf
+HDF-EOS Library User's Guide Volume 2: Function Reference Guide,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_REF.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 1: Overview and Examples,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_UG.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 2: Function Reference Guide,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_REF.pdf
