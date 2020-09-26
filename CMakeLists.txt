@@ -58,7 +58,7 @@ ENDIF()
 ###
 
 # Get extra netCDF libraries.
-execute_process(COMMAND nc-config --libs --static OUTPUT_VARIABLE CMD_OUTPUT)
+execute_process(COMMAND nc-config --libs OUTPUT_VARIABLE CMD_OUTPUT)
 
 # Unfortunately, this requires a more recent netcdf install.
 #execute_process(COMMAND nc-config --libs --static OUTPUT_VARIABLE CMD_OUTPUT)
