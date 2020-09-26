@@ -27,7 +27,7 @@ endif ()
 cmake_print_variables(ENABLE_LARGE_FILE_TESTS TEST_LARGE)
 
 # Find netCDF.
-include(FindNetCDF)
+include(FindNetCDF_3)
 find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
@@ -58,15 +58,17 @@ ENDIF()
 ###
 
 # Get extra netCDF libraries.
-execute_process(COMMAND nc-config --libs OUTPUT_VARIABLE CMD_OUTPUT)
+execute_process(COMMAND nc-config --libs --static OUTPUT_VARIABLE CMD_OUTPUT)
 IF(CMD_OUTPUT)
 	string(STRIP ${CMD_OUTPUT} CMD_OUTPUT)
 ENDIF()
-message(STATUS ${CMD_OUTPUT})
+cmake_print_variables(CMD_OUTPUT)
 
 # Find HDF5. CMake already includes FindHDF5.
 find_package(HDF5 1.8.15)
 cmake_print_variables(HDF5_FOUND HDF5_INCLUDE_DIRS HDF5_LIBRARIES)
+find_library(Z NAMES "z")
+cmake_print_variables(HDF5_INCLUDE_DIR HDF5_DEFINITIONS HDF5_LIBRARIES Z_LIB)
 
 # Find HDF4.
 #include(FindHDF4)
