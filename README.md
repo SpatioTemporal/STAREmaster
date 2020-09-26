@@ -5,7 +5,9 @@ files. For full documentation, see
 https://spatiotemporal.github.io/STAREmaster/
 
 For more info about STARE, see [the STARE GitHub
-site](https://github.com/SpatioTemporal/STARE)
+site](https://github.com/SpatioTemporal/STARE) and [STARE - TOWARD
+UNPRECEDENTED GEO-DATA
+INTEROPERABILITY](https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY).
 
 ## Supported Datasets
 
@@ -26,6 +28,37 @@ HDF4    | 4.2.13                | https://support.hdfgroup.org/ftp/HDF/HDF_Curre
 HDFEOS2 | 1.00                  | https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
 HDF5    | 1.8.x, 1.10.x, 1.12.x | https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.6/src/hdf5-1.10.6.tar.gz
 netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
+
+### Build Notes
+
+When building HDF4 and HDFEOS2, there are some build issues. As
+demonstrated in the GitHub workflow
+builds(ex. https://github.com/SpatioTemporal/STAREmaster/blob/master/.github/workflows/autotools.yml),
+set the CFLAGS to -fPIC.
+
+When building HDF4, the --disable-netcdf option must be used.
+
+Building HDF4 can be accomplished with these commands:
+
+<pre>
+export CFLAGS=-fPIC
+./configure --prefix=/usr/local/hdf-4.2.15_fPIC --disable-netcdf
+make all
+make check
+sudo make install
+</pre>
+
+When building hdfeos, the --enable-install-include option must be used
+with configure. Building hdfeos can be accomplished with these commands:
+
+<pre>
+export CPPFLAGS=-I/usr/local/hdf-4.2.15_fPIC/include LDFLAGS=-L/usr/local/hdf-4.2.15_fPIC/lib
+export CFLAGS=-fPIC
+./configure --prefix=/usr/local/hdfeos_fPIC --enable-install-include
+make all
+make check
+sudo make install
+</pre>
 
 ### Building with Autotools
 
@@ -69,4 +102,31 @@ use:
 createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
 
+## References
 
+Kuo, K-S and ML Rilee, “STARE – Toward unprecedented geo-data
+interoperability,” 2017 Conference on Big Data from Space. Toulouse,
+France. 28-30 November 2017, retrieved on Sep 19,2020 from
+https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY.
+
+Kuo, K-S, H. YuYu, and ML Rilee, "Leveraging STARE for Co-aligned Data
+Locality with netCDF and Python MPI", 2019 IEEE International
+Geoscience and Remote Sensing Symposium, June 2019, retrieved on Sep
+19, 2020 from
+https://www.researchgate.net/publication/337504144_Leveraging_STARE_for_Co-aligned_Data_Locality_with_netCDF_and_Python_MPI.
+
+HDF-EOS Library User's Guide Volume 1: Overview and Examples,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_UG.pdf
+
+HDF-EOS Library User's Guide Volume 2: Function Reference Guide,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS_REF.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 1: Overview and Examples,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_UG.pdf
+
+HDF-EOS Interface Based on HDF5, Volume 2: Function Reference Guide,
+retrieved Sep 7, 2020 from
+http://newsroom.gsfc.nasa.gov/sdptoolkit/docs/2.20/HDF-EOS5_REF.pdf

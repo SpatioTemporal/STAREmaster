@@ -103,15 +103,10 @@ AC_LANG_POP()
 #AC_CHECK_LIB([m], [floor], [],
 #[AC_MSG_ERROR([Can't find or link to the math library.])])
 
-# Check for netCDF C library.
-USE_NETCDF=no
+# Check for netCDF C library and header. It is required.
 AC_SEARCH_LIBS([nc_create], [netcdf], [USE_NETCDF=yes],
-                            [AC_MSG_WARN([Can't find or link to the netcdf C library; will build without netCDF capability.])])
-AC_MSG_CHECKING([whether to use netCDF])			    
-AC_MSG_RESULT([$USE_NETCDF])
-if test "$USE_NETCDF" = yes; then
-   AC_DEFINE([USE_NETCDF], [1], [If true, use NetCDF.])
-fi
+                            [AC_MSG_ERROR([Cannot link to the netcdf C library, set LDFLAGS.])])
+AC_CHECK_HEADERS([netcdf.h], [], [AC_MSG_ERROR([Cannot find netcdf.h, set CPPFLAGS.])])			    
 
 # Check for HDF5 library.
 USE_HDF5=no
@@ -124,14 +119,12 @@ if test "$USE_HDF5" = yes; then
 fi
 
 # Find HDF4 and all the trimmings.
-dnl AC_CHECK_LIB([jpeg], [jpeg_CreateCompress], [],
-dnl              [AC_MSG_ERROR([Jpeg library required for --enable-hdf4 builds.])])
 AC_CHECK_HEADERS([mfhdf.h], [], [AC_MSG_ERROR([Cannot find mfhdf.h, set CPPFLAGS.])])
 AC_CHECK_HEADERS([hdf.h], [], [AC_MSG_ERROR([Cannot find hdf.h, set CPPFLAGS.])])
 AC_CHECK_LIB([z], [deflate], [], [])
 AC_CHECK_LIB([jpeg], [jpeg_set_quality], [], [])
 AC_CHECK_LIB([df], [Hclose], [], [])
-# AC_CHECK_LIB([mfhdf], [NC_arrayfill], [AC_MSG_ERROR([HDF4 library must be built with --disable-netcdf.])])
+AC_CHECK_LIB([mfhdf], [NC_arrayfill], [AC_MSG_ERROR([HDF4 library must be built with --disable-netcdf.])])
 AC_SEARCH_LIBS([SDcreate], [mfhdf], [USE_HDF4=yes], [USE_HDF4=no])
 
 AC_MSG_CHECKING([whether to use HDF4])			    
@@ -146,11 +139,6 @@ AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([math library required])])
 AC_SEARCH_LIBS([SWopen], [hdfeos], [], [AC_MSG_ERROR([hdfeos library required])])
 AC_CHECK_HEADERS([HdfEosDef.h], [], [AC_MSG_ERROR([Cannot find HdfEosDef.h, set CPPFLAGS.])], [#include "mfhdf.h"])
 
-# Either netCDF or HDF5 must be provided.
-if test "$USE_HDF5" = no -a "$USE_NETCDF" = no -a "$USE_HDF4" = no; then
-   AC_MSG_ERROR([Cannot find netCDF, HDF4, or HDF5. Set CPPFLAGS/LDFLAGS.])
-fi
-
 # We need ncdump for testing.
 AC_CHECK_PROG(NCDUMP,[ncdump],[ncdump],[no])
 test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
@@ -159,6 +147,7 @@ test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])
 AC_CONFIG_LINKS([test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl:test/ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl])
+AC_CONFIG_LINKS([test/data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf:test/data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf])
 
 # Create test script.
 AC_CONFIG_FILES([test/run_large_file_tests.sh], [chmod ugo+x test/run_large_file_tests.sh])
