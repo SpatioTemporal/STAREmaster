@@ -27,7 +27,7 @@ endif ()
 cmake_print_variables(ENABLE_LARGE_FILE_TESTS TEST_LARGE)
 
 # Find netCDF.
-include(FindNetCDF_3)
+include(FindNetCDF)
 find_package(NetCDF REQUIRED)
 cmake_print_variables(NETCDF_LIBRARIES NETCDF_INCLUDES)
 include_directories("${NETCDF_INCLUDES}")
