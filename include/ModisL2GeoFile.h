@@ -23,6 +23,9 @@
 class ModisL2GeoFile : public GeoFile
 {
 public:
+    ModisL2GeoFile();
+    ~ModisL2GeoFile();
+    
     int readFile(const std::string fileName, int verbose, int quiet, int build_level);
 };
 
