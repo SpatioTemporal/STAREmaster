@@ -203,12 +203,14 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
     
-    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
+//    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
+    cover = index.NonConvexHull(perimeter,finest_resolution);
 
     std::cout << "cover size = " << cover1[0].size()  << "\n";
     
-    geo_cover1[0]            = &(cover1[0])[0];
-    geo_num_cover_values1[0] = cover1[0].size();
+//    geo_cover1[0]            = &(cover1[0])[0];
+//    geo_num_cover_values1[0] = cover1[0].size();
+    geo_num_cover_values1[0] = cover.size();    
     
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
