@@ -15,6 +15,20 @@
 #define MAX_ALONG 406
 #define MAX_ACROSS 270
 
+/** Construct a ModisL2GeoFile.
+ *
+ * @return a ModisL2GeoFile
+ */
+ModisL2GeoFile::ModisL2GeoFile()
+{
+    cout<<"ModisL2GeoFile constructor\n";
+}
+
+ModisL2GeoFile::~ModisL2GeoFile()
+{
+    cout<<"ModisL2GeoFile destructor\n";
+}
+
 /**
  * Read a HDF4 MODIS L2 MOD05 file.
  *
