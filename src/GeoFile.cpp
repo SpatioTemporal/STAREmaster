@@ -75,6 +75,24 @@ Options:
 #include <hdf.h>
 #include <HdfEosDef.h>
 
+/** Construct a GeoFile.
+ *
+ * @return a GeoFile
+ */
+GeoFile::GeoFile()
+{
+    cout<<"GeoFile constructor\n";
+    
+}
+
+/** Destroy a GeoFile.
+ *
+ */
+GeoFile::~GeoFile()
+{
+    cout<<"GeoFile destructor\n";
+}
+
 /**
  * Determine the format of the target file.
  *

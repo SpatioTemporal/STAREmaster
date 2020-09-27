@@ -25,6 +25,9 @@ using namespace std;
 class GeoFile
 {
 public:
+    GeoFile();
+    ~GeoFile();
+    
     int determineFormat(const std::string fileName, int *gf_format);
     /** Read file. */
     int readFile(const std::string fileName, int verbose, int quiet, int build_level);

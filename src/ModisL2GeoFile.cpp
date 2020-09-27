@@ -22,8 +22,12 @@
 ModisL2GeoFile::ModisL2GeoFile()
 {
     cout<<"ModisL2GeoFile constructor\n";
+    
 }
 
+/** Destroy a ModisL2GeoFile.
+ *
+ */
 ModisL2GeoFile::~ModisL2GeoFile()
 {
     cout<<"ModisL2GeoFile destructor\n";
