@@ -183,14 +183,19 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	}
     }
 
-    std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
+    if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
     
     cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
 
-    std::cout << "cover size = " << cover1[0].size()  << "\n";
+    if (verbose) std::cout << "cover size = " << cover1[0].size()  << "\n";
+    
+    geo_num_cover_values1[0] = cover1[0].size();
+
+    // If we can't avoid copying...
+    // if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+    //	return SSC_ENOMEM;
     
     geo_cover1[0]            = &(cover1[0])[0];
-    geo_num_cover_values1[0] = cover1[0].size();
     
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
