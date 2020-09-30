@@ -26,6 +26,9 @@ using namespace std;
 class GeoFile
 {
 public:
+    GeoFile();
+    ~GeoFile();
+    
     int determineFormat(const std::string fileName, int *gf_format);
     /** Read file. */
     int readFile(const std::string fileName, int verbose, int quiet, int build_level);
@@ -43,8 +46,9 @@ public:
     int num_cover;
     unsigned long long **geo_cover1; /**< Array of STARE index intervals. */
     int *geo_num_cover_values1;
-    STARE_SpatialIntervals *cover1;
+    //    STARE_SpatialIntervals *cover1;
     vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
+    STARE_SpatialIntervals cover;
 };
 
 #endif /* GEO_FILE_H_ */

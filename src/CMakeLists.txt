@@ -8,7 +8,7 @@ set(CSF_FILES SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile.c
 
 # This is the library we create.
 add_library(ssc SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile.cpp
-  Modis09L2GeoFile.cpp)
+  Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp)
 
 # This is the executable we create.
 add_executable(createSidecarFile createSidecarFile.cpp)
@@ -23,6 +23,7 @@ target_link_libraries(createSidecarFile netcdf)
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
 target_link_libraries(createSidecarFile ${MFHDF4} ${DF} ${JPEG_LIB})
+target_link_libraries(createSidecarFile ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
 target_link_libraries(createSidecarFile ${CMD_OUTPUT})
 
 # Install the execuatable in the bin directory.

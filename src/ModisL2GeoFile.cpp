@@ -15,6 +15,24 @@
 #define MAX_ALONG 406
 #define MAX_ACROSS 270
 
+/** Construct a ModisL2GeoFile.
+ *
+ * @return a ModisL2GeoFile
+ */
+ModisL2GeoFile::ModisL2GeoFile()
+{
+    cout<<"ModisL2GeoFile constructor\n";
+    
+}
+
+/** Destroy a ModisL2GeoFile.
+ *
+ */
+ModisL2GeoFile::~ModisL2GeoFile()
+{
+    cout<<"ModisL2GeoFile destructor\n";
+}
+
 /**
  * Read a HDF4 MODIS L2 MOD05 file.
  *
@@ -72,8 +90,10 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
       return SSC_ENOMEM;
     if (!(geo_cover1 = (unsigned long long **)malloc(num_cover * sizeof(unsigned long long *))))
       return SSC_ENOMEM;
+    /*
     if (!(cover1 = (STARE_SpatialIntervals *)malloc(num_cover * sizeof(STARE_SpatialIntervals))))
       return SSC_ENOMEM;
+    */
 
     // Open the swath file.
     if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
@@ -185,17 +205,33 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
     
-    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
+//    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
+    cover = index.NonConvexHull(perimeter,finest_resolution);
 
-    if (verbose) std::cout << "cover size = " << cover1[0].size()  << "\n";
+    if (verbose) std::cout << "cover size = " << cover.size()  << "\n";
     
-    geo_num_cover_values1[0] = cover1[0].size();
+// <<<<<<< HEAD
+//     geo_num_cover_values1[0] = cover1[0].size();
+// 
+//     // If we can't avoid copying...
+//     // if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+//     //	return SSC_ENOMEM;
+//     
+//     geo_cover1[0]            = &(cover1[0])[0];
+// =======
+// //    geo_cover1[0]            = &(cover1[0])[0];
+// //    geo_num_cover_values1[0] = cover1[0].size();
+//     geo_num_cover_values1[0] = cover.size();    
+// >>>>>>> ddaa8660c5d3f7734a00940592a3e323728abbdb
 
-    // If we can't avoid copying...
-    // if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
-    //	return SSC_ENOMEM;
+    geo_num_cover_values1[0] = cover.size();    
+    if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+      return SSC_ENOMEM;
+    for(int k=0; k<geo_num_cover_values1[0]; ++k) {
+      geo_cover1[0][k] = cover[k];
+    }
+     
     
-    geo_cover1[0]            = &(cover1[0])[0];
     
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)

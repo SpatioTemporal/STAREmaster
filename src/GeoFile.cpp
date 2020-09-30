@@ -75,6 +75,69 @@ Options:
 #include <hdf.h>
 #include <HdfEosDef.h>
 
+/** Construct a GeoFile.
+ *
+ * @return a GeoFile
+ */
+GeoFile::GeoFile()
+{
+    cout<<"GeoFile constructor\n";
+
+    // Initialize values.
+    num_index = 0;
+    geo_num_i1 = NULL;
+    geo_num_j1 = NULL;
+    geo_lat1 = NULL;
+    geo_lon1 = NULL;
+    geo_index1 = NULL;
+    geo_cover1 = NULL;
+    //    cover1 = NULL;
+    geo_num_cover_values1 = NULL;
+}
+
+/** Destroy a GeoFile.
+ *
+ */
+GeoFile::~GeoFile()
+{
+    cout<<"GeoFile destructor\n";
+
+    // Free any allocated memory.
+    for (int i = 0; i < num_index; i++)
+    {
+	free(geo_lat1[i]);
+	free(geo_lon1[i]);
+	free(geo_index1[i]);
+    }
+    
+    if (geo_num_i1)
+	free(geo_num_i1);
+    if (geo_num_j1)
+	free(geo_num_j1);
+    if (geo_lat1)
+	free(geo_lat1);
+    if (geo_lon1)
+	free(geo_lon1);
+    if (geo_index1)
+	free(geo_index1);
+
+    for (int i = 0; i < num_cover; i++)
+    {
+	if (geo_cover1)
+	    free(geo_cover1[i]);
+	// if (cover1)
+	//     free(cover1[i]);
+    }
+
+    if (geo_cover1)
+	free(geo_cover1);
+    if (geo_num_cover_values1)
+	free(geo_num_cover_values1);
+    //    if (cover1)
+    //	free(cover1);
+
+}
+
 /**
  * Determine the format of the target file.
  *

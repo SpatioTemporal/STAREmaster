@@ -4,7 +4,7 @@
 # Ed Hartnett 3/16/20
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
-LDADD = ${top_builddir}/src/libssc.la
+LDADD = ${top_builddir}/src/libstaremaster.la
 
 SUBDIRS = data
 
