@@ -160,7 +160,7 @@ NetcdfSidecarFile::writeSTARECover(int verbose, int quiet,
     // Define STARE cover.
     
     dim_name.clear();
-    dim_name.append(SSC_COVER_NAME);
+    dim_name.append(SSC_L_NAME);
     dim_name.append("_");
     dim_name.append(stare_cover_name);
     if ((ret = nc_def_dim(ncid, dim_name.c_str(), stare_cover_size, &cover_dimid[0])))

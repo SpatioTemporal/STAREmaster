@@ -19,6 +19,8 @@
 #define SSC_LON_NAME "Longitude"
 #define SSC_I_NAME "i"
 #define SSC_J_NAME "j"
+#define SSC_K_NAME "k"
+#define SSC_L_NAME "l"
 #define SSC_INDEX_NAME "STARE_index"
 #define SSC_COVER_NAME "STARE_cover"
 #define SSC_LONG_NAME "long_name"
