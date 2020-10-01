@@ -70,10 +70,15 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     int32 nswath;
     char swathlist[MAX_NAME + 1];
 
-    stare_index_name.push_back("1km");
-    stare_index_name.push_back("500m");
-    stare_index_name.push_back("250m");
-    stare_cover_name.push_back("1km");
+    // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
+    // The same 1km geolocation data can be found in MOD03.
+    //
+    stare_index_name.push_back("5km");
+    
+    // stare_index_name.push_back("1km");
+    // stare_index_name.push_back("500m");
+    // stare_index_name.push_back("250m");
+    stare_cover_name.push_back("5km");
     
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";

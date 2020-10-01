@@ -1,18 +1,18 @@
 netcdf MOD05_L2.A2005349.2125.061.2017294065400_stare {
 dimensions:
-	i_1km = 406;
-	j_1km = 270;
-	l_1km = 7221;
+	i_5km = 406;
+	j_5km = 270;
+	l_5km = 7221;
 variables:
-	double Latitude_1km(i_1km, j_1km) ;
-		Latitude_1km:long_name = "latitude" ;
-		Latitude_1km:units = "degrees_north" ;
-	double Longitude_1km(i_1km, j_1km) ;
-		Longitude_1km:long_name = "longitude" ;
-		Longitude_1km:units = "degrees_east" ;
-	uint64 STARE_index_1km(i_1km, j_1km) ;
-		STARE_index_1km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
-		STARE_index_1km:variables = "" ;
-	uint64 STARE_cover_1km(l_1km) ;
-		STARE_cover_1km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) cover" ;
+	double Latitude_5km(i_5km, j_5km) ;
+		Latitude_5km:long_name = "latitude" ;
+		Latitude_5km:units = "degrees_north" ;
+	double Longitude_5km(i_5km, j_5km) ;
+		Longitude_5km:long_name = "longitude" ;
+		Longitude_5km:units = "degrees_east" ;
+	uint64 STARE_index_5km(i_5km, j_5km) ;
+		STARE_index_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
+		STARE_index_5km:variables = "" ;
+	uint64 STARE_cover_5km(l_5km) ;
+		STARE_cover_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) cover" ;
 }
