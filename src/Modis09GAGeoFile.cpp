@@ -64,6 +64,11 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int quiet,
     string fileOut;
     int h, v;
 
+    stare_index_name.push_back("1km");
+    stare_index_name.push_back("500m");
+    stare_index_name.push_back("250m");
+    stare_cover_name.push_back("1km");
+
     // Create the output file name and find the h and v tile numbers.
     dir_name = fileName.substr(0, fileName.rfind("/") + 1);
     cout << "dir_name " << dir_name << "\n";

@@ -69,6 +69,11 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
+
+    stare_index_name.push_back("1km");
+    stare_index_name.push_back("500m");
+    stare_index_name.push_back("250m");
+    stare_cover_name.push_back("1km");
     
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";

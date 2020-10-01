@@ -49,6 +49,9 @@ public:
     //    STARE_SpatialIntervals *cover1;
     vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
     STARE_SpatialIntervals cover;
+
+    vector<string> stare_index_name;
+    vector<string> stare_cover_name;
 };
 
 #endif /* GEO_FILE_H_ */
