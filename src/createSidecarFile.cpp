@@ -110,7 +110,7 @@ main(int argc, char *argv[])
     const string MOD09 = "MOD09";
     const string MOD09GA = "MOD09GA";
     const string SIN_TABLE = "sn_bound_10deg.txt";
-    vector<string> stare_index_name;
+
 
     // Input file must be provided.
     if (!argv[optind])
@@ -143,10 +143,6 @@ main(int argc, char *argv[])
 	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
 	    return 99;
     }
-    stare_index_name.push_back("1km");
-    stare_index_name.push_back("500m");
-    stare_index_name.push_back("250m");
-
 
     // Create the sidecar file.
     sf.createFile(file_out, arg.verbose);
@@ -154,8 +150,17 @@ main(int argc, char *argv[])
     // Write the sidecar file.
     for (int i = 0; i < gf->num_index; i++)
 	if (sf.writeSTAREIndex(arg.verbose, arg.quiet, arg.build_level, gf->geo_num_i1[i], gf->geo_num_j1[i],
-			       gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i], gf->var_name[i], stare_index_name.at(i)))
+			       gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i], gf->var_name[i], gf->stare_index_name.at(i)))
 	    return 99;
+
+    std::cout << "writing covers" << std::endl;
+    for (int i = 0; i < gf->num_cover; i++) {
+      std::cout << "writing cover i = " << i << ", name = " << gf->stare_cover_name.at(i)  << std::endl;
+      if (sf.writeSTARECover(arg.verbose, arg.quiet,
+			     gf->geo_num_cover_values1[i], gf->geo_cover1[i],
+			     gf->stare_cover_name.at(i)))
+	return 99;
+    }
 
     // Close the sidecar file.
     sf.closeFile();

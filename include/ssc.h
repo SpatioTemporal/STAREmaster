@@ -19,9 +19,13 @@
 #define SSC_LON_NAME "Longitude"
 #define SSC_I_NAME "i"
 #define SSC_J_NAME "j"
+#define SSC_K_NAME "k"
+#define SSC_L_NAME "l"
 #define SSC_INDEX_NAME "STARE_index"
+#define SSC_COVER_NAME "STARE_cover"
 #define SSC_LONG_NAME "long_name"
 #define SSC_INDEX_LONG_NAME "SpatioTemporal Adaptive Resolution Encoding (STARE) index"
+#define SSC_COVER_LONG_NAME "SpatioTemporal Adaptive Resolution Encoding (STARE) cover"
 #define SSC_LAT_LONG_NAME "latitude"
 #define SSC_LON_LONG_NAME "longitude"
 #define SSC_UNITS "units"
@@ -31,6 +35,7 @@
 
 #define SSC_MAX_NAME 256
 
+#define SSC_NDIM1 1
 #define SSC_NDIM2 2
 
 

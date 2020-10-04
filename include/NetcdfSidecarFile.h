@@ -31,6 +31,9 @@ public:
     int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon, unsigned long long *stare_index,
 			vector<string> var_name, string stare_index_name);
+    int writeSTARECover(int verbose, int quiet,
+			int stare_cover_size, unsigned long long *stare_cover,
+			string stare_cover_name);
     int closeFile();
 };
 

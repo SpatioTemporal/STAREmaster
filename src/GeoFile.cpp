@@ -90,6 +90,9 @@ GeoFile::GeoFile()
     geo_lat1 = NULL;
     geo_lon1 = NULL;
     geo_index1 = NULL;
+    geo_cover1 = NULL;
+    //    cover1 = NULL;
+    geo_num_cover_values1 = NULL;
 }
 
 /** Destroy a GeoFile.
@@ -117,6 +120,22 @@ GeoFile::~GeoFile()
 	free(geo_lon1);
     if (geo_index1)
 	free(geo_index1);
+
+    for (int i = 0; i < num_cover; i++)
+    {
+	if (geo_cover1)
+	    free(geo_cover1[i]);
+	// if (cover1)
+	//     free(cover1[i]);
+    }
+
+    if (geo_cover1)
+	free(geo_cover1);
+    if (geo_num_cover_values1)
+	free(geo_num_cover_values1);
+    //    if (cover1)
+    //	free(cover1);
+
 }
 
 /**

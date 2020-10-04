@@ -69,6 +69,16 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
+
+    // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
+    // The same 1km geolocation data can be found in MOD03.
+    //
+    stare_index_name.push_back("5km");
+    
+    // stare_index_name.push_back("1km");
+    // stare_index_name.push_back("500m");
+    // stare_index_name.push_back("250m");
+    stare_cover_name.push_back("5km");
     
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
@@ -83,7 +93,17 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (!(geo_lon1 = (double **)malloc(num_index * sizeof(double *))))
 	return SSC_ENOMEM;	
     if (!(geo_index1 = (unsigned long long **)malloc(num_index * sizeof(unsigned long long *))))
-	return SSC_ENOMEM;	
+	return SSC_ENOMEM;
+
+    num_cover = 1;
+    if (!(geo_num_cover_values1 = (int *)malloc(num_cover * sizeof(int))))
+      return SSC_ENOMEM;
+    if (!(geo_cover1 = (unsigned long long **)malloc(num_cover * sizeof(unsigned long long *))))
+      return SSC_ENOMEM;
+    /*
+    if (!(cover1 = (STARE_SpatialIntervals *)malloc(num_cover * sizeof(STARE_SpatialIntervals))))
+      return SSC_ENOMEM;
+    */
 
     // Open the swath file.
     if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
@@ -115,6 +135,8 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     int level = 27;
     STARE index(level, build_level);
+
+    int finest_resolution = 0;
     
     // Calculate STARE index for each point. 
     for (int i = 0; i < MAX_ALONG; i++)
@@ -129,7 +151,97 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 									 (double)longitude[i][j], level);
 	}
 	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+
+	for (int j = 0; j < MAX_ACROSS; j++) {
+	  int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
+	  if ( test_resolution > finest_resolution ) {
+	    finest_resolution = test_resolution;
+	  }
+	}
     }
+
+    LatLonDegrees64ValueVector perimeter(2*MAX_ALONG+2*MAX_ACROSS-4);
+
+    std::cout << "calculating perimeter" << "\n" << std::flush;
+
+    int pk = 2*MAX_ALONG+2*MAX_ACROSS-4 - 1;
+    { // Go along the 'bottom' CCW. Do the full side.
+      int i = 0;
+	{
+	  for (int j = 0; j < MAX_ACROSS; j++)
+	    {
+	      perimeter[pk].lat = latitude[i][j];
+	      perimeter[pk].lon = longitude[i][j];
+	      --pk;
+	    }
+	}
+    }
+    
+    { // Go up along the right side. Start at 1, because the corner's done.
+      int j = MAX_ACROSS-1;
+      for (int i = 1; i < MAX_ALONG; i++)
+	{
+	    {
+	      perimeter[pk].lat = latitude[i][j];
+	      perimeter[pk].lon = longitude[i][j];
+	      --pk;
+	    }
+	}
+    }
+    
+    { // Go back along the top. Start one over.
+	int i = MAX_ALONG-1;
+	{
+	  for (int j = MAX_ACROSS-2; j > -1; j--)
+	    {
+	      perimeter[pk].lat = latitude[i][j];
+	      perimeter[pk].lon = longitude[i][j];
+	      --pk;
+	    }
+	}
+    }
+    
+    { // Go back down along the left side. Start one over and don't include the end.
+      int j = 0;
+      for (int i = MAX_ALONG-2; i > 0; i--)
+	{
+	    {
+	      perimeter[pk].lat = latitude[i][j];
+	      perimeter[pk].lon = longitude[i][j];
+	      --pk;
+	    }
+	}
+    }
+
+    if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
+    
+//    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
+    cover = index.NonConvexHull(perimeter,finest_resolution);
+
+    if (verbose) std::cout << "cover size = " << cover.size()  << "\n";
+    
+// <<<<<<< HEAD
+//     geo_num_cover_values1[0] = cover1[0].size();
+// 
+//     // If we can't avoid copying...
+//     // if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+//     //	return SSC_ENOMEM;
+//     
+//     geo_cover1[0]            = &(cover1[0])[0];
+// =======
+// //    geo_cover1[0]            = &(cover1[0])[0];
+// //    geo_num_cover_values1[0] = cover1[0].size();
+//     geo_num_cover_values1[0] = cover.size();    
+// >>>>>>> ddaa8660c5d3f7734a00940592a3e323728abbdb
+
+    geo_num_cover_values1[0] = cover.size();    
+    if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+      return SSC_ENOMEM;
+    for(int k=0; k<geo_num_cover_values1[0]; ++k) {
+      geo_cover1[0][k] = cover[k];
+    }
+     
+    
     
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
