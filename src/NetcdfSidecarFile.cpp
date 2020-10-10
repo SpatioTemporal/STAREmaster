@@ -14,17 +14,6 @@
 
 using namespace std;
 
-/** This macro prints an error message with line number and name of
- * test program. */
-#define NCERR(ret) do {							\
-        fflush(stdout); /* Make sure our stdout is synced with stderr. */ \
-        fprintf(stderr, "Sorry! Unexpected result, %s, line: %d %s\n",     \
-                __FILE__, __LINE__, nc_strerror(ret));			\
-        fflush(stderr);                                                 \
-	return SSC_ENETCDF;						\
-    } while (0)
-
-
 /**
  * Create a sidecar file.
  */
