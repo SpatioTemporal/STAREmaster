@@ -14,6 +14,11 @@
 
 using namespace std;
 
+#define NAME_TITLE "title"
+#define NAME_INSTITUTION "institution"
+#define NAME_SOURCE "source"
+#define NAME_HISTORY "history"
+
 /**
  * Create a sidecar file.
  */
@@ -21,12 +26,49 @@ int
 NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
 {
     int ret;
+    string title = "STARE sidecar file";
+    string institution = "";
+    string source = "";
+    string history = "";
     
     if (verbose) std::cout << "Creating NETCDF sidecar file " << fileName << "\n";
 
     // Create a netCDF/HDF5 file.
     if ((ret = nc_create(fileName.c_str(), NC_CLOBBER|NC_NETCDF4, &ncid)))
 	NCERR(ret);
+
+    // Write some attributes to conform with CF conventions. See
+    // https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#_attributes.
+
+    // title - A succinct description of what is in the dataset.
+    if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_TITLE, title.size() + 1, title.c_str())))
+	NCERR(ret);
+
+    // institution - Specifies where the original data was produced.
+    if (institution.size())
+	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_INSTITUTION, institution.size() + 1, institution.c_str())))
+	    NCERR(ret);
+
+    // source - The method of production of the original data. If it
+    // was model-generated, source should name the model and its
+    // version, as specifically as could be useful. If it is
+    // observational, source should characterize it (e.g., "surface
+    // observation" or "radiosonde").
+    if (source.size())
+	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_SOURCE, source.size() + 1, source.c_str())))
+	    NCERR(ret);
+
+    // history - Provides an audit trail for modifications to the
+    // original data. Well-behaved generic netCDF filters will
+    // automatically append their name and the parameters with which
+    // they were invoked to the global history attribute of an input
+    // netCDF file. We recommend that each line begin with a timestamp
+    // indicating the date and time of day that the program was
+    // executed.
+    if (history.size())
+	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_HISTORY, history.size() + 1, history.c_str())))
+	    NCERR(ret);
+    
 
     return 0;
 }
