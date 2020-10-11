@@ -17,7 +17,7 @@ using namespace std;
 void usage(char *name) {
     cout
         << "STARE spatial create sidecar file. " << endl
-        << "Usage: " << name << " [options] [filename]} " << endl
+        << "Usage: " << name << " [options] filename " << endl
         << "Examples:" << endl
         << "  " << name << " data.nc" << endl
         << "  " << name << " data.h5" << endl
@@ -133,19 +133,28 @@ main(int argc, char *argv[])
     {
 	gf = new Modis09L2GeoFile();
 	if (((Modis09L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	{
+	    cerr<<"Error reading MOD09 L2 file.\n";
 	    return 99;
+	}
     }
     else if (arg.data_type == MOD09GA)
     {
 	gf = new Modis09GAGeoFile();
 	if (((Modis09GAGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	{
+	    cerr<<"Error reading MOD09GA file.\n";	    
 	    return 99;
+	}
     }
     else
     {
 	gf = new ModisL2GeoFile();
 	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	{
+	    cerr<<"Error reading MOD05 file.\n";
 	    return 99;
+	}
     }
 
     // Create the sidecar file.
@@ -153,17 +162,25 @@ main(int argc, char *argv[])
     
     // Write the sidecar file.
     for (int i = 0; i < gf->num_index; i++)
+    {
 	if (sf.writeSTAREIndex(arg.verbose, arg.quiet, arg.build_level, gf->geo_num_i1[i], gf->geo_num_j1[i],
 			       gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i], gf->var_name[i], gf->stare_index_name.at(i)))
+	{
+	    cerr<<"Error writing STARE index.\n";
 	    return 99;
+	}
+    }
 
     std::cout << "writing covers" << std::endl;
     for (int i = 0; i < gf->num_cover; i++) {
-      std::cout << "writing cover i = " << i << ", name = " << gf->stare_cover_name.at(i)  << std::endl;
-      if (sf.writeSTARECover(arg.verbose, arg.quiet,
-			     gf->geo_num_cover_values1[i], gf->geo_cover1[i],
-			     gf->stare_cover_name.at(i)))
-	return 99;
+	std::cout << "writing cover i = " << i << ", name = " << gf->stare_cover_name.at(i)  << std::endl;
+	if (sf.writeSTARECover(arg.verbose, arg.quiet,
+			       gf->geo_num_cover_values1[i], gf->geo_cover1[i],
+			       gf->stare_cover_name.at(i)))
+	{
+	    cerr<<"Error writing STARE cover.\n";
+	    return 99;
+	}
     }
 
     // Close the sidecar file.
