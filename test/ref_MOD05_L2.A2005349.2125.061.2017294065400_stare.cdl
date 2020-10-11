@@ -17,6 +17,6 @@ variables:
 		STARE_cover_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) cover" ;
 
 // global attributes:
-		:title = "STARE sidecar file" ;
+		:title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file" ;
 		:source = "STAREmaster 1.0.0" ;
 }
