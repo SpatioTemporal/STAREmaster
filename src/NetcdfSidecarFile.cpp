@@ -11,6 +11,7 @@
 #include <netcdf.h>
 #include <stdio.h>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ using namespace std;
 #define NAME_INSTITUTION "institution"
 #define NAME_SOURCE "source"
 #define NAME_HISTORY "history"
+#define MAX_TIME_STR 128
 
 /**
  * Create a sidecar file.
@@ -54,6 +56,8 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
     // version, as specifically as could be useful. If it is
     // observational, source should characterize it (e.g., "surface
     // observation" or "radiosonde").
+    source.append("STAREmaster ");
+    source.append(PACKAGE_VERSION);
     if (source.size())
 	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_SOURCE, source.size() + 1, source.c_str())))
 	    NCERR(ret);
@@ -65,10 +69,18 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
     // netCDF file. We recommend that each line begin with a timestamp
     // indicating the date and time of day that the program was
     // executed.
+
+    // Get the current date/time.
+    time_t now = time(0);
+    char time_str[MAX_TIME_STR + 1];
+    time_t time_ptr = time(NULL); 
+    strftime(time_str, MAX_TIME_STR, "%F %T", localtime(&time_ptr));
+    history.append(time_str);
+    history.append(" - STAREmaster ");
+    history.append(fileName);
     if (history.size())
 	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_HISTORY, history.size() + 1, history.c_str())))
 	    NCERR(ret);
-    
 
     return 0;
 }
