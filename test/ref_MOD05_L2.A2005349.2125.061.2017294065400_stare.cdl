@@ -18,4 +18,5 @@ variables:
 
 // global attributes:
 		:title = "STARE sidecar file" ;
+		:source = "STAREmaster 1.0.0" ;
 }

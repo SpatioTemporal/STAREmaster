@@ -143,6 +143,10 @@ AC_CHECK_HEADERS([HdfEosDef.h], [], [AC_MSG_ERROR([Cannot find HdfEosDef.h, set 
 AC_CHECK_PROG(NCDUMP,[ncdump],[ncdump],[no])
 test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
 
+# We need sed for testing.
+AC_CHECK_PROG(SED,[sed],[sed],[no])
+test "$SED" == "no" && AC_MSG_ERROR([Required program 'sed' not found.])
+
 # Move data files into build directory so it can be found by tests.
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])
