@@ -62,7 +62,7 @@ Arguments parseArguments(int argc, char *argv[]) {
 
     int long_index = 0;
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "hvqb:d:o:r:", long_options, &long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hvqb:d:o:r:i:", long_options, &long_index)) != -1) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
@@ -149,7 +149,7 @@ main(int argc, char *argv[])
     }
 
     // Create the sidecar file.
-    sf.createFile(file_out, arg.verbose);
+    sf.createFile(file_out, arg.verbose, arg.institution);
     
     // Write the sidecar file.
     for (int i = 0; i < gf->num_index; i++)

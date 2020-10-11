@@ -25,7 +25,7 @@ using namespace std;
  * Create a sidecar file.
  */
 int
-NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
+NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *institution_c)
 {
     int ret;
     string title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file";
@@ -47,6 +47,8 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
 	NCERR(ret);
 
     // institution - Specifies where the original data was produced.
+    if (institution_c)
+	institution.append(institution_c);
     if (institution.size())
 	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_INSTITUTION, institution.size() + 1, institution.c_str())))
 	    NCERR(ret);
