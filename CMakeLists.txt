@@ -11,6 +11,7 @@ endif()
 
 # set the project name
 project(STAREmaster VERSION 1.0.0)
+set(PACKAGE_VERSION ${VERSION})
 
 # This provides cmake_print_variables() function for debugging.
 include(CMakePrintHelpers)
