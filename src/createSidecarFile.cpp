@@ -28,6 +28,7 @@ void usage(char *name) {
         << "  " << " -q, --quiet       : don't chat, just give back index" << endl
         << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
         << "  " << " -d, --data_type   : Allows specification of data type." << endl
+        << "  " << " -i, --institution : Institution where sidecar file is produced." << endl
         << "  " << " -o, --output_file : Provide file name for output file." << endl
         << "  " << " -r, --output_dir  : Provide output directory name." << endl
         << endl;
@@ -39,6 +40,7 @@ struct Arguments {
     bool quiet = false;
     int build_level = SSC_DEFAULT_BUILD_LEVEL;
     char data_type[SSC_MAX_NAME] = "";
+    char institution[SSC_MAX_NAME] = "";
     char output_file[SSC_MAX_NAME] = "";
     char output_dir[SSC_MAX_NAME] = "";
 };
@@ -52,6 +54,7 @@ Arguments parseArguments(int argc, char *argv[]) {
         {"quiet", no_argument, 0, 'q'},
         {"build_level", required_argument, 0, 'b'},
         {"data_type", required_argument, 0, 'd'},
+	{"institution", required_argument, 0, 'i'},
         {"output_file", required_argument, 0, 'o'},
         {"output_directory", required_argument, 0, 'r'},
         {0, 0, 0, 0}
@@ -66,6 +69,7 @@ Arguments parseArguments(int argc, char *argv[]) {
         case 'q': arguments.quiet = true; break;
         case 'b': arguments.build_level = atoi(optarg); break;
         case 'd': strcpy(arguments.data_type, optarg); break;
+        case 'i': strcpy(arguments.institution, optarg); break;
         case 'o': strcpy(arguments.output_file, optarg); break;
         case 'r': strcpy(arguments.output_dir, optarg); break;
         }
