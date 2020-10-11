@@ -17,6 +17,7 @@ variables:
 		STARE_cover_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) cover" ;
 
 // global attributes:
+		:Conventions = "CF-1.8" ;
 		:title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file" ;
 		:institution = "Institute for the Study of Institutes" ;
 		:source = "STAREmaster 1.0.0" ;
