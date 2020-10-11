@@ -28,7 +28,7 @@ main()
 	return ERR;
 
     // Create the sidecar file.
-    if (sf.createFile(fileNameOut, 1))
+    if (sf.createFile(fileNameOut, 1, NULL))
 	return ERR;
     
     // Write the sidecar file.

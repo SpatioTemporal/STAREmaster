@@ -43,6 +43,7 @@ Options:
    -q, --quiet       : don't chat, just give back index
    -b, --build_level : Higher levels -> longer initialization time. (default is 5)
    -d, --data_type   : Allows specification of data type.
+   -i, --institution : Institution where sidecar file is produced.
    -o, --output_file : Provide file name for output file.
    -r, --output_dir  : Provide output directory name.
 </pre>

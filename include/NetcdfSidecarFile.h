@@ -38,7 +38,7 @@ private:
     int ncid;
     
 public:
-    int createFile(const std::string fileName, int verbose);
+    int createFile(const std::string fileName, int verbose, char *institution);
     int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon, unsigned long long *stare_index,
 			vector<string> var_name, string stare_index_name);

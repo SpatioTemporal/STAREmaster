@@ -15,23 +15,26 @@
 
 using namespace std;
 
+#define NAME_CONVENTIONS "Conventions"
 #define NAME_TITLE "title"
 #define NAME_INSTITUTION "institution"
 #define NAME_SOURCE "source"
 #define NAME_HISTORY "history"
 #define MAX_TIME_STR 128
+#define CF_VERSION "CF-1.8"
 
 /**
  * Create a sidecar file.
  */
 int
-NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
+NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *institution_c)
 {
     int ret;
     string title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file";
     string institution = "";
     string source = "";
     string history = "";
+    string cf_version = CF_VERSION;
     
     if (verbose) std::cout << "Creating NETCDF sidecar file " << fileName << "\n";
 
@@ -42,11 +45,19 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
     // Write some attributes to conform with CF conventions. See
     // https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#_attributes.
 
+    // From CF: Files that follow this version of the CF Conventions
+    // must indicate this by setting the NUG defined global attribute
+    // Conventions to a string value that contains "CF-1.8".
+    if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_CONVENTIONS, cf_version.size() + 1, cf_version.c_str())))
+	NCERR(ret);
+
     // title - A succinct description of what is in the dataset.
     if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_TITLE, title.size() + 1, title.c_str())))
 	NCERR(ret);
 
     // institution - Specifies where the original data was produced.
+    if (institution_c)
+	institution.append(institution_c);
     if (institution.size())
 	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_INSTITUTION, institution.size() + 1, institution.c_str())))
 	    NCERR(ret);
