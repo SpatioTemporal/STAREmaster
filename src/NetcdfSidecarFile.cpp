@@ -28,7 +28,7 @@ int
 NetcdfSidecarFile::createFile(const std::string fileName, int verbose)
 {
     int ret;
-    string title = "STARE sidecar file";
+    string title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file";
     string institution = "";
     string source = "";
     string history = "";

@@ -18,8 +18,8 @@ echo "*** creating CDL of MOD05 sidecar file header..."
 ncdump -h data/MOD05_L2.A2005349.2125.061.2017294065400_stare.nc > MOD05_L2.A2005349.2125.061.2017294065400_stare_out.cdl
 
 echo "*** checking that sidecar header is correct..."
-sed '22d' MOD05_L2.A2005349.2125.061.2017294065400_stare_out.cdl > MOD05_L2.A2005349.2125.061.2017294065400_stare_out_no_hist.cdl
-diff -b -w MOD05_L2.A2005349.2125.061.2017294065400_stare_out_no_hist.cdl ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl
+sed '22d' MOD05_L2.A2005349.2125.061.2017294065400_stare_out.cdl > MOD05_L2.A2005349.2125.061.2017294065400_stare_no_hist_out.cdl
+diff -b -w MOD05_L2.A2005349.2125.061.2017294065400_stare_no_hist_out.cdl ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl
 
 
 
