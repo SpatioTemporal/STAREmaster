@@ -9,11 +9,13 @@ if (${CMAKE_VERSION} VERSION_LESS 3.12)
   cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-# set the project name
-project(STAREmaster VERSION 1.0.0)
-
 # This provides cmake_print_variables() function for debugging.
 include(CMakePrintHelpers)
+
+# set the project name
+project(STAREmaster VERSION 1.0.0)
+set(PACKAGE_VERSION ${PROJECT_VERSION})
+cmake_print_variables(PACKAGE_VERSION PROJECT_VERSION)
 
 #Add custom CMake Module
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
