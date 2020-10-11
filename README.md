@@ -23,7 +23,7 @@ STAREmaster program requires several libraries.
 
 Library | Required Version      | Source
 ------- | ----------------      | ------
-STARE   | 0.15.6-beta           | https://github.com/SpatioTemporal/STARE/releases/tag/0.15.6-beta
+STARE   | 0.16.3-beta           | https://github.com/SpatioTemporal/STARE/releases/tag/0.16.3-beta
 HDF4    | 4.2.13                | https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz
 HDFEOS2 | 1.00                  | https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
 HDF5    | 1.8.x, 1.10.x, 1.12.x | https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.6/src/hdf5-1.10.6.tar.gz
@@ -67,13 +67,14 @@ and libraries must be provided via the CPPFLAGS and LDFLAGS
 environmental variable. For example:
 
 <pre>
-export CPPFLAGS="-I/usr/local/hdfeos/include -I/usr/local/hdf-4.2.15/include -I/usr/local/STARE-0.15.6/include -I/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/include"
-export LDFLAGS="-L/usr/local/hdfeos/lib -L/usr/local/hdf-4.2.15/lib -L/usr/local/STARE-0.15.6/lib -L/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/lib"
+export CPPFLAGS="-I/usr/local/hdfeos_fPIC/include -I/usr/local/hdf-4.2.15_fPIC/include -I/usr/local/STARE-0.16.3/include -I/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/include"
+export LDFLAGS="-L/usr/local/hdfeos_fPIC/lib -L/usr/local/hdf-4.2.15_fPIC/lib -L/usr/local/STARE-0.16.3/lib -L/usr/local/netcdf-c-4.7.4-development_hdf5-1.10.6/lib"
 </pre>
 
 Configure and make in the standard way:
 
 <pre>
+autoreconf -i
 ./configure
 make check
 make install
@@ -90,6 +91,12 @@ cd build
 cmake  -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.15.6/include -DSTARE_LIBRARY=/usr/local/STARE-0.15.6/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" .. 
 make VERBOSE=1
 make VERBOSE=1 test
+</pre>
+
+Sometimes the FindNetCDF.cmake module has difficulty finding all the netCDF libraries needed for linking. This has been identified as an issue but the fix is non-trivial (see https://github.com/SpatioTemporal/STAREmaster/issues/11). A workaround is to set the CMAKE_CXX_STANDARD_LIBRARIES variable when invoking cmake. For example:
+
+<pre>
+cmake -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.16.3/include -DSTARE_LIBRARY=/usr/local/STARE-0.16.3/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" -DCMAKE_CXX_STANDARD_LIBRARIES="-lcurl" ..
 </pre>
 
 ## Using STAREmaster
