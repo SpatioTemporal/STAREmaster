@@ -48,6 +48,9 @@ make check
 sudo make install
 </pre>
 
+The hdfeos documentation can be found here:
+https://edhs1.gsfc.nasa.gov/waisdata/eeb/pdf/170eeb001.pdf
+
 When building hdfeos, the --enable-install-include option must be used
 with configure. Building hdfeos can be accomplished with these commands:
 
