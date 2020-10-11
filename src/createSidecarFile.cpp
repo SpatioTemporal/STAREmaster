@@ -17,7 +17,7 @@ using namespace std;
 void usage(char *name) {
     cout
         << "STARE spatial create sidecar file. " << endl
-        << "Usage: " << name << " [options] [filename]} " << endl
+        << "Usage: " << name << " [options] filename " << endl
         << "Examples:" << endl
         << "  " << name << " data.nc" << endl
         << "  " << name << " data.h5" << endl
