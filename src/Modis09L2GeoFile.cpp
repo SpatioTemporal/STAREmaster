@@ -9,6 +9,9 @@
 #include <vector>
 #include <HdfEosDef.h>
 #include "STARE.h"
+
+#include <omp.h>
+
 using namespace std;
 
 #define MAX_NAME 256
@@ -118,12 +121,16 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 						   sizeof(unsigned long long))))
 	return SSC_ENOMEM;
 
-    int level = 5;
+    int level = 27;
     STARE index(level, build_level);
 
     int finest_resolution = 0;
     
     // Calculate STARE index for each point. 
+#pragma omp parallel reduction(max : finest_resolution)
+    {
+    STARE index1(level, build_level);
+#pragma omp for
     for (int i = 0; i < MAX_ALONG; i++) {
       for (int j = 0; j < MAX_ACROSS; j++)
 	{
@@ -131,11 +138,11 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	  geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
 	  
 	  // Calculate the stare indicies.
-	  geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
+	  geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
 									   (double)longitude[i * MAX_ACROSS + j], level);
 	}
 
-	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+	index1.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
 
 	for (int j = 0; j < MAX_ACROSS; j++) {
 	  int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
@@ -143,6 +150,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	    finest_resolution = test_resolution;
 	  }
 	}
+    }
     }
 
     

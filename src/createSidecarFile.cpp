@@ -27,6 +27,8 @@ void usage(char *name) {
         << "  " << " -v, --verbose     : verbose: print all" << endl
         << "  " << " -q, --quiet       : don't chat, just give back index" << endl
         << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
+        << "  " << " -c, --cover_level : Cover resolution, level 10 ~ 10 km." << endl
+        << "  " << " -s, --stride      : Perimeter stride" << endl
         << "  " << " -d, --data_type   : Allows specification of data type." << endl
         << "  " << " -i, --institution : Institution where sidecar file is produced." << endl
         << "  " << " -o, --output_file : Provide file name for output file." << endl
@@ -36,13 +38,15 @@ void usage(char *name) {
 };
 
 struct Arguments {
-    bool verbose = false;
-    bool quiet = false;
-    int build_level = SSC_DEFAULT_BUILD_LEVEL;
-    char data_type[SSC_MAX_NAME] = "";
-    char institution[SSC_MAX_NAME] = "";
-    char output_file[SSC_MAX_NAME] = "";
-    char output_dir[SSC_MAX_NAME] = "";
+  bool verbose = false;
+  bool quiet = false;
+  int build_level = SSC_DEFAULT_BUILD_LEVEL;
+  int cover_level = -1;
+  int stride = 1;
+  char data_type[SSC_MAX_NAME] = "";
+  char institution[SSC_MAX_NAME] = "";
+  char output_file[SSC_MAX_NAME] = "";
+  char output_dir[SSC_MAX_NAME] = "";
 };
 
 Arguments parseArguments(int argc, char *argv[]) {
@@ -53,6 +57,8 @@ Arguments parseArguments(int argc, char *argv[]) {
         {"verbose", no_argument, 0, 'v'},
         {"quiet", no_argument, 0, 'q'},
         {"build_level", required_argument, 0, 'b'},
+	{"cover_level", required_argument,0,'c'},
+	{"stride", required_argument,0,'s'},
         {"data_type", required_argument, 0, 'd'},
 	{"institution", required_argument, 0, 'i'},
         {"output_file", required_argument, 0, 'o'},
@@ -62,12 +68,14 @@ Arguments parseArguments(int argc, char *argv[]) {
 
     int long_index = 0;
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "hvqb:d:o:r:i:", long_options, &long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hvqb:c:s:d:o:r:i:", long_options, &long_index)) != -1) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
         case 'q': arguments.quiet = true; break;
         case 'b': arguments.build_level = atoi(optarg); break;
+	case 'c': arguments.cover_level = atoi(optarg); break;
+	case 's': arguments.stride = atoi(optarg); break;
         case 'd': strcpy(arguments.data_type, optarg); break;
         case 'i': strcpy(arguments.institution, optarg); break;
         case 'o': strcpy(arguments.output_file, optarg); break;
@@ -150,7 +158,7 @@ main(int argc, char *argv[])
     else
     {
 	gf = new ModisL2GeoFile();
-	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level, arg.cover_level, arg.stride))
 	{
 	    cerr<<"Error reading MOD05 file.\n";
 	    return 99;

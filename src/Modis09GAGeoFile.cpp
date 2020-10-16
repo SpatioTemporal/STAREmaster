@@ -9,6 +9,7 @@
 #include <vector>
 #include <HdfEosDef.h>
 #include "STARE.h"
+
 using namespace std;
 
 #define MAX_NAME 256

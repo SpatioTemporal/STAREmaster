@@ -26,7 +26,7 @@ public:
     ModisL2GeoFile();
     ~ModisL2GeoFile();
     
-    int readFile(const std::string fileName, int verbose, int quiet, int build_level);
+    int readFile(const std::string fileName, int verbose, int quiet, int build_level, int cover_level, int perimeter_stride);
 };
 
 #endif /* MODIS_L2_GEO_FILE_H_ */

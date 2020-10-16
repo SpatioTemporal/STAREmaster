@@ -9,6 +9,8 @@
 #include <HdfEosDef.h>
 #include "STARE.h"
 
+#include <omp.h>
+
 #define MAX_NAME 256
 #define MAX_DIMS 16
 
@@ -45,7 +47,7 @@ ModisL2GeoFile::~ModisL2GeoFile()
  */
 int
 ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
-			 int build_level)
+			 int build_level, int cover_level, int perimeter_stride)
 {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
@@ -134,11 +136,14 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	return SSC_ENOMEM;
 
     int level = 27;
-    STARE index(level, build_level);
-
     int finest_resolution = 0;
+    STARE index(level, build_level);          
     
-    // Calculate STARE index for each point. 
+    // Calculate STARE index for each point.
+#pragma omp parallel reduction(max : finest_resolution)
+    {
+    STARE index1(level, build_level);
+#pragma omp for 
     for (int i = 0; i < MAX_ALONG; i++)
     {
     	for (int j = 0; j < MAX_ACROSS; j++)
@@ -147,10 +152,10 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	    geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
 	    
 	    // Calculate the stare indicies.
-	    geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i][j],
+	    geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double)latitude[i][j],
 									 (double)longitude[i][j], level);
 	}
-	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+	index1.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
 
 	for (int j = 0; j < MAX_ACROSS; j++) {
 	  int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
@@ -159,32 +164,49 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	  }
 	}
     }
+    }
 
     LatLonDegrees64ValueVector perimeter(2*MAX_ALONG+2*MAX_ACROSS-4);
-
-    std::cout << "calculating perimeter" << "\n" << std::flush;
-
+    // int perimeter_stride = 10;
+    this->perimeter_stride = perimeter_stride;
     int pk = 2*MAX_ALONG+2*MAX_ACROSS-4 - 1;
+
+    if (verbose) std::cout << "perimeter_stride " << this->perimeter_stride << "\n" << std::flush;
+    
+    if( perimeter_stride > 0 ) {
+
+      if( verbose ) std::cout << "calculating perimeter" << "\n" << std::flush;
+
     { // Go along the 'bottom' CCW. Do the full side.
       int i = 0;
 	{
-	  for (int j = 0; j < MAX_ACROSS; j++)
+	  for (int j = 0; j < MAX_ACROSS; j += perimeter_stride)
 	    {
 	      perimeter[pk].lat = latitude[i][j];
 	      perimeter[pk].lon = longitude[i][j];
 	      --pk;
+	      if( (perimeter_stride > 1) && ( j+perimeter_stride >= MAX_ACROSS ) ) {
+		perimeter[pk].lat = latitude[i][MAX_ACROSS-1];
+		perimeter[pk].lon = longitude[i][MAX_ACROSS-1];
+		--pk;
+	      }
 	    }
 	}
     }
     
     { // Go up along the right side. Start at 1, because the corner's done.
       int j = MAX_ACROSS-1;
-      for (int i = 1; i < MAX_ALONG; i++)
+      for (int i = 1; i < MAX_ALONG; i += perimeter_stride)
 	{
 	    {
 	      perimeter[pk].lat = latitude[i][j];
 	      perimeter[pk].lon = longitude[i][j];
 	      --pk;
+	      if( (perimeter_stride > 1) && ( i+perimeter_stride >= MAX_ALONG ) ) {
+		perimeter[pk].lat = latitude[MAX_ALONG-1][j];
+		perimeter[pk].lon = longitude[MAX_ALONG-1][j];
+		--pk;
+	      }
 	    }
 	}
     }
@@ -192,31 +214,70 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     { // Go back along the top. Start one over.
 	int i = MAX_ALONG-1;
 	{
-	  for (int j = MAX_ACROSS-2; j > -1; j--)
+	  for (int j = MAX_ACROSS-2; j > -1; j -= perimeter_stride)
 	    {
 	      perimeter[pk].lat = latitude[i][j];
 	      perimeter[pk].lon = longitude[i][j];
 	      --pk;
+	      if( (perimeter_stride > 1) && ( j-perimeter_stride < 0 ) ) {
+		perimeter[pk].lat = latitude[i][0];
+		perimeter[pk].lon = longitude[i][0];
+		--pk;
+	      }
+	      
 	    }
 	}
     }
     
     { // Go back down along the left side. Start one over and don't include the end.
       int j = 0;
-      for (int i = MAX_ALONG-2; i > 0; i--)
+      for (int i = MAX_ALONG-2; i > 0; i -= perimeter_stride)
 	{
 	    {
 	      perimeter[pk].lat = latitude[i][j];
 	      perimeter[pk].lon = longitude[i][j];
 	      --pk;
+	      if( (perimeter_stride > 1) && ( i-perimeter_stride < 0 ) ) {
+		perimeter[pk].lat = latitude[0][j];
+		perimeter[pk].lon = longitude[0][j];
+		--pk;
+	      }
+	      
 	    }
 	}
     }
 
+    if ( perimeter_stride > 1 ) {
+      // Clean up and resize the vector.
+      // Recall that     LatLonDegrees64ValueVector perimeter(2*MAX_ALONG+2*MAX_ACROSS-4).
+
+      // Copy to front of vector.
+      int i = 0;
+      for ( int k = pk+1; k < 2*MAX_ALONG+2*MAX_ACROSS-4; ++k ) {
+	perimeter[i].lat = perimeter[k].lat;
+	perimeter[i].lon = perimeter[k].lon;
+	++i;
+      }
+      perimeter.resize(i);
+    }
+
+    } else if ( perimeter_stride <= 0 ) {
+      // Not implemented. Throw error?
+      // TODO: Put G-RING here?
+    }
+
     if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
+
+    if ( cover_level == -1 ) {
+      this->cover_level = finest_resolution;
+    } else {
+      this->cover_level = cover_level;
+    }
+
+    if (verbose) std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
     
 //    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
-    cover = index.NonConvexHull(perimeter,finest_resolution);
+    cover = index.NonConvexHull(perimeter,this->cover_level);
 
     if (verbose) std::cout << "cover size = " << cover.size()  << "\n";
     
