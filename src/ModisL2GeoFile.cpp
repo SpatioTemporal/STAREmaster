@@ -33,6 +33,68 @@ ModisL2GeoFile::~ModisL2GeoFile()
     cout<<"ModisL2GeoFile destructor\n";
 }
 
+/** Read the GRing info.
+ *
+ * @param fileName name of the file.
+ * 
+ * @return 0 for success, error code otherwise.
+ */
+int
+ModisL2GeoFile::getGRing(const std::string fileName, int verbose)
+{
+    char attr_name[SSC_MAX_NAME];
+    char sds_name[SSC_MAX_NAME];
+    char *sm_attr;
+    string sm;
+    string lon_str = "GRINGPOINTLONGITUDE";
+    string lat_str = "GRINGPOINTLATITUDE";
+    string am0_str = "ArchiveMetadata.0";
+    size_t lon_pos, lat_pos;
+    int32 num_datasets, num_global_attrs;
+    int32 sd_id;
+    int32 data_type, count;
+    int32 am0_idx;
+    int ret;
+
+    // Open the HDF4 SD API for this file.
+    if ((sd_id = SDstart(fileName.c_str(), DFACC_READ)) == -1)
+	return SSC_EHDF4ERR;
+
+    // Learn about this file.
+    if(SDfileinfo(sd_id, &num_datasets, &num_global_attrs))
+	return SSC_EHDF4ERR;
+    if (verbose)
+	cout<<"num_datasets "<<num_datasets<<" num_global_attrs "<<num_global_attrs<<"\n";
+
+    // Find the attribute called ArchiveMetadata.0.
+    if ((am0_idx = SDfindattr(sd_id, am0_str.c_str())) == -1)
+	return SSC_EHDF4ERR;
+
+    // Learn about the am0 attribute.
+    if ((ret = SDattrinfo(sd_id, am0_idx, attr_name, &data_type, &count)) == -1)
+	    return SSC_EHDF4ERR;	
+    if (verbose)
+	cout<<"attribute "<<attr_name<<" data type "<<data_type<<" count "<<count<<"\n";
+    if (!(sm_attr = (char *)malloc(count * sizeof(char))))
+	return SSC_ENOMEM;
+    if ((ret = SDreadattr(sd_id, am0_idx, sm_attr)))
+	return SSC_EHDF4ERR;
+    sm = sm_attr;
+    //cout<<sm;
+    lon_pos = sm.find(lon_str, 0);
+    lat_pos = sm.find(lat_str, 0);
+    cout<<"lon_pos "<<lon_pos<<" lat_pos "<<lat_pos<<"\n";
+
+    // Free resources.
+    free(sm_attr);
+    
+    // Close the HDF4 SD API for this file.
+    if (SDend(sd_id))
+	return SSC_EHDF4ERR;
+    
+    return 0;
+}
+
 /**
  * Read a HDF4 MODIS L2 MOD05 file.
  *
@@ -69,6 +131,11 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
+    int ret;
+
+    // Get the GRing info.
+    if ((ret = getGRing(fileName, 1)))
+	return ret;
 
     // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
     // The same 1km geolocation data can be found in MOD03.
