@@ -8,6 +8,8 @@
 #include <hdf.h>
 #include <HdfEosDef.h>
 #include "STARE.h"
+#include <iostream> 
+#include <sstream>
 
 #define MAX_NAME 256
 #define MAX_DIMS 16
@@ -40,7 +42,7 @@ ModisL2GeoFile::~ModisL2GeoFile()
  * @return 0 for success, error code otherwise.
  */
 int
-ModisL2GeoFile::getGRing(const std::string fileName, int verbose)
+ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon)
 {
     char attr_name[SSC_MAX_NAME];
     char sds_name[SSC_MAX_NAME];
@@ -51,9 +53,11 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose)
     string am0_str = "ArchiveMetadata.0";
     size_t lon_pos, lat_pos;
     int32 num_datasets, num_global_attrs;
+    string grlon, grlat;
     int32 sd_id;
     int32 data_type, count;
     int32 am0_idx;
+    size_t sz, off = 0;
     int ret;
 
     // Open the HDF4 SD API for this file.
@@ -83,7 +87,31 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose)
     //cout<<sm;
     lon_pos = sm.find(lon_str, 0);
     lat_pos = sm.find(lat_str, 0);
-    cout<<"lon_pos "<<lon_pos<<" lat_pos "<<lat_pos<<"\n";
+    if (verbose)
+	cout<<"lon_pos "<<lon_pos<<" lat_pos "<<lat_pos<<"\n";
+
+    grlon = sm.substr(lon_pos+126, 71);
+    if (verbose)
+	cout<<grlon<<"\n";
+    for (int i = 0; i < SSC_NUM_GRING; i++)
+    {
+	gring_lon[i] = stof(grlon.substr(off), &sz);
+	off += sz + 2;
+	if (verbose)
+	    cout<<"gring_lon["<<i<<"]="<<gring_lon[i]<<"\n";
+    }
+
+    grlat = sm.substr(lat_pos+125, 70);
+    if (verbose)
+	cout<<grlat<<"\n";
+    off = 0;
+    for (int i = 0; i < SSC_NUM_GRING; i++)
+    {
+	gring_lat[i] = stof(grlat.substr(off), &sz);
+	off += sz + 2;
+	if (verbose)
+	    cout<<"gring_lat["<<i<<"]="<<gring_lat[i]<<"\n";
+    }
 
     // Free resources.
     free(sm_attr);
@@ -131,10 +159,12 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
+    float gring_lat[4], gring_lon[4];
     int ret;
 
-    // Get the GRing info.
-    if ((ret = getGRing(fileName, 1)))
+    // Get the GRing info. After this call, gring_lat and gring_lon
+    // contain the 4 gring values for lat and lon.
+    if ((ret = getGRing(fileName, verbose, gring_lat, gring_lon)))
 	return ret;
 
     // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
