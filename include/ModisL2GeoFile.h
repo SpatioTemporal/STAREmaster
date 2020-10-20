@@ -27,6 +27,8 @@ public:
     ~ModisL2GeoFile();
     
     int readFile(const std::string fileName, int verbose, int quiet, int build_level);
+    int getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon);
+
 };
 
 #endif /* MODIS_L2_GEO_FILE_H_ */
