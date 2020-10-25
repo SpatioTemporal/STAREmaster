@@ -1,4 +1,4 @@
-name: Autotools ubuntu-latest
+name: Autotools ubuntu-latest HDFEOS2.20
 
 on:
   push:
@@ -46,17 +46,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdfeos2
-        key: hdfeos2-${{ runner.os }}-fPIC-19v1.00
+        key: hdfeos2-${{ runner.os }}-fPIC-20v1.00
 
     - name: build-hdfeos2
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
         set -x
-        wget -O hdfeos2_19.zip https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip &> /dev/null
-        ls -l
-        unzip hdfeos2_19.zip
-        cd hdfeos2_19/hdfeos2.19/hdfeos
-        chmod ug+x configure
+        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
+        tar zxf HDF-EOS2.20v1.00.tar.Z
+        cd hdfeos
         CFLAGS=-fPIC ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install clean
@@ -86,9 +84,8 @@ jobs:
     - name: autoreconf
       run: autoreconf -i
     - name: configure
-      run: |
-        export CXXFLAGS=-fpermissive
-        ./configure
-        make -j distcheck
+      run: ./configure
+    - name: make distcheck
+      run: make -j distcheck
 
 
