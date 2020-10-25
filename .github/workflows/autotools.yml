@@ -52,9 +52,9 @@ jobs:
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
         set -x
-        wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z  &> /dev/null
-        zcat HDF-EOS2.19v1.00.tar.Z | tar -xvf -
-        cd hdfeos
+        wget https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip &> /dev/null
+        unzip hdfeos2_19.zip 
+        cd hdfeos2_19/hdfeos2.19/hdfeos
         CFLAGS=-fPIC ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install clean
