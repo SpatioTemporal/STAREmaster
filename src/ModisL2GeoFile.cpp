@@ -160,6 +160,9 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     int32 nswath;
     char swathlist[MAX_NAME + 1];
     float gring_lat[4], gring_lon[4];
+    const string MOD05 = "mod05";
+    const string LONGITUDE = "Longitude";
+    const string LATITUDE = "Latitude";
     int ret;
 
     // Get the GRing info. After this call, gring_lat and gring_lon
@@ -203,21 +206,21 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     */
 
     // Open the swath file.
-    if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
+    if ((swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY)) < 0)
 	return SSC_EHDF4ERR;
 
-    if ((nswath = SWinqswath(fileName.c_str(), swathlist, &strbufsize)) < 0)
+    if ((nswath = SWinqswath((char *)fileName.c_str(), swathlist, &strbufsize)) < 0)
 	return SSC_EHDF4ERR;
     if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";    
 
     // Attach to a swath.
-    if ((swathid = SWattach(swathfileid, "mod05")) < 0)
+    if ((swathid = SWattach(swathfileid, (char *)MOD05.c_str())) < 0)
 	return SSC_EHDF4ERR;
 
     // Get lat and lon values.
-    if (SWreadfield(swathid, "Longitude", NULL, NULL, NULL, longitude))
+    if (SWreadfield(swathid, (char *)LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
 	return SSC_EHDF4ERR;
-    if (SWreadfield(swathid, "Latitude", NULL, NULL, NULL, latitude))
+    if (SWreadfield(swathid, (char *)LATITUDE.c_str(), NULL, NULL, NULL, latitude))
 	return SSC_EHDF4ERR;
 
     geo_num_i1[0] = MAX_ALONG;
@@ -354,7 +357,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	result.push_back(substr);
 
 	// Get a dimsize.
-	if ((dimsize = SWdiminfo(swathid, substr.c_str())) < 0)
+	if ((dimsize = SWdiminfo(swathid, (char *)substr.c_str())) < 0)
 	    return SSC_EHDF4ERR;
 	if (verbose) std::cout << "dim " << substr << " dimsize " << dimsize << "\n";
 

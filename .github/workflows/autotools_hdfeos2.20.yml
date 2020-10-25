@@ -1,4 +1,4 @@
-name: Autotools ubuntu-latest
+name: Autotools ubuntu-latest HDFEOS2.20
 
 on:
   push:
