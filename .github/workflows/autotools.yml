@@ -53,7 +53,8 @@ jobs:
       run: |
         set -x
         wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z  &> /dev/null
-        tar zxf HDF-EOS2.19v1.00.tar.Z
+        uncompress HDF-EOS2.19v1.00.tar.Z
+        tar xf HDF-EOS2.19v1.00.tar
         cd hdfeos
         CFLAGS=-fPIC ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
