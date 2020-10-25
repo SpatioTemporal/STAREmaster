@@ -58,7 +58,10 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
-    
+    const string MODIS_SWATH_TYPE_L2 = "MODIS SWATH TYPE L2";
+    const string LONGITUDE = "Longitude";
+    const string LATITUDE = "Latitude";
+   
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
@@ -86,15 +89,15 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     var_name[0].push_back("1km Atmospheric Optical Depth Band CM");
     
     // Open the swath file.
-    if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
+    if ((swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY)) < 0)
 	return SSC_EHDF4ERR;
 
-    if ((nswath = SWinqswath(fileName.c_str(), swathlist, &strbufsize)) < 0)
+    if ((nswath = SWinqswath((char *)fileName.c_str(), swathlist, &strbufsize)) < 0)
 	return SSC_EHDF4ERR;
     if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";    
 
     // Attach to a swath.
-    if ((swathid = SWattach(swathfileid, "MODIS SWATH TYPE L2")) < 0)
+    if ((swathid = SWattach(swathfileid, (char *)MODIS_SWATH_TYPE_L2.c_str())) < 0)
 	return SSC_EHDF4ERR;
 
     if (!(longitude = (float32 *)calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
@@ -103,9 +106,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	return SSC_ENOMEM;
 
     // Get lat and lon values.
-    if (SWreadfield(swathid, "Longitude", NULL, NULL, NULL, longitude))
+    if (SWreadfield(swathid, (char *)LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
 	return SSC_EHDF4ERR;
-    if (SWreadfield(swathid, "Latitude", NULL, NULL, NULL, latitude))
+    if (SWreadfield(swathid, (char *)LATITUDE.c_str(), NULL, NULL, NULL, latitude))
 	return SSC_EHDF4ERR;
 
     geo_num_i1[0] = MAX_ALONG;
@@ -160,7 +163,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	result.push_back(substr);
 
 	// Get a dimsize.
-	if ((dimsize = SWdiminfo(swathid, substr.c_str())) < 0)
+	if ((dimsize = SWdiminfo(swathid, (char *)substr.c_str())) < 0)
 	    return SSC_EHDF4ERR;
 	if (verbose) std::cout << "dim " << substr << " dimsize " << dimsize << "\n";
 
