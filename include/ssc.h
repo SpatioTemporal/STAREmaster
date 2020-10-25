@@ -32,6 +32,7 @@
 #define SSC_LAT_UNITS "degrees_north"
 #define SSC_LON_UNITS "degrees_east"
 #define SSC_INDEX_VAR_ATT_NAME "variables"
+#define SSC_NUM_GRING 4
 
 #define SSC_MAX_NAME 256
 
