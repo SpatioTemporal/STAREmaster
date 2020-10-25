@@ -15,7 +15,7 @@ add_executable(createSidecarFile createSidecarFile.cpp)
 
 # Add these directories to those searched during linking.
 target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
-target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY})
+target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY_DIR})
 
 # The executable depends on these libraries.
 target_link_libraries(createSidecarFile ssc)
