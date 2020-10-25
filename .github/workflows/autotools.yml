@@ -89,7 +89,6 @@ jobs:
       run: |
         export CXXFLAGS=-fpermissive
         ./configure
-    - name: make distcheck
-      run: make -j distcheck
+        make -j distcheck
 
 
