@@ -87,7 +87,7 @@ jobs:
       run: autoreconf -i
     - name: configure
       run: |
-        export CFLAGS=-fpermissive
+        export CXXFLAGS=-fpermissive
         ./configure
     - name: make distcheck
       run: make -j distcheck
