@@ -23,16 +23,17 @@ void usage(char *name) {
         << "  " << name << " data.h5" << endl
         << endl
         << "Options:" << endl
-        << "  " << " -h, --help        : print this help" << endl
-        << "  " << " -v, --verbose     : verbose: print all" << endl
-        << "  " << " -q, --quiet       : don't chat, just give back index" << endl
-        << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
-        << "  " << " -c, --cover_level : Cover resolution, level 10 ~ 10 km." << endl
-        << "  " << " -s, --stride      : Perimeter stride" << endl
-        << "  " << " -d, --data_type   : Allows specification of data type." << endl
-        << "  " << " -i, --institution : Institution where sidecar file is produced." << endl
-        << "  " << " -o, --output_file : Provide file name for output file." << endl
-        << "  " << " -r, --output_dir  : Provide output directory name." << endl
+        << "  " << " -h, --help           : print this help" << endl
+        << "  " << " -v, --verbose        : verbose: print all" << endl
+        << "  " << " -q, --quiet          : don't chat, just give back index" << endl
+        << "  " << " -b, --build_level    : Higher levels -> longer initialization time. (default is 5)" << endl
+        << "  " << " -c, --cover_level    : Cover resolution, level 10 ~ 10 km." << endl
+        << "  " << " -g, --use_gring      : Use GRING data to construct cover (default)" << endl
+	<< "  " << " -w, --walk_perimeter : Use perimeter to construct cover (more accurate) with stride" << endl
+        << "  " << " -d, --data_type      : Allows specification of data type." << endl
+        << "  " << " -i, --institution    : Institution where sidecar file is produced." << endl
+        << "  " << " -o, --output_file    : Provide file name for output file." << endl
+        << "  " << " -r, --output_dir     : Provide output directory name." << endl
         << endl;
     exit(0);
 };
@@ -42,11 +43,13 @@ struct Arguments {
   bool quiet = false;
   int build_level = SSC_DEFAULT_BUILD_LEVEL;
   int cover_level = -1;
-  int stride = 1;
+  bool cover_gring = false; 
+  int stride = -1; // if stride > 0, then we're walking the perimeter and cover_gring = false.
   char data_type[SSC_MAX_NAME] = "";
   char institution[SSC_MAX_NAME] = "";
   char output_file[SSC_MAX_NAME] = "";
   char output_dir[SSC_MAX_NAME] = "";
+  int err_code = 0;
 };
 
 Arguments parseArguments(int argc, char *argv[]) {
@@ -58,7 +61,8 @@ Arguments parseArguments(int argc, char *argv[]) {
         {"quiet", no_argument, 0, 'q'},
         {"build_level", required_argument, 0, 'b'},
 	{"cover_level", required_argument,0,'c'},
-	{"stride", required_argument,0,'s'},
+	{"use_gring", no_argument, 0, 'g'},
+	{"walk_perimeter", required_argument, 0, 'w'},
         {"data_type", required_argument, 0, 'd'},
 	{"institution", required_argument, 0, 'i'},
         {"output_file", required_argument, 0, 'o'},
@@ -75,13 +79,26 @@ Arguments parseArguments(int argc, char *argv[]) {
         case 'q': arguments.quiet = true; break;
         case 'b': arguments.build_level = atoi(optarg); break;
 	case 'c': arguments.cover_level = atoi(optarg); break;
-	case 's': arguments.stride = atoi(optarg); break;
+	case 'g': arguments.cover_gring = true; break;
+	case 'w': arguments.stride = atoi(optarg); break;
         case 'd': strcpy(arguments.data_type, optarg); break;
         case 'i': strcpy(arguments.institution, optarg); break;
         case 'o': strcpy(arguments.output_file, optarg); break;
         case 'r': strcpy(arguments.output_dir, optarg); break;
         }
     }
+
+    if ( !arguments.cover_gring ) {
+      if ( arguments.stride <= 0 ) {
+	arguments.cover_gring = true;
+      }
+    } else {
+      if ( arguments.stride > 0 ) { // error case, both gring and walk are set
+	cerr <<"Incompatible arguments. Both perimeter walk (-w) and gring (-g) STARE covers requested.\n";
+	arguments.err_code = 99;
+      }
+    }
+    
     return arguments;
 };
 
@@ -137,6 +154,10 @@ main(int argc, char *argv[])
     else
 	file_out = pickOutputName(argv[optind], arg.output_dir);
 
+    if (arg.err_code) {
+      return arg.err_code;
+    }
+    
     if (arg.data_type == MOD09)
     {
 	gf = new Modis09L2GeoFile();
@@ -151,14 +172,14 @@ main(int argc, char *argv[])
 	gf = new Modis09GAGeoFile();
 	if (((Modis09GAGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
 	{
-	    cerr<<"Error reading MOD09GA file.\n";	    
+	    cerr<<"Error reading MOD09GA file.\n";
 	    return 99;
 	}
     }
     else
     {
 	gf = new ModisL2GeoFile();
-	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level, arg.cover_level, arg.stride))
+	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level, arg.cover_level, arg.cover_gring, arg.stride))
 	{
 	    cerr<<"Error reading MOD05 file.\n";
 	    return 99;
