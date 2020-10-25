@@ -56,6 +56,7 @@ jobs:
         ls -l
         unzip hdfeos2_19.zip
         cd hdfeos2_19/hdfeos2.19/hdfeos
+        chmod ug+x configure
         CFLAGS=-fPIC ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install clean
