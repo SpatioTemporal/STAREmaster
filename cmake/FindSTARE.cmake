@@ -35,7 +35,7 @@ Cache Variables
 The following cache variables may also be set:
 
 ``STARE_INCLUDE_DIR``
-The directory containing ``foo.h``.
+The directory containing ``STARE.h``.
 ``STARE_LIBRARY``
 The path to the STARE library.
 
@@ -45,12 +45,12 @@ find_package(PkgConfig)
 pkg_check_modules(PC_STARE QUIET STARE)
 
 find_path(STARE_INCLUDE_DIR
-  NAMES foo.h
+  NAMES STARE.h
   PATHS ${PC_STARE_INCLUDE_DIRS}
   PATH_SUFFIXES STARE
   )
 find_library(STARE_LIBRARY
-  NAMES foo
+  NAMES STARE
   PATHS ${PC_STARE_LIBRARY_DIRS}
   )
 
