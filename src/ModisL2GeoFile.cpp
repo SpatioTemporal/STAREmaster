@@ -375,11 +375,11 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     // Note the hardcoded 4 for the 4 corners or the gring.
     perimeter.resize(4); // Use 4 here until we find a granule with more than 4.
-    pk = 0;
+    pk = 3;
     for (int i=0; i< 4; ++i) {
       perimeter[pk].lat = gring_lat[i];
       perimeter[pk].lon = gring_lon[i];
-      ++pk;
+      --pk;
     }
   }
 

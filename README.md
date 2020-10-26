@@ -102,6 +102,9 @@ Sometimes the FindNetCDF.cmake module has difficulty finding all the netCDF libr
 cmake -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.16.3/include -DSTARE_LIBRARY=/usr/local/STARE-0.16.3/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" -DCMAKE_CXX_STANDARD_LIBRARIES="-lcurl" ..
 </pre>
 
+To make use of OpenMP multi-threading you may need to add -DOpenMP_EXE_LINKER_FLAGS=...
+to the cmake command line.
+
 ## Using STAREmaster
 
 The STAREmaster package installs a binary createSidecarFile, whcih may
@@ -111,6 +114,12 @@ use:
 <pre>
 createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
+
+To see a number usage options execute _createSidecarFile_ without any
+command line arguments.
+
+To enable OpenMP multithreading, you may need to set the environment
+variable OMP_NUM_THREADS to the number of threads you wish used.
 
 ## References
 

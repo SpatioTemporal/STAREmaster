@@ -29,7 +29,7 @@ void usage(char *name) {
         << "  " << " -b, --build_level    : Higher levels -> longer initialization time. (default is 5)" << endl
         << "  " << " -c, --cover_level    : Cover resolution, level 10 ~ 10 km." << endl
         << "  " << " -g, --use_gring      : Use GRING data to construct cover (default)" << endl
-	<< "  " << " -w, --walk_perimeter : Use perimeter to construct cover (more accurate) with stride" << endl
+	<< "  " << " -w, --walk_perimeter : Provide stride and walk perimeter to construct cover (more accurate)" << endl
         << "  " << " -d, --data_type      : Allows specification of data type." << endl
         << "  " << " -i, --institution    : Institution where sidecar file is produced." << endl
         << "  " << " -o, --output_file    : Provide file name for output file." << endl
@@ -72,7 +72,7 @@ Arguments parseArguments(int argc, char *argv[]) {
 
     int long_index = 0;
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "hvqb:c:s:d:o:r:i:", long_options, &long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hvqb:c:gw:d:o:r:i:", long_options, &long_index)) != -1) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
