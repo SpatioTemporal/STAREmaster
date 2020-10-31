@@ -161,8 +161,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char swathlist[MAX_NAME + 1];
     float gring_lat[4], gring_lon[4];
     const string MOD05 = "mod05";
-    const string LONGITUDE = "Longitude";
-    const string LATITUDE = "Latitude";
     int ret;
 
     // Get the GRing info. After this call, gring_lat and gring_lon
@@ -220,7 +218,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     // Get lat and lon values.
     if (SWreadfield(swathid, SSC_LON_NAME, NULL, NULL, NULL, longitude))
 	return SSC_EHDF4ERR;
-    if (SWreadfield(swathid, (char *)LATITUDE.c_str(), NULL, NULL, NULL, latitude))
+    if (SWreadfield(swathid, SSC_LAT_NAME, NULL, NULL, NULL, latitude))
 	return SSC_EHDF4ERR;
 
     geo_num_i1[0] = MAX_ALONG;
