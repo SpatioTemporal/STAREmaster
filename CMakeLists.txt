@@ -94,10 +94,10 @@ cmake_print_variables(HDFEOS2_INCLUDE_DIR HDFEOS2)
 
 # Find STARE.
 include(FindSTARE)
-cmake_print_variables(STARE_LIBRARY STARE_INCLUDE_DIR)
+cmake_print_variables(STARE_LIBRARY_DIR STARE_INCLUDE_DIR)
 
 # STARE is required.
-if (NOT STARE_LIBRARY)
+if (NOT STARE_FOUND)
   message(fatal_error " STARE library is required.")
 endif()
 

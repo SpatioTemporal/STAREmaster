@@ -1,5 +1,5 @@
-# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
-# file Copyright.txt or https://cmake.org/licensing for details.
+# Find STARE library.
+# Ed Hartnett 2020
 
 #[=======================================================================[.rst:
 FindSTARE
@@ -36,10 +36,13 @@ The following cache variables may also be set:
 
 ``STARE_INCLUDE_DIR``
 The directory containing ``STARE.h``.
-``STARE_LIBRARY``
+``STARE_LIBRARY_DIR``
 The path to the STARE library.
 
 #]=======================================================================]
+
+# This provides cmake_print_variables() function for debugging.
+include(CMakePrintHelpers)
 
 find_package(PkgConfig)
 pkg_check_modules(PC_STARE QUIET STARE)
@@ -56,12 +59,14 @@ find_library(STARE_LIBRARY
 
 set(STARE_VERSION ${PC_STARE_VERSION})
 
+# Print out values for debugging.
+cmake_print_variables(STARE_LIBRARY STARE_INCLUDE_DIR STARE_VERSION)
+
+# Handle the arguments to find_package()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(STARE
   FOUND_VAR STARE_FOUND
-  REQUIRED_VARS
-  STARE_LIBRARY
-  STARE_INCLUDE_DIR
+  REQUIRED_VARS STARE_LIBRARY STARE_INCLUDE_DIR
   VERSION_VAR STARE_VERSION
   )
 

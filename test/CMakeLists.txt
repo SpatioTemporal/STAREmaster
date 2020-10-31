@@ -5,7 +5,7 @@
 add_executable(t1 t1.cpp)
 
 target_link_directories(t1 PUBLIC ${NETCDF_LIBRARIES})
-target_link_directories(t1 PUBLIC ${STARE_LIBRARY})
+target_link_directories(t1 PUBLIC ${STARE_LIBRARY_DIR})
 
 target_link_libraries(t1 ssc)
 target_link_libraries(t1 netcdf)
@@ -19,7 +19,7 @@ add_test(NAME t1 COMMAND t1)
 add_executable(t2 t2.cpp)
 
 target_link_directories(t2 PUBLIC ${NETCDF_LIBRARIES})
-target_link_directories(t2 PUBLIC ${STARE_LIBRARY})
+target_link_directories(t2 PUBLIC ${STARE_LIBRARY_DIR})
 
 target_link_libraries(t2 ssc)
 target_link_libraries(t2 netcdf)
