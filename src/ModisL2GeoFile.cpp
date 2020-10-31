@@ -218,7 +218,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	return SSC_EHDF4ERR;
 
     // Get lat and lon values.
-    if (SWreadfield(swathid, (char *)LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
+    if (SWreadfield(swathid, SSC_LON_NAME, NULL, NULL, NULL, longitude))
 	return SSC_EHDF4ERR;
     if (SWreadfield(swathid, (char *)LATITUDE.c_str(), NULL, NULL, NULL, latitude))
 	return SSC_EHDF4ERR;
