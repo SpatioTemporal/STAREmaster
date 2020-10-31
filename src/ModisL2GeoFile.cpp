@@ -45,7 +45,6 @@ int
 ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon)
 {
     char attr_name[SSC_MAX_NAME];
-    char sds_name[SSC_MAX_NAME];
     char *sm_attr;
     string sm;
     string lon_str = "GRINGPOINTLONGITUDE";
@@ -160,7 +159,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     int32 nswath;
     char swathlist[MAX_NAME + 1];
     float gring_lat[4], gring_lon[4];
-    const string MOD05 = "mod05";
     int ret;
 
     // Get the GRing info. After this call, gring_lat and gring_lon
@@ -212,7 +210,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";    
 
     // Attach to a swath.
-    if ((swathid = SWattach(swathfileid, (char *)MOD05.c_str())) < 0)
+    if ((swathid = SWattach(swathfileid, SSC_MOD05)) < 0)
 	return SSC_EHDF4ERR;
 
     // Get lat and lon values.
