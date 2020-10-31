@@ -57,6 +57,10 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
     int32 data_type, count;
     int32 am0_idx;
     size_t sz, off = 0;
+    const int LON_INC = 126;
+    const int LAT_INC = 125;
+    const int LON_LEN = 71;
+    const int LAT_LEN = 70;
     int ret;
 
     // Open the HDF4 SD API for this file.
@@ -83,13 +87,17 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
     if ((ret = SDreadattr(sd_id, am0_idx, sm_attr)))
 	return SSC_EHDF4ERR;
     sm = sm_attr;
-    //cout<<sm;
+    
+    // Find the positions of the longitude and latitude GRing info in
+    // the ArchiveMetadata.0 text string.
     lon_pos = sm.find(lon_str, 0);
     lat_pos = sm.find(lat_str, 0);
     if (verbose)
 	cout<<"lon_pos "<<lon_pos<<" lat_pos "<<lat_pos<<"\n";
 
-    grlon = sm.substr(lon_pos+126, 71);
+    // Pull the longitude GRing values from the ArchiveMetadata.0 text
+    // string.
+    grlon = sm.substr(lon_pos + LON_INC, LON_LEN);
     if (verbose)
 	cout<<grlon<<"\n";
     for (int i = 0; i < SSC_NUM_GRING; i++)
@@ -100,7 +108,9 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
 	    cout<<"gring_lon["<<i<<"]="<<gring_lon[i]<<"\n";
     }
 
-    grlat = sm.substr(lat_pos+125, 70);
+    // Pull the latitude GRing values from the ArchiveMetadata.0 text
+    // string.
+    grlat = sm.substr(lat_pos + LAT_INC, LAT_LEN);
     if (verbose)
 	cout<<grlat<<"\n";
     off = 0;
@@ -158,7 +168,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
-    float gring_lat[4], gring_lon[4];
+    float gring_lat[SSC_NUM_GRING], gring_lon[SSC_NUM_GRING];
     int ret;
 
     // Get the GRing info. After this call, gring_lat and gring_lon
