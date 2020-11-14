@@ -147,6 +147,12 @@ test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
 AC_CHECK_PROG(SED,[sed],[sed],[no])
 test "$SED" == "no" && AC_MSG_ERROR([Required program 'sed' not found.])
 
+# Is open_mp available?
+AX_OPENMP([have_openmp=yes], [have_openmp=no])
+if test "x$have_openmp" = xyes; then
+   AC_MSG_WARN([OpenMP is available.])
+fi
+
 # Move data files into build directory so it can be found by tests.
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
 AC_CONFIG_LINKS([test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl:test/ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl])
