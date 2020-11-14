@@ -96,6 +96,12 @@ AC_MSG_RESULT([yes])
 AC_MSG_CHECKING([LIBS])
 AC_MSG_RESULT([$LIBS])
 
+# Is open_mp available? If so, use it.
+AX_OPENMP([have_openmp=yes], [have_openmp=no])
+if test "x$have_openmp" = xyes; then
+   CXXFLAGS="$CXXFLAGS $OPENMP_CXXFLAGS"
+fi
+
 # Switch back to C.
 AC_LANG_POP()
 
