@@ -96,6 +96,12 @@ AC_MSG_RESULT([yes])
 AC_MSG_CHECKING([LIBS])
 AC_MSG_RESULT([$LIBS])
 
+# Is open_mp available? If so, use it.
+AX_OPENMP([have_openmp=yes], [have_openmp=no])
+if test "x$have_openmp" = xyes; then
+   CXXFLAGS="$CXXFLAGS $OPENMP_CXXFLAGS"
+fi
+
 # Switch back to C.
 AC_LANG_POP()
 
@@ -146,12 +152,6 @@ test "$NCDUMP" == "no" && AC_MSG_ERROR([Required program 'ncdump' not found.])
 # We need sed for testing.
 AC_CHECK_PROG(SED,[sed],[sed],[no])
 test "$SED" == "no" && AC_MSG_ERROR([Required program 'sed' not found.])
-
-# Is open_mp available?
-AX_OPENMP([have_openmp=yes], [have_openmp=no])
-if test "x$have_openmp" = xyes; then
-   AC_MSG_WARN([OpenMP is available.])
-fi
 
 # Move data files into build directory so it can be found by tests.
 AC_CONFIG_LINKS([test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf:test/data/MOD05_L2.A2005349.2125.061.2017294065400.hdf])
