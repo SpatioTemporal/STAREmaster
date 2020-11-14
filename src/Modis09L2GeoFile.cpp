@@ -9,6 +9,9 @@
 #include <vector>
 #include <HdfEosDef.h>
 #include "STARE.h"
+
+#include <omp.h>
+
 using namespace std;
 
 #define MAX_NAME 256
@@ -58,10 +61,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
-    const string MODIS_SWATH_TYPE_L2 = "MODIS SWATH TYPE L2";
-    const string LONGITUDE = "Longitude";
-    const string LATITUDE = "Latitude";
-   
+    
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
@@ -89,15 +89,15 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     var_name[0].push_back("1km Atmospheric Optical Depth Band CM");
     
     // Open the swath file.
-    if ((swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY)) < 0)
+    if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
 	return SSC_EHDF4ERR;
 
-    if ((nswath = SWinqswath((char *)fileName.c_str(), swathlist, &strbufsize)) < 0)
+    if ((nswath = SWinqswath(fileName.c_str(), swathlist, &strbufsize)) < 0)
 	return SSC_EHDF4ERR;
     if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";    
 
     // Attach to a swath.
-    if ((swathid = SWattach(swathfileid, (char *)MODIS_SWATH_TYPE_L2.c_str())) < 0)
+    if ((swathid = SWattach(swathfileid, "MODIS SWATH TYPE L2")) < 0)
 	return SSC_EHDF4ERR;
 
     if (!(longitude = (float32 *)calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
@@ -106,9 +106,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	return SSC_ENOMEM;
 
     // Get lat and lon values.
-    if (SWreadfield(swathid, (char *)LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
+    if (SWreadfield(swathid, "Longitude", NULL, NULL, NULL, longitude))
 	return SSC_EHDF4ERR;
-    if (SWreadfield(swathid, (char *)LATITUDE.c_str(), NULL, NULL, NULL, latitude))
+    if (SWreadfield(swathid, "Latitude", NULL, NULL, NULL, latitude))
 	return SSC_EHDF4ERR;
 
     geo_num_i1[0] = MAX_ALONG;
@@ -121,12 +121,16 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 						   sizeof(unsigned long long))))
 	return SSC_ENOMEM;
 
-    int level = 5;
+    int level = 27;
     STARE index(level, build_level);
 
     int finest_resolution = 0;
     
     // Calculate STARE index for each point. 
+#pragma omp parallel reduction(max : finest_resolution)
+    {
+    STARE index1(level, build_level);
+#pragma omp for
     for (int i = 0; i < MAX_ALONG; i++) {
       for (int j = 0; j < MAX_ACROSS; j++)
 	{
@@ -134,11 +138,11 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	  geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
 	  
 	  // Calculate the stare indicies.
-	  geo_index1[0][i * MAX_ACROSS + j] = index.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
+	  geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double)latitude[i * MAX_ACROSS + j],
 									   (double)longitude[i * MAX_ACROSS + j], level);
 	}
 
-	index.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
+	index1.adaptSpatialResolutionEstimatesInPlace( &(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS );
 
 	for (int j = 0; j < MAX_ACROSS; j++) {
 	  int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
@@ -146,6 +150,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	    finest_resolution = test_resolution;
 	  }
 	}
+    }
     }
 
     
@@ -163,7 +168,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	result.push_back(substr);
 
 	// Get a dimsize.
-	if ((dimsize = SWdiminfo(swathid, (char *)substr.c_str())) < 0)
+	if ((dimsize = SWdiminfo(swathid, substr.c_str())) < 0)
 	    return SSC_EHDF4ERR;
 	if (verbose) std::cout << "dim " << substr << " dimsize " << dimsize << "\n";
 
