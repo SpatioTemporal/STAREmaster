@@ -63,6 +63,24 @@ make check
 sudo make install
 </pre>
 
+#### Different HDFOES2 Versions
+
+There are several versions of HDFEOS2, and the two of interest to STAREmaster code:
+
+Version | Link
+--------|-----
+2.19    | https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip
+2.20    | https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
+
+When building 2.19 from this link, it was necessary to cd into a subdirectory, and change the permissions of the configure file:
+
+<pre>
+wget -O hdfeos2_19.zip https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip &> /dev/null
+unzip hdfeos2_19.zip
+cd hdfeos2_19/hdfeos2.19/hdfeos
+chmod ug+x configure
+</pre>
+
 ### Building with Autotools
 
 When building with autotools locations of all required header files
@@ -83,8 +101,6 @@ make check
 make install
 make clean
 </pre>
-
-If OpenMP is available, it will be enabled automatically.
 
 ### Building with CMake
 
