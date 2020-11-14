@@ -63,24 +63,6 @@ make check
 sudo make install
 </pre>
 
-#### Different HDFOES2 Versions
-
-There are several versions of HDFEOS2, and the two of interest to STAREmaster code:
-
-Version | Link
---------|-----
-2.19    | https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip
-2.20    | https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z
-
-When building 2.19 from this link, it was necessary to cd into a subdirectory, and change the permissions of the configure file:
-
-<pre>
-wget -O hdfeos2_19.zip https://git.earthdata.nasa.gov/rest/git-lfs/storage/DAS/hdfeos/ce2beacbb1ab8471a9a207def005d559f0ab725b9a4f1b1525cbee3d20aab5b0?response-content-disposition=attachment%3B%20filename%3D%22hdfeos2_19.zip%22%3B%20filename*%3Dutf-8%27%27hdfeos2_19.zip &> /dev/null
-unzip hdfeos2_19.zip
-cd hdfeos2_19/hdfeos2.19/hdfeos
-chmod ug+x configure
-</pre>
-
 ### Building with Autotools
 
 When building with autotools locations of all required header files
@@ -102,6 +84,8 @@ make install
 make clean
 </pre>
 
+If OpenMP is available, it will be enabled automatically.
+
 ### Building with CMake
 
 CMake finds the necessary library using CMake variables:
@@ -120,6 +104,9 @@ Sometimes the FindNetCDF.cmake module has difficulty finding all the netCDF libr
 cmake -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.16.3/include -DSTARE_LIBRARY=/usr/local/STARE-0.16.3/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" -DCMAKE_CXX_STANDARD_LIBRARIES="-lcurl" ..
 </pre>
 
+To make use of OpenMP multi-threading you may need to add -DOpenMP_EXE_LINKER_FLAGS=...
+to the cmake command line.
+
 ## Using STAREmaster
 
 The STAREmaster package installs a binary createSidecarFile, whcih may
@@ -129,6 +116,12 @@ use:
 <pre>
 createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
+
+To see a number usage options execute _createSidecarFile_ without any
+command line arguments.
+
+To enable OpenMP multithreading, you may need to set the environment
+variable OMP_NUM_THREADS to the number of threads you wish used.
 
 ## References
 
