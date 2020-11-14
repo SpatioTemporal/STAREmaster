@@ -27,6 +27,9 @@ void usage(char *name) {
         << "  " << " -v, --verbose     : verbose: print all" << endl
         << "  " << " -q, --quiet       : don't chat, just give back index" << endl
         << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
+        << "  " << " -c, --cover_level    : Cover resolution, level 10 ~ 10 km." << endl
+        << "  " << " -g, --use_gring      : Use GRING data to construct cover (default)" << endl
+	<< "  " << " -w, --walk_perimeter : Provide stride and walk perimeter to construct cover (more accurate)" << endl
         << "  " << " -d, --data_type   : Allows specification of data type." << endl
         << "  " << " -i, --institution : Institution where sidecar file is produced." << endl
         << "  " << " -o, --output_file : Provide file name for output file." << endl
@@ -39,10 +42,14 @@ struct Arguments {
     bool verbose = false;
     bool quiet = false;
     int build_level = SSC_DEFAULT_BUILD_LEVEL;
+    int cover_level = -1;
+    bool cover_gring = false; 
+    int stride = -1; // if stride > 0, then we're walking the perimeter and cover_gring = false.
     char data_type[SSC_MAX_NAME] = "";
     char institution[SSC_MAX_NAME] = "";
     char output_file[SSC_MAX_NAME] = "";
     char output_dir[SSC_MAX_NAME] = "";
+    int err_code = 0;
 };
 
 Arguments parseArguments(int argc, char *argv[]) {
@@ -53,6 +60,9 @@ Arguments parseArguments(int argc, char *argv[]) {
         {"verbose", no_argument, 0, 'v'},
         {"quiet", no_argument, 0, 'q'},
         {"build_level", required_argument, 0, 'b'},
+	{"cover_level", required_argument,0,'c'},
+	{"use_gring", no_argument, 0, 'g'},
+	{"walk_perimeter", required_argument, 0, 'w'},
         {"data_type", required_argument, 0, 'd'},
 	{"institution", required_argument, 0, 'i'},
         {"output_file", required_argument, 0, 'o'},
@@ -62,18 +72,34 @@ Arguments parseArguments(int argc, char *argv[]) {
 
     int long_index = 0;
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "hvqb:d:o:r:i:", long_options, &long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "hvqb:c:gw:d:o:r:i:", long_options, &long_index)) != -1) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
         case 'q': arguments.quiet = true; break;
         case 'b': arguments.build_level = atoi(optarg); break;
+	case 'c': arguments.cover_level = atoi(optarg); break;
+	case 'g': arguments.cover_gring = true; break;
+	case 'w': arguments.stride = atoi(optarg); break;
         case 'd': strcpy(arguments.data_type, optarg); break;
         case 'i': strcpy(arguments.institution, optarg); break;
         case 'o': strcpy(arguments.output_file, optarg); break;
         case 'r': strcpy(arguments.output_dir, optarg); break;
         }
     }
+
+    // Check for argument consistency.
+    if ( !arguments.cover_gring ) {
+      if ( arguments.stride <= 0 ) {
+	arguments.cover_gring = true;
+      }
+    } else {
+      if ( arguments.stride > 0 ) { // error case, both gring and walk are set
+	cerr <<"Incompatible arguments. Both perimeter walk (-w) and gring (-g) STARE covers requested.\n";
+	arguments.err_code = 99;
+      }
+    }
+
     return arguments;
 };
 
@@ -128,6 +154,10 @@ main(int argc, char *argv[])
 	file_out = arg.output_file;
     else
 	file_out = pickOutputName(argv[optind], arg.output_dir);
+
+    if (arg.err_code) {
+	return arg.err_code;
+    }
 
     if (arg.data_type == MOD09)
     {
