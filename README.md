@@ -102,6 +102,8 @@ make install
 make clean
 </pre>
 
+If OpenMP is present on the system, it will be automatically enabled.
+
 ### Building with CMake
 
 CMake finds the necessary library using CMake variables:
