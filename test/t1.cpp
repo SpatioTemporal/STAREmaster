@@ -24,7 +24,7 @@ main()
     if (gf_format != SSC_FORMAT_MODIS_L2) return 1;
 
     // Read the file.
-    if (gf.readFile(fileName, 1, 0, 5))
+    if (gf.readFile(fileName, 1, 0, 5, -1, false, 1))
 	return ERR;
 
     // Create the sidecar file.

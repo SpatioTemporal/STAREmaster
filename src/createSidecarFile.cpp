@@ -180,7 +180,7 @@ main(int argc, char *argv[])
     else
     {
 	gf = new ModisL2GeoFile();
-	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	if (gf->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level, arg.cover_level, arg.cover_gring, arg.stride))
 	{
 	    cerr<<"Error reading MOD05 file.\n";
 	    return 99;
