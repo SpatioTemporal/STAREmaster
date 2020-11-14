@@ -60,6 +60,10 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
   int32 data_type, count;
   int32 am0_idx;
   size_t sz, off = 0;
+  const int LON_INC = 126;
+  const int LAT_INC = 125;
+  const int LON_LEN = 71;
+  const int LAT_LEN = 70;
   int ret;
 
   // Open the HDF4 SD API for this file.
@@ -86,13 +90,17 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
   if ((ret = SDreadattr(sd_id, am0_idx, sm_attr)))
     return SSC_EHDF4ERR;
   sm = sm_attr;
-  //cout<<sm;
+
+  // Find the positions of the longitude and latitude GRing info in
+  // the ArchiveMetadata.0 text string.
   lon_pos = sm.find(lon_str, 0);
   lat_pos = sm.find(lat_str, 0);
   if (verbose)
     cout<<"lon_pos "<<lon_pos<<" lat_pos "<<lat_pos<<"\n";
 
-  grlon = sm.substr(lon_pos+126, 71);
+  // Pull the longitude GRing values from the ArchiveMetadata.0 text
+  // string.
+  grlon = sm.substr(lon_pos + LON_INC, LON_LEN);
   if (verbose)
     cout<<grlon<<"\n";
   for (int i = 0; i < SSC_NUM_GRING; i++)
@@ -103,7 +111,9 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
 	cout<<"gring_lon["<<i<<"]="<<gring_lon[i]<<"\n";
     }
 
-  grlat = sm.substr(lat_pos+125, 70);
+  // Pull the latitude GRing values from the ArchiveMetadata.0 text
+  // string.
+  grlat = sm.substr(lat_pos + LAT_INC, LAT_LEN);
   if (verbose)
     cout<<grlat<<"\n";
   off = 0;
@@ -131,6 +141,9 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
  * @param fileName the data file name.
  * @param verbose non-zero for verbose output to stdout.
  * @param quiet non-zero for no output.
+ * @param cover_level STARE cover level.
+ * @param use_gring if true, use g-ring data for cover calculation.
+ * @param perimeter_stride perimeter stride.
  * @param build_level STARE build level.
  *
  * @return 0 for no error, error code otherwise.
@@ -162,7 +175,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
   char attrlist[MAX_NAME + 1] = "";
   int32 nswath;
   char swathlist[MAX_NAME + 1];
-  float gring_lat[4], gring_lon[4];
+  float gring_lat[SSC_NUM_GRING], gring_lon[SSC_NUM_GRING];
   int ret;
 
 
@@ -202,21 +215,21 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
   */
 
   // Open the swath file.
-  if ((swathfileid = SWopen(fileName.c_str(), DFACC_RDONLY)) < 0)
+  if ((swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY)) < 0)
     return SSC_EHDF4ERR;
 
-  if ((nswath = SWinqswath(fileName.c_str(), swathlist, &strbufsize)) < 0)
+  if ((nswath = SWinqswath((char *)fileName.c_str(), swathlist, &strbufsize)) < 0)
     return SSC_EHDF4ERR;
   if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";    
 
   // Attach to a swath.
-  if ((swathid = SWattach(swathfileid, "mod05")) < 0)
+  if ((swathid = SWattach(swathfileid, SSC_MOD05)) < 0)
     return SSC_EHDF4ERR;
 
   // Get lat and lon values.
-  if (SWreadfield(swathid, "Longitude", NULL, NULL, NULL, longitude))
+  if (SWreadfield(swathid, SSC_LON_NAME, NULL, NULL, NULL, longitude))
     return SSC_EHDF4ERR;
-  if (SWreadfield(swathid, "Latitude", NULL, NULL, NULL, latitude))
+  if (SWreadfield(swathid, SSC_LAT_NAME, NULL, NULL, NULL, latitude))
     return SSC_EHDF4ERR;
 
   geo_num_i1[0] = MAX_ALONG;
