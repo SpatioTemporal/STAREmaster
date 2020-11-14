@@ -141,10 +141,10 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
  * @param fileName the data file name.
  * @param verbose non-zero for verbose output to stdout.
  * @param quiet non-zero for no output.
+ * @param build_level STARE build level.
  * @param cover_level STARE cover level.
  * @param use_gring if true, use g-ring data for cover calculation.
  * @param perimeter_stride perimeter stride.
- * @param build_level STARE build level.
  *
  * @return 0 for no error, error code otherwise.
  */
@@ -411,20 +411,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
   if (verbose) std::cout << "cover size = " << cover.size()  << "\n";
     
-  // <<<<<<< HEAD
-  //     geo_num_cover_values1[0] = cover1[0].size();
-  // 
-  //     // If we can't avoid copying...
-  //     // if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
-  //     //	return SSC_ENOMEM;
-  //     
-  //     geo_cover1[0]            = &(cover1[0])[0];
-  // =======
-  // //    geo_cover1[0]            = &(cover1[0])[0];
-  // //    geo_num_cover_values1[0] = cover1[0].size();
-  //     geo_num_cover_values1[0] = cover.size();    
-  // >>>>>>> ddaa8660c5d3f7734a00940592a3e323728abbdb
-
   geo_num_cover_values1[0] = cover.size();    
   if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
     return SSC_ENOMEM;
@@ -446,7 +432,7 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
       result.push_back(substr);
 
       // Get a dimsize.
-      if ((dimsize = SWdiminfo(swathid, substr.c_str())) < 0)
+      if ((dimsize = SWdiminfo(swathid, (char *)substr.c_str())) < 0)
 	return SSC_EHDF4ERR;
       if (verbose) std::cout << "dim " << substr << " dimsize " << dimsize << "\n";
 
