@@ -139,12 +139,16 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
  * @param verbose non-zero for verbose output to stdout.
  * @param quiet non-zero for no output.
  * @param build_level STARE build level.
+ * @param cover_level STARE cover level.
+ * @param use_gring if true, use g-ring data for cover calculation.
+ * @param perimeter_stride perimeter stride.
  *
  * @return 0 for no error, error code otherwise.
  */
 int
 ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
-			 int build_level)
+			 int build_level, int cover_level, bool use_gring,
+			 int perimeter_stride)
 {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
