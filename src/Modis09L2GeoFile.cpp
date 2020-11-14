@@ -122,8 +122,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 	return SSC_ENOMEM;
 
     int level = 27;
-    // STARE index(level, build_level);
-
     int finest_resolution = 0;
     
     // Calculate STARE index for each point. 
