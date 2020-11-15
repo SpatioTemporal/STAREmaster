@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04,  ubuntu-20.04]
+        os: [ubuntu-latest,  macos-latest]
 
     env:
       PWD_DIR: /home/runner
@@ -24,7 +24,10 @@ jobs:
     - name: Installs
       run: |
         set -x
-        sudo apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+        if [[ ${{ matrix.os }} == "ubuntu-latest" ]]; then	
+           sudo apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+        elif [[ ${{ matrix.os }} == "clang" ]]; then
+        fi
     - name: cache-hdf4
       id: cache-hdf4
       uses: actions/cache@v2
