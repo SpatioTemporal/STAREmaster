@@ -97,9 +97,9 @@ jobs:
     - name: configure
       run: |
         set -x
+        export PWD_DIR=`pwd`
         mkdir build
         cd build
-        export PWD_DIR=`pwd`
         export LIBS=`nc-config --libs`
         cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH="${PWD_DIR}/hdf4;${PWD_DIR}/hdfeos2" -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
         make VERBOSE=1
