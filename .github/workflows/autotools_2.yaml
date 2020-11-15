@@ -25,9 +25,9 @@ jobs:
       run: |
         set -x
         if [[ ${{ matrix.os }} == "ubuntu-latest" ]]; then	
-           apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+           sudo apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
         elif [[ ${{ matrix.os }} == "macos-latest" ]]; then
-           brew install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+           sudo brew install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
         fi
     - name: cache-hdf4
       id: cache-hdf4
