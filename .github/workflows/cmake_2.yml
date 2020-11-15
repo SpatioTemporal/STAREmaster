@@ -65,7 +65,7 @@ jobs:
         cd hdfeos
         export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include"
         export LDFLAGS="-L${PWD_DIR}/hdf4/lib"
-        export CFLAGS=-fPIC
+        export CFLAGS="-fPIC -Wno-implicit-function-declaration"
         ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install clean
