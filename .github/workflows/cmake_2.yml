@@ -35,13 +35,13 @@ jobs:
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
       run: |
         set -x
+        echo ${PWD_DIR}
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
         export PWD_DIR=`pwd`
         export CPPFLAGS="-I/usr/include -I/usr/local/include"
         export CFLAGS="-fPIC -Wno-implicit-function-declaration"
-        echo ${PWD_DIR}
         echo ${CPPFLAGS}
         echo ${LDFLAGS}
         ./configure --disable-netcdf --disable-fortran --prefix=${PWD_DIR}/hdf4 
@@ -59,10 +59,10 @@ jobs:
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
         set -x
+        export PWD_DIR=`pwd`
         wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
-        export PWD_DIR=`pwd`
         export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include"
         export LDFLAGS="-L${PWD_DIR}/hdf4/lib"
         export CFLAGS=-fPIC
