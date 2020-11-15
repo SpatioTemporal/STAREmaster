@@ -14,11 +14,6 @@ jobs:
       matrix:
         os: [ubuntu-latest,  macos-latest]
 
-    env:
-      PWD_DIR: /home/runner
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
-      LDFLAGS: "-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
-        
     steps:
     - uses: actions/checkout@v2
     - name: Installs
@@ -34,7 +29,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdf4
-        key: hdf4-${{ runner.os }}-fPIC-4.2.13-111520_2
+        key: hdf4-${{ runner.os }}-fPIC-4.2.13-111520_3
 
     - name: build-hdf4
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
@@ -58,7 +53,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdfeos2
-        key: hdfeos2-${{ runner.os }}-fPIC-20v1.00-111520
+        key: hdfeos2-${{ runner.os }}-fPIC-20v1.00-111520_2
 
     - name: build-hdfeos2
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
