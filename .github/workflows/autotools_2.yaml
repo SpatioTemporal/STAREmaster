@@ -34,7 +34,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdf4
-        key: hdf4-${{ runner.os }}-fPIC-4.2.13-111520
+        key: hdf4-${{ runner.os }}-fPIC-4.2.13-111520_2
 
     - name: build-hdf4
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
@@ -44,8 +44,7 @@ jobs:
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
         export PWD_DIR=`pwd`
-        export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
-        export LDFLAGS="-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
+        export CPPFLAGS="-I/usr/include -I/usr/local/include"
         export CFLAGS="-fPIC -Wno-implicit-function-declaration"
         echo ${PWD_DIR}
         echo ${CPPFLAGS}
@@ -68,7 +67,11 @@ jobs:
         wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
         tar zxf HDF-EOS2.20v1.00.tar.Z
         cd hdfeos
-        CFLAGS=-fPIC ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
+        export PWD_DIR=`pwd`
+        export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include"
+        export LDFLAGS="-L${PWD_DIR}/hdf4/lib"
+        export CFLAGS=-fPIC
+        ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
         sudo make install clean
         cd ..
@@ -97,8 +100,11 @@ jobs:
     - name: autoreconf
       run: autoreconf -i
     - name: configure
-      run: ./configure
-    - name: make distcheck
-      run: make -j distcheck
+      export PWD_DIR=`pwd`
+      export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
+      export LDFLAGS="-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
+      run: |
+        ./configure
+        make -j distcheck
 
 
