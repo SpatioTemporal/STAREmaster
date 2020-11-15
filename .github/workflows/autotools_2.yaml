@@ -16,8 +16,8 @@ jobs:
 
     env:
       PWD_DIR: /home/runner
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4/include -I/home/runner/stare/include -I/home/runner/hdfeos2/include"
-      LDFLAGS: "-L/home/runner/hdf4/lib -L/home/runner/stare/lib -L/home/runner/hdfeos2/lib"
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
+      LDFLAGS: "-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
         
     steps:
     - uses: actions/checkout@v2
