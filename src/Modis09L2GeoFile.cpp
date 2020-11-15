@@ -10,7 +10,9 @@
 #include <HdfEosDef.h>
 #include "STARE.h"
 
+#ifdef HAVE_OPENMP
 #include <omp.h>
+#endif
 
 using namespace std;
 

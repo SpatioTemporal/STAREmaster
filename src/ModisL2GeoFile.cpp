@@ -11,7 +11,9 @@
 #include <iostream> 
 #include <sstream>
 
+#ifdef HAVE_OPENMP
 #include <omp.h>
+#endif
 
 #define MAX_NAME 256
 #define MAX_DIMS 16
