@@ -75,18 +75,19 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/stare
-        key: stare-${{ runner.os }}-0.16.3
+        key: stare-${{ runner.os }}-0.16.3-111520
 
     - name: build-stare
       if: steps.cache-stare.outputs.cache-hit != 'true'
       run: |
         set -x
+        export PWD_DIR=`pwd`
         wget https://github.com/SpatioTemporal/STARE/archive/0.16.3-beta.tar.gz  &> /dev/null
         tar zxf 0.16.3-beta.tar.gz
         cd STARE-0.16.3-beta/
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/stare ..
+        cmake -DCMAKE_INSTALL_PREFIX=${PWD_DIR}/stare ..
         make all
         sudo make install
         cd ../..
@@ -101,7 +102,7 @@ jobs:
         mkdir build
         cd build
         export LIBS=`nc-config --libs`
-        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH="${PWD_DIR}/hdf4;${PWD_DIR}/hdfeos2" -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH="${PWD_DIR}/hdf4;${PWD_DIR}/hdfeos2;${PWD_DIR}/stare" -DSTARE_INCLUDE_DIR=${PWD_DIR}/stare/include -DSTARE_LIBRARY=${PWD_DIR}/stare/lib ..
         make VERBOSE=1
         make VERBOSE=1 test
 
