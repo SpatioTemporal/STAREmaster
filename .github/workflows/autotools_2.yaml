@@ -44,7 +44,7 @@ jobs:
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
         export CFLAGS=-fPIC
-        ./configure --disable-netcdf --prefix=${PWD_DIR}/hdf4 
+        ./configure --disable-netcdf --disable-fortran --prefix=${PWD_DIR}/hdf4 
         make all 
         sudo make install clean
         cd ..
