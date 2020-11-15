@@ -35,11 +35,11 @@ jobs:
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
       run: |
         set -x
+        export PWD_DIR=`pwd`
         echo ${PWD_DIR}
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
-        export PWD_DIR=`pwd`
         export CPPFLAGS="-I/usr/include -I/usr/local/include"
         export CFLAGS="-fPIC -Wno-implicit-function-declaration"
         echo ${CPPFLAGS}
