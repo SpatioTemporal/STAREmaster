@@ -43,6 +43,9 @@ jobs:
         wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
+        export PWD_DIR=`pwd`
+        export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
+        export LDFLAGS="-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
         export CFLAGS="-fPIC -Wno-implicit-function-declaration"
         echo ${PWD_DIR}
         echo ${CPPFLAGS}
