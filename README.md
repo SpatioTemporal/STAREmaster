@@ -34,15 +34,18 @@ netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
 When building HDF4 and HDFEOS2, there are some build issues. As
 demonstrated in the GitHub workflow
 builds(ex. https://github.com/SpatioTemporal/STAREmaster/blob/master/.github/workflows/autotools.yml),
-set the CFLAGS to -fPIC.
+set the CFLAGS to -fPIC. For the most recent versions of gcc,
+-Wno-implicit-function-declaration is required.
 
-When building HDF4, the --disable-netcdf option must be used.
+When building HDF4, the --disable-netcdf option must be used. The
+--disable-fortran option may be used, as STAREmaster does not use the
+Fortran API for HDF4.
 
 Building HDF4 can be accomplished with these commands:
 
 <pre>
-export CFLAGS=-fPIC
-./configure --prefix=/usr/local/hdf-4.2.15_fPIC --disable-netcdf
+export CFLAGS="-fPIC -Wno-implicit-function-declaration"
+./configure --prefix=/usr/local/hdf-4.2.15_fPIC --disable-netcdf --disable-fortran
 make all
 make check
 sudo make install
