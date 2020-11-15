@@ -91,11 +91,8 @@ jobs:
         make all
         sudo make install
         cd ../..
-
         
-    - name: autoreconf
-      run: autoreconf -i
-    - name: configure
+    - name: cmake build
       run: |
         set -x
         export PWD_DIR=`pwd`
