@@ -34,7 +34,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdf4
-        key: hdf4-${{ runner.os }}-fPIC-4.2.13
+        key: hdf4-${{ runner.os }}-fPIC-4.2.13-111520
 
     - name: build-hdf4
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
@@ -59,7 +59,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdfeos2
-        key: hdfeos2-${{ runner.os }}-fPIC-20v1.00
+        key: hdfeos2-${{ runner.os }}-fPIC-20v1.00-111520
 
     - name: build-hdfeos2
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
