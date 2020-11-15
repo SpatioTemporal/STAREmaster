@@ -26,7 +26,8 @@ jobs:
         set -x
         if [[ ${{ matrix.os }} == "ubuntu-latest" ]]; then	
            sudo apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
-        elif [[ ${{ matrix.os }} == "clang" ]]; then
+        elif [[ ${{ matrix.os }} == "macos-latest ]]; then
+           sudo apt-get install -o Acquire::Retries=3 netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
         fi
     - name: cache-hdf4
       id: cache-hdf4
