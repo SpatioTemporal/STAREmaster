@@ -82,6 +82,7 @@ jobs:
     - name: cmake
       run: |
         set -x
+        ls -l /usr/local/Cellar
         mkdir build
         cd build
         nc-config --libs
