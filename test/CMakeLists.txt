@@ -27,6 +27,7 @@ target_link_libraries(t2 STARE)
 target_link_libraries(t2 ${HDFEOS2})
 target_link_libraries(t2 ${MFHDF4} ${DF} ${JPEG_LIB})
 target_link_libraries(t2 ${CMD_OUTPUT})
+target_link_libraries(t2 ${CMAKE_CXX_STANDARD_LIBRARIES})
 
 add_test(NAME t2 COMMAND t2)
 
