@@ -86,4 +86,8 @@
 /* Version number of package */
 #cmakedefine VERSION @VERSION@
 
+#cmakedefine HAVE_OPENMP @HAVE_OPENMP@
+
+
+
 

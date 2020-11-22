@@ -56,6 +56,15 @@ AC_MSG_RESULT($TEST_LARGE)
 AC_SUBST(TEST_LARGE)
 AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test files.])
 
+# OpenMP is enabled by default, if available. Use --disable-openmp to
+# disable it, even if it is present.
+AC_MSG_CHECKING([whether OpenMP is desired])
+AC_ARG_ENABLE([openmp],
+              [AS_HELP_STRING([--disable-openmp],
+                              [disable OpenMP.])])
+test "x$enable_openmp" = xno || enable_openmp=yes
+AC_MSG_RESULT([$enable_openmp])
+
 # Does the user want to build documentation?
 AC_MSG_CHECKING([whether documentation should be build (requires doxygen)])
 AC_ARG_ENABLE([docs],
@@ -96,10 +105,14 @@ AC_MSG_RESULT([yes])
 AC_MSG_CHECKING([LIBS])
 AC_MSG_RESULT([$LIBS])
 
-# Is open_mp available? If so, use it.
-AX_OPENMP([have_openmp=yes], [have_openmp=no])
-if test "x$have_openmp" = xyes; then
-   CXXFLAGS="$CXXFLAGS $OPENMP_CXXFLAGS"
+# Is open_mp available? If so, use it if the user didn't disable it.
+if test "$enable_openmp" = yes; then
+   AX_OPENMP([have_openmp=yes], [have_openmp=no])
+   if test "x$have_openmp" = xyes; then
+      CXXFLAGS="$CXXFLAGS $OPENMP_CXXFLAGS"
+   fi
+
+   AC_DEFINE([USE_OPENMP], [1], [true if OpenMP is in use])
 fi
 
 # Switch back to C.
