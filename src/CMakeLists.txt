@@ -14,12 +14,11 @@ add_library(ssc SidecarFile.cpp GeoFile.cpp ModisL2GeoFile.cpp NetcdfSidecarFile
 add_executable(createSidecarFile createSidecarFile.cpp)
 
 # Add these directories to those searched during linking.
-target_link_directories(createSidecarFile PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(createSidecarFile PUBLIC ${STARE_LIBRARY_DIR})
 
 # The executable depends on these libraries.
 target_link_libraries(createSidecarFile ssc)
-target_link_libraries(createSidecarFile netcdf)
+target_link_libraries(createSidecarFile ${NETCDF_LIBRARIES_C})
 target_link_libraries(createSidecarFile STARE)
 target_link_libraries(createSidecarFile ${HDFEOS2})
 target_link_libraries(createSidecarFile ${MFHDF4} ${DF} ${JPEG_LIB})
