@@ -4,11 +4,10 @@
 
 add_executable(t1 t1.cpp)
 
-target_link_directories(t1 PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(t1 PUBLIC ${STARE_LIBRARY_DIR})
 
 target_link_libraries(t1 ssc)
-target_link_libraries(t1 netcdf)
+target_link_libraries(t1 PUBLIC ${NETCDF_LIBRARIES_C})
 target_link_libraries(t1 STARE)
 target_link_libraries(t1 ${HDFEOS2})
 target_link_libraries(t1 ${MFHDF4} ${DF} ${JPEG_LIB})
@@ -18,16 +17,14 @@ add_test(NAME t1 COMMAND t1)
 
 add_executable(t2 t2.cpp)
 
-target_link_directories(t2 PUBLIC ${NETCDF_LIBRARIES})
 target_link_directories(t2 PUBLIC ${STARE_LIBRARY_DIR})
 
 target_link_libraries(t2 ssc)
-target_link_libraries(t2 netcdf)
+target_link_libraries(t2 PUBLIC ${NETCDF_LIBRARIES_C})
 target_link_libraries(t2 STARE)
 target_link_libraries(t2 ${HDFEOS2})
 target_link_libraries(t2 ${MFHDF4} ${DF} ${JPEG_LIB})
 target_link_libraries(t2 ${CMD_OUTPUT})
-target_link_libraries(t2 ${CMAKE_CXX_STANDARD_LIBRARIES})
 
 add_test(NAME t2 COMMAND t2)
 
