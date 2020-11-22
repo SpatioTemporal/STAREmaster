@@ -22,7 +22,7 @@ jobs:
     - name: Installs
       run: |
         set -x
-        brew install netcdf doxygen zlib
+        brew install hdf5 netcdf doxygen zlib
     - name: cache-hdf4
       id: cache-hdf4
       uses: actions/cache@v2
