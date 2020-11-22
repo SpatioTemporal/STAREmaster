@@ -1,0 +1,94 @@
+name: CMake MacOS
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    env:
+      PWD_DIR: /Users/runner
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/Users/runner/hdf4/include -I/Users/runner/stare/include -I/Users/runner/hdfeos2/include"
+      LDFLAGS: "-L/Users/runner/hdf4/lib -L/Users/runner/stare/lib -L/Users/runner/hdfeos2/lib -L/usr/local/Cellar/hdf5/1.12.0_1/lib -L/usr/local/Cellar/netcdf/4.7.4_1/lib"
+      CFLAGS: "-fPIC -Wno-implicit-function-declaration"        
+        
+    steps:
+    - uses: actions/checkout@v2
+    - name: Installs
+      run: |
+        set -x
+        brew install hdf5 netcdf doxygen zlib
+    - name: cache-hdf4
+      id: cache-hdf4
+      uses: actions/cache@v2
+      with:
+        path: ~/hdf4
+        key: hdf4-${{ runner.os }}-4.2.13
+
+    - name: build-hdf4
+      if: steps.cache-hdf4.outputs.cache-hit != 'true'
+      run: |
+        set -x
+        pwd
+        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
+        tar zxf hdf-4.2.13.tar.gz
+        cd hdf-4.2.13
+        ./configure --disable-netcdf --disable-fortran --prefix=${PWD_DIR}/hdf4
+        make all 
+        sudo make install clean
+        cd ..
+    - name: cache-hdfeos2
+      id: cache-hdfeos2
+      uses: actions/cache@v2
+      with:
+        path: ~/hdfeos2
+        key: hdfeos2-${{ runner.os }}-20v1.00
+
+    - name: build-hdfeos2
+      if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
+      run: |
+        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
+        tar zxf HDF-EOS2.20v1.00.tar.Z
+        cd hdfeos
+        ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
+        make
+        sudo make install
+        cd ..
+    - name: cache-stare
+      id: cache-stare
+      uses: actions/cache@v2
+      with:
+        path: ~/stare
+        key: stare-${{ runner.os }}-0.16.2
+
+    - name: build-stare
+      if: steps.cache-stare.outputs.cache-hit != 'true'
+      run: |
+        wget https://github.com/SpatioTemporal/STARE/archive/0.16.2-beta.tar.gz &> /dev/null
+        tar zxf 0.16.2-beta.tar.gz
+        cd STARE-0.16.2-beta/
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=~/stare ..
+        make all
+        sudo make install
+        cd ../..
+        
+    - name: cmake
+      run: |
+        set -x
+        ls -l /usr/local/Cellar/netcdf
+        mkdir build
+        cd build
+        nc-config --libs
+        export CXX_STANDARD_LIBRARIES=-lz
+        cmake -DCMAKE_CXX_STANDARD_LIBRARIES="${CXX_STANDARD_LIBRARIES}" -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/Users/runner/hdf4;/Users/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
+        make VERBOSE=1
+        make VERBOSE=1 test
+
+
