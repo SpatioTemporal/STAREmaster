@@ -14,7 +14,7 @@ jobs:
     env:
       PWD_DIR: /Users/runner
       CPPFLAGS: "-I/usr/include -I/usr/local/include -I/Users/runner/hdf4/include -I/Users/runner/stare/include -I/Users/runner/hdfeos2/include"
-      LDFLAGS: "-L/Users/runner/hdf4/lib -L/Users/runner/stare/lib -L/Users/runner/hdfeos2/lib"
+      LDFLAGS: "-L/Users/runner/hdf4/lib -L/Users/runner/stare/lib -L/Users/runner/hdfeos2/lib -L/usr/local/Cellar/hdf5/1.12.0_1/lib"
       CFLAGS: "-fPIC -Wno-implicit-function-declaration"        
         
     steps:
@@ -82,7 +82,7 @@ jobs:
     - name: cmake
       run: |
         set -x
-        ls -l /usr/local/Cellar/hdf5/1.12.0_1
+        ls -l /usr/local/Cellar/hdf5/1.12.0_1/lib
         mkdir build
         cd build
         nc-config --libs
