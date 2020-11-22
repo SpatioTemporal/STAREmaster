@@ -82,7 +82,7 @@ jobs:
     - name: cmake
       run: |
         set -x
-        ls -l /usr/local/Cellar/hdf5
+        ls -l /usr/local/Cellar/hdf5/1.12.0_1
         mkdir build
         cd build
         nc-config --libs
