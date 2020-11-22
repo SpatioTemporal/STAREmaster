@@ -13,8 +13,8 @@ jobs:
 
     env:
       PWD_DIR: /Users/runner
-      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/home/runner/hdf4/include -I/home/runner/stare/include -I/home/runner/hdfeos2/include"
-      LDFLAGS: "-L/home/runner/hdf4/lib -L/home/runner/stare/lib -L/home/runner/hdfeos2/lib"
+      CPPFLAGS: "-I/usr/include -I/usr/local/include -I/Users/runner/hdf4/include -I/Users/runner/stare/include -I/Users/runner/hdfeos2/include"
+      LDFLAGS: "-L/Users/runner/hdf4/lib -L/Users/runner/stare/lib -L/Users/runner/hdfeos2/lib"
       CFLAGS: "-fPIC -Wno-implicit-function-declaration"        
         
     steps:
@@ -87,7 +87,7 @@ jobs:
         cd build
         nc-config --libs
         export LIBS=`nc-config --libs`
-        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/home/runner/hdf4;/home/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/Users/runner/hdf4;/Users/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
         make VERBOSE=1
         make VERBOSE=1 test
 
