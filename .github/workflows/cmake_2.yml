@@ -99,7 +99,7 @@ jobs:
         mkdir build
         cd build
         export LIBS=`nc-config --libs`
-        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH="${PWD_DIR}/hdf4;${PWD_DIR}/hdfeos2;${PWD_DIR}/stare" -DSTARE_INCLUDE_DIR=${PWD_DIR}/stare/include -DSTARE_LIBRARY=${PWD_DIR}/stare/lib ..
+        cmake -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH="${PWD_DIR}/hdf4;${PWD_DIR}/hdfeos2;${PWD_DIR}/stare" ..
         make VERBOSE=1
         make VERBOSE=1 test
 
