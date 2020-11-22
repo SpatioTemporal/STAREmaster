@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     env:
       PWD_DIR: /home/runner
@@ -21,7 +21,7 @@ jobs:
     - name: Installs
       run: |
         set -x
-        sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+        brew install netcdf doxygen 
     - name: cache-hdf4
       id: cache-hdf4
       uses: actions/cache@v2
