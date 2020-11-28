@@ -102,6 +102,25 @@ AC_LINK_IFELSE([
 ], [], [AC_MSG_ERROR([STARE library not present.])])
 AC_MSG_RESULT([yes])
 
+# Check the STARE version number. It must be 0.16.3 or later.
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include "STARE.h"],
+[[#if STARE_VERSION_MAJOR == 0
+#if STARE_VERSION_MINOR < 16
+#error
+#endif
+#if STARE_VERSION_MINOR == 16
+#if STARE_VERSION_PATCH < 3
+#error
+#endif
+#endif
+#endif]
+])], [good_STARE_version=yes], [good_STARE_version=no])
+AC_MSG_CHECKING([whether STARE library version is correct])
+AC_MSG_RESULT([${good_STARE_version}])
+if test "$good_STARE_version" = no; then
+   [AC_MSG_ERROR([STARE library is too old, it must be version 0.16.3 or later.])])
+fi
+
 AC_MSG_CHECKING([LIBS])
 AC_MSG_RESULT([$LIBS])
 
