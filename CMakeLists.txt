@@ -141,6 +141,9 @@ INCLUDE(CheckCXXSourceCompiles)
 CHECK_CXX_SOURCE_COMPILES("
 #include <STARE.h>
 #if STARE_VERSION_MAJOR == 0
+#if STARE_VERSION_MINOR < 16
+#error
+#endif
 #endif
 int main() {return 0;}" GOOD_STARE_VERSION)
 cmake_print_variables(GOOD_STARE_VERSION)
