@@ -86,6 +86,7 @@ jobs:
         nc-config --libs
         export LIBS=`nc-config --libs`
         cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=CMakeLists.txt  -DCMAKE_PREFIX_PATH='/home/runner/hdf4;/home/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
+        cat CMakeFiles/CMakeOutput.log
         make VERBOSE=1
         make VERBOSE=1 test
 

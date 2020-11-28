@@ -152,8 +152,6 @@ CHECK_CXX_SOURCE_COMPILES("
 #endif
 int main() {return 0;}" GOOD_STARE_VERSION)
 cmake_print_variables(GOOD_STARE_VERSION)
-file(READ CMakeFiles/CMakeOutput.log LOGFILE)
-cmake_print_variables(LOGFILE)
 if (NOT GOOD_STARE_VERSION)
   MESSAGE(FATAL_ERROR "STARE version 0.16.3 or later is required")  
 endif ()
