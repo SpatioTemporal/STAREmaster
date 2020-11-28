@@ -110,11 +110,11 @@ CHECK_C_SOURCE_COMPILES("
 #include <STARE.h>
 #if STARE_VERSION_MAJOR == 0
 #if STARE_VERSION_MINOR < 16
-#error
+ no good
 #endif
 #if STARE_VERSION_MINOR == 16
 #if STARE_VERSION_PATCH < 3
-#error
+ no good
 #endif
 #endif
 #endif
