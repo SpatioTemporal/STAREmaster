@@ -119,6 +119,9 @@ CHECK_C_SOURCE_COMPILES("
 #endif
 #endif
 int main() {return 0;}" GOOD_STARE_VERSION)
+if (NOT GOOD_STARE_VERSION)
+  MESSAGE(FATAL_ERROR "STARE version 0.16.3 or later is required")  
+endif ()
 
 # Ensure that ncdump is available for testing.
 find_program(NCDUMP NAMES ncdump)
