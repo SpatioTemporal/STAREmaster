@@ -101,6 +101,9 @@ if (NOT STARE_FOUND)
   message(fatal_error " STARE library is required.")
 endif()
 
+# STARE requires C++11
+add_compile_options( -std=c++11 )
+
 # Check STARE version, must be 0.16.3 or later.
 INCLUDE(CheckCSourceCompiles)
 CHECK_C_SOURCE_COMPILES("
@@ -116,9 +119,6 @@ CHECK_C_SOURCE_COMPILES("
 #endif
 #endif
 int main() {return 0;}" GOOD_STARE_VERSION)
-
-# STARE requires C++11
-add_compile_options( -std=c++11 )
 
 # Ensure that ncdump is available for testing.
 find_program(NCDUMP NAMES ncdump)
