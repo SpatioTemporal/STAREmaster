@@ -101,6 +101,22 @@ if (NOT STARE_FOUND)
   message(fatal_error " STARE library is required.")
 endif()
 
+# Check STARE version, must be 0.16.3 or later.
+INCLUDE(CheckCSourceCompiles)
+CHECK_C_SOURCE_COMPILES("
+#include <STARE.h>
+#if STARE_VERSION_MAJOR == 0
+#if STARE_VERSION_MINOR < 16
+#error
+#endif
+#if STARE_VERSION_MINOR == 16
+#if STARE_VERSION_PATCH < 3
+#error
+#endif
+#endif
+#endif
+int main() {return 0;}" GOOD_STARE_VERSION)
+
 # STARE requires C++11
 add_compile_options( -std=c++11 )
 
