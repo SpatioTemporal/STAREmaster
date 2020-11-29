@@ -21,7 +21,7 @@ jobs:
     - name: Installs
       run: |
         set -x
-        sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev
+        sudo apt-get install netcdf-bin libnetcdf-dev doxygen graphviz wget gfortran libjpeg-dev libz-dev build-essential
     - name: cache-hdf4
       id: cache-hdf4
       uses: actions/cache@v2
