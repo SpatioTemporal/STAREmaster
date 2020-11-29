@@ -111,6 +111,8 @@ cmake_print_variables(STARE_LIBRARIES)
 set(CMAKE_REQUIRED_LINK_OPTIONS "-L${STARE_LIBRARIES}")
 set(CMAKE_REQUIRED_LIBRARIES "STARE")
 INCLUDE(CheckCXXSourceCompiles)
+FILE(READ "/home/runner/stare/include/STARE.h" LOGFILE)
+cmake_print_variables(LOGFILE)
 CHECK_CXX_SOURCE_COMPILES("
 #include <STARE.h>
 #if STARE_VERSION_MAJOR == 0
