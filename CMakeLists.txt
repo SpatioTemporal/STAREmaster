@@ -141,8 +141,10 @@ INCLUDE(CheckCXXSourceCompiles)
 CHECK_CXX_SOURCE_COMPILES("
 #include <STARE.h>
 #if STARE_VERSION_MAJOR == 0
-#if STARE_VERSION_MAJOR < 16
+#if STARE_VERSION_MINOR < 16
+#if STARE_VERSION_PATCH < 3
  choke me
+#endif
 #endif
 #endif
 int main() {return 0;}" GOOD_STARE_VERSION)
