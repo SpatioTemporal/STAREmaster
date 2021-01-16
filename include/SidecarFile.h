@@ -31,7 +31,7 @@ public:
 			int stare_cover_size, unsigned long long *stare_cover);
 
     /* Read a STARE sidecar file. */
-    int readFile(const std::string fileName, int verbose);
+    int readSidecarFile(const std::string fileName, int verbose);
     
     /** Close the file. */
     int closeFile();
