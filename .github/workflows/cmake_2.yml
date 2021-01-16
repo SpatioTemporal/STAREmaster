@@ -85,7 +85,6 @@ jobs:
         ls -l /usr/local/Cellar/netcdf
         mkdir build
         cd build
-        nc-config --libs
         export CXX_STANDARD_LIBRARIES=-lz
         cmake -DCMAKE_CXX_STANDARD_LIBRARIES="${CXX_STANDARD_LIBRARIES}" -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/Users/runner/hdf4;/Users/runner/hdfeos2' -DSTARE_INCLUDE_DIR=/Users/runner/stare/include -DSTARE_LIBRARY=/Users/runner/stare/lib ..
         make VERBOSE=1
