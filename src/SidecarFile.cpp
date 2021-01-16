@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "SidecarFile.h"
+#include "ssc.h"
 #include <netcdf.h>
 
 /**
@@ -29,12 +30,17 @@ int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose)
 {
     int ncid;
+    char title_in[NC_MAX_NAME + 1];
     int ret;
     
     if (verbose) std::cout << "Reading sidecar file " << fileName << "\n";
 
     // Open the sidecar file.
     if ((ret = nc_open(fileName.c_str(), NC_NOWRITE, &ncid)))
+        return ret;
+
+    // Check the title attribute to make sure this is a sidecar file.
+    if ((ret = nc_get_att_text(ncid, NC_GLOBAL, SSC_TITLE_NAME, title_in)))
         return ret;
 
     // Close the sidecar file.

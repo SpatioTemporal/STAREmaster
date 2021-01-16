@@ -16,7 +16,6 @@
 using namespace std;
 
 #define NAME_CONVENTIONS "Conventions"
-#define NAME_TITLE "title"
 #define NAME_INSTITUTION "institution"
 #define NAME_SOURCE "source"
 #define NAME_HISTORY "history"
@@ -30,7 +29,7 @@ int
 NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *institution_c)
 {
     int ret;
-    string title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file";
+    string title = SSC_TITLE;
     string institution = "";
     string source = "";
     string history = "";
@@ -52,7 +51,7 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
 	NCERR(ret);
 
     // title - A succinct description of what is in the dataset.
-    if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_TITLE, title.size() + 1, title.c_str())))
+    if ((ret = nc_put_att_text(ncid, NC_GLOBAL, SSC_TITLE_NAME, title.size() + 1, title.c_str())))
 	NCERR(ret);
 
     // institution - Specifies where the original data was produced.
@@ -82,7 +81,6 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
     // executed.
 
     // Get the current date/time.
-    time_t now = time(0);
     char time_str[MAX_TIME_STR + 1];
     time_t time_ptr = time(NULL); 
     strftime(time_str, MAX_TIME_STR, "%F %T", localtime(&time_ptr));
