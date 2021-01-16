@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "SidecarFile.h"
+#include <netcdf.h>
 
 /**
  * Write a sidecar file.
@@ -27,7 +28,19 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose)
 {
+    int ncid;
+    int ret;
+    
     if (verbose) std::cout << "Reading sidecar file " << fileName << "\n";
+
+    // Open the sidecar file.
+    if ((ret = nc_open(fileName.c_str(), NC_NOWRITE, &ncid)))
+        return ret;
+
+    // Close the sidecar file.
+    if ((ret = nc_close(ncid)))
+        return ret;
+    
     return 0;
 }
     

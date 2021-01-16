@@ -42,7 +42,7 @@ main()
 	return ERR;
 
     // Read the sidecar file.
-    if (sf.readSidecarFile(fileName, verbose))
+    if (sf.readSidecarFile(fileNameOut, verbose))
         return ERR;
 
     return 0;
