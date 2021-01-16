@@ -9,6 +9,9 @@ site](https://github.com/SpatioTemporal/STARE) and [STARE - TOWARD
 UNPRECEDENTED GEO-DATA
 INTEROPERABILITY](https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY).
 
+For more information about STARE, see the [STARE demonstration
+presentation](https://drive.google.com/file/d/16z9pPxAnWKl2b1yKkhHyKM9pAQuGP0Z7).
+
 ## Supported Datasets
 
 Dataset        | STAREmaster ID | Full Name | Notes
