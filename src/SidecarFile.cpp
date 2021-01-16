@@ -20,3 +20,14 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 		     " with build level " << build_level << "\n";
     return 0;
 }
+
+/**
+ * Read a sidecare file.
+ */
+int
+SidecarFile::readFile(const std::string fileName, int verbose)
+{
+    if (verbose) std::cout << "Reading sidecar file " << fileName << "\n";
+    return 0;
+}
+    

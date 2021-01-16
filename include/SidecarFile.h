@@ -21,6 +21,7 @@ public:
 		  int quiet, int build_level, int i, int j,
 		  double *geo_lat, double *geo_lon,
 		  unsigned long long *index);
+
     /** Write a STARE index. */
     int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon,
@@ -28,6 +29,9 @@ public:
     /** Write a STARE cover */
     int writeSTARECover(int verbose, int quiet,
 			int stare_cover_size, unsigned long long *stare_cover);
+
+    /* Read a STARE sidecar file. */
+    int readFile(const std::string fileName, int verbose);
     
     /** Close the file. */
     int closeFile();
