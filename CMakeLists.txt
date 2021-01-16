@@ -104,6 +104,30 @@ endif()
 # STARE requires C++11
 add_compile_options( -std=c++11 )
 
+# Check STARE version, must be 0.16.3 or later.
+set(CMAKE_REQUIRED_INCLUDES "${STARE_INCLUDE_DIR}")
+set(CMAKE_REQUIRED_FLAGS "-std=c++11")
+cmake_print_variables(STARE_LIBRARIES)
+set(CMAKE_REQUIRED_LINK_OPTIONS "-L${STARE_LIBRARIES}")
+set(CMAKE_REQUIRED_LIBRARIES "STARE")
+INCLUDE(CheckCXXSourceCompiles)
+FILE(READ "/home/runner/stare/include/STARE.h" LOGFILE)
+cmake_print_variables(LOGFILE)
+CHECK_CXX_SOURCE_COMPILES("
+#include <STARE.h>
+#if STARE_VERSION_MAJOR == 0
+#if STARE_VERSION_MINOR < 16
+#if STARE_VERSION_PATCH < 3
+ choke me
+#endif
+#endif
+#endif
+int main() {return 0;}" GOOD_STARE_VERSION)
+cmake_print_variables(GOOD_STARE_VERSION)
+if (NOT GOOD_STARE_VERSION)
+  MESSAGE(FATAL_ERROR "STARE version 0.16.3 or later is required")  
+endif ()
+
 # Ensure that ncdump is available for testing.
 find_program(NCDUMP NAMES ncdump)
 cmake_print_variables(NCDUMP)
@@ -124,6 +148,13 @@ else()
 message("OpenMP not found")
 endif()
 
+# Set the include directories.
+include_directories("${CMAKE_CURRENT_BINARY_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  "${HDF4_INCLUDE_DIR}"
+  "${HDFEOS2_INCLUDE_DIR}"
+  "${STARE_INCLUDE_DIR}")
+
 #TARGET_LINK_LIBRARIES ( myDSO PUBLIC ${HDF5_LIBRARIES} )
 #TARGET_INCLUDE_DIRECTORIES ( myDSO PUBLIC ${HDF5_INCLUDE_DIRS} )
 
@@ -136,11 +167,6 @@ ENDMACRO()
 
 # Create a config.h.
 configure_file(config.h.cmake.in config.h)
-include_directories("${CMAKE_CURRENT_BINARY_DIR}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include"
-  "${HDF4_INCLUDE_DIR}"
-  "${HDFEOS2_INCLUDE_DIR}"
-  "${STARE_INCLUDE_DIR}")
 
 # Turn on testing.
 enable_testing()
