@@ -74,7 +74,7 @@ jobs:
         cd STARE-0.16.3-beta/
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/stare ..
+        cmake -DCMAKE_INSTALL_PREFIX=/Users/runner/stare ..
         make all
         sudo make install
         cd ../..
@@ -87,7 +87,7 @@ jobs:
         cd build
         nc-config --libs
         export CXX_STANDARD_LIBRARIES=-lz
-        cmake -DCMAKE_CXX_STANDARD_LIBRARIES="${CXX_STANDARD_LIBRARIES}" -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/Users/runner/hdf4;/Users/runner/hdfeos2' -DSTARE_INCLUDE_DIR=~/stare/include -DSTARE_LIBRARY=~/stare/lib ..
+        cmake -DCMAKE_CXX_STANDARD_LIBRARIES="${CXX_STANDARD_LIBRARIES}" -DCMAKE_BUILD_TYPE=Debug --trace-source=test/CMakeLists.txt  -DCMAKE_PREFIX_PATH='/Users/runner/hdf4;/Users/runner/hdfeos2' -DSTARE_INCLUDE_DIR=/Users/runner/stare/include -DSTARE_LIBRARY=/Users/runner/stare/lib ..
         make VERBOSE=1
         make VERBOSE=1 test
 
