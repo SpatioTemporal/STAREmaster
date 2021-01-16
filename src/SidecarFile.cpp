@@ -8,6 +8,7 @@
 #include "SidecarFile.h"
 #include "ssc.h"
 #include <netcdf.h>
+#include <cstring>
 
 /**
  * Write a sidecar file.
@@ -42,6 +43,8 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
     // Check the title attribute to make sure this is a sidecar file.
     if ((ret = nc_get_att_text(ncid, NC_GLOBAL, SSC_TITLE_NAME, title_in)))
         return ret;
+    if (strncmp(title_in, SSC_TITLE, NC_MAX_NAME))
+        return SSC_NOT_SIDECAR;
 
     // Close the sidecar file.
     if ((ret = nc_close(ncid)))

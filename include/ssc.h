@@ -41,6 +41,6 @@
 #define SSC_NDIM1 1
 #define SSC_NDIM2 2
 
-
+#define SSC_NOT_SIDECAR (-1001)
 
 
