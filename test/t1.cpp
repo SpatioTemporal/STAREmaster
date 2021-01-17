@@ -15,6 +15,7 @@ main()
     std::string fileName = "data/MOD05_L2.A2005349.2125.061.2017294065400.hdf";
     std::string fileNameOut = "t1_sidecar.nc";
     int gf_format;
+    int verbose = 1;
     
     std::cout << "Howdy!\n";
 
@@ -39,6 +40,10 @@ main()
     // Close the sidecar file.
     if (sf.closeFile())
 	return ERR;
+
+    // Read the sidecar file.
+    if (sf.readSidecarFile(fileNameOut, verbose))
+        return ERR;
 
     return 0;
 }

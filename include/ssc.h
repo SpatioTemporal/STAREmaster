@@ -34,12 +34,13 @@
 #define SSC_INDEX_VAR_ATT_NAME "variables"
 #define SSC_NUM_GRING 4
 #define SSC_MOD05 "mod05"
-
+#define SSC_TITLE_NAME "title"
+#define SSC_TITLE "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file"
 #define SSC_MAX_NAME 256
 
 #define SSC_NDIM1 1
 #define SSC_NDIM2 2
 
-
+#define SSC_NOT_SIDECAR (-1001)
 
 
