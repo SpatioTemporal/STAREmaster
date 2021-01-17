@@ -74,12 +74,20 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
                          " ndims " << ndims << "\n";
 
         // Get the long_name attribute value.
-        if ((ret = nc_get_att_text(ncid, NC_GLOBAL, SSC_LONG_NAME, long_name_in)))
+        if ((ret = nc_get_att_text(ncid, v, SSC_LONG_NAME, long_name_in)))
             continue;
+
+        // If this is a STARE index, learn about it.
         if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
         {
+            char variables_in[NC_MAX_NAME + 1];
+            
+            // What variables does this STARE index apply to?
+            if ((ret = nc_get_att_text(ncid, v, SSC_INDEX_VAR_ATT_NAME, variables_in)))
+                return ret;
+
             if (verbose)
-                std::cout << "long_name " << long_name_in << "\n";
+                std::cout << "variable_in " << variables_in << "\n";
         }
     }
 
