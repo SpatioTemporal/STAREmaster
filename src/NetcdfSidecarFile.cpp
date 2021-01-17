@@ -96,6 +96,20 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
 
 /**
  * Write a sidecar file.
+ *
+ * @param verbose Set to non-zero for verbose output.
+ * @param quiet Unused
+ * @param build_level STARE build level.
+ * @param i Size of latitude array.
+ * @param j Size of longitude array.
+ * @parma geo_lat Pointer to array of latitudes.
+ * @param geo_lon Pointer to array of longitudes.
+ * @param stare_index Pointer to array of STARE indexes.
+ * @param var_name Vector of string with variable names this STARE
+ * index applies to.
+ * @param stare_index_name Name of the variable that will hold this
+ * STARE index.
+ * @return 0 for success, error code otherwise.
  */
 int
 NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
