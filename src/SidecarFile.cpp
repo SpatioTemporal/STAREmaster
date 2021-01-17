@@ -10,6 +10,8 @@
 #include <netcdf.h>
 #include <cstring>
 
+#define NDIM2 2
+
 /**
  * Write a sidecar file.
  */
@@ -37,6 +39,7 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
 {
     int ncid;
     char title_in[NC_MAX_NAME + 1];
+    int ndims, nvars;
     int ret;
     
     if (verbose) std::cout << "Reading sidecar file " << fileName << "\n";
@@ -50,6 +53,25 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
         return ret;
     if (strncmp(title_in, SSC_TITLE, NC_MAX_NAME))
         return SSC_NOT_SIDECAR;
+
+    // How many vars and dims?
+    if ((ret = nc_inq(ncid, &ndims, &nvars, NULL, NULL)))
+        return ret;
+
+    // Find all variables that are STARE indexes.
+    for (int v = 0; v < nvars; v++)
+    {
+        char var_name[NC_MAX_NAME + 1];
+        nc_type xtype;
+        int ndims, dimids[NDIM2], natts;
+
+        // Learn about this var.
+        if ((ret = nc_inq_var(ncid, v, var_name, &xtype, &ndims, dimids, &natts)))
+            return ret;
+
+        if (verbose) std::cout << "var " << var_name << " type " << xtype << " ndims " << ndims;
+    }
+    
 
     // Close the sidecar file.
     if ((ret = nc_close(ncid)))
