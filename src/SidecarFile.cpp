@@ -78,7 +78,8 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
             continue;
         if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
         {
-            std::cout << "long_name " << long_name_in << "\n";
+            if (verbose)
+                std::cout << "long_name " << long_name_in << "\n";
         }
     }
 
