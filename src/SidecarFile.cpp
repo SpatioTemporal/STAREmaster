@@ -26,6 +26,11 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 
 /**
  * Read a sidecare file.
+ *
+ * @param fileName Name of the sidecar file.
+ * @param verbose Set to non-zero to enable verbose output for
+ * debugging.
+ * @return 0 for success, error code otherwise.
  */
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose)
