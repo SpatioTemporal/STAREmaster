@@ -62,6 +62,7 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
     for (int v = 0; v < nvars; v++)
     {
         char var_name[NC_MAX_NAME + 1];
+        char long_name_in[NC_MAX_NAME + 1];
         nc_type xtype;
         int ndims, dimids[NDIM2], natts;
 
@@ -69,9 +70,17 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
         if ((ret = nc_inq_var(ncid, v, var_name, &xtype, &ndims, dimids, &natts)))
             return ret;
 
-        if (verbose) std::cout << "var " << var_name << " type " << xtype << " ndims " << ndims;
+        if (verbose) std::cout << "var " << var_name << " type " << xtype <<
+                         " ndims " << ndims << "\n";
+
+        // Get the long_name attribute value.
+        if ((ret = nc_get_att_text(ncid, NC_GLOBAL, SSC_LONG_NAME, long_name_in)))
+            continue;
+        if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
+        {
+            std::cout << "long_name " << long_name_in << "\n";
+        }
     }
-    
 
     // Close the sidecar file.
     if ((ret = nc_close(ncid)))
