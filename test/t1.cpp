@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include "ModisL2GeoFile.h"
+#include "Modis05L2GeoFile.h"
 #include "NetcdfSidecarFile.h"
 
 #define MAX_STR 256
@@ -10,7 +10,7 @@
 int
 main()
 {
-    ModisL2GeoFile gf;
+    Modis05L2GeoFile gf;
     NetcdfSidecarFile sf;
     std::string fileName = "data/MOD05_L2.A2005349.2125.061.2017294065400.hdf";
     std::string fileNameOut = "t1_sidecar.nc";
