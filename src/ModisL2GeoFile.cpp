@@ -282,7 +282,8 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     LatLonDegrees64ValueVector perimeter; // Resize below
     int pk; // perimeter counter
 
-    if( !use_gring ) { // walk_perimeter, stride > 0...
+    if (!use_gring)
+    { // walk_perimeter, stride > 0...
 
         pk = 2*MAX_ALONG+2*MAX_ACROSS-4 - 1;
         perimeter.resize(2*MAX_ALONG+2*MAX_ACROSS-4); // Walk the perimeter. Note pk below.
@@ -363,13 +364,15 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
                 }
             }
 
-            if ( perimeter_stride > 1 ) {
+            if (perimeter_stride > 1)
+            {
                 // Clean up and resize the vector.
                 // Recall that     LatLonDegrees64ValueVector perimeter(2*MAX_ALONG+2*MAX_ACROSS-4).
 
                 // Copy to front of vector.
                 int i = 0;
-                for ( int k = pk+1; k < 2*MAX_ALONG+2*MAX_ACROSS-4; ++k ) {
+                for (int k = pk+1; k < 2*MAX_ALONG+2*MAX_ACROSS-4; ++k)
+                {
                     perimeter[i].lat = perimeter[k].lat;
                     perimeter[i].lon = perimeter[k].lon;
                     ++i;
@@ -378,12 +381,15 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
             }
 
         }
-    } else { // Right now, use_gring goes here. If we ever load from a separate file, reconsider.
+    }
+    else
+    { // Right now, use_gring goes here. If we ever load from a separate file, reconsider.
         //             perimeter_stride <= 0 ) {
 
         // Get the GRing info. After this call, gring_lat and gring_lon
         // contain the 4 gring values for lat and lon.
-        if ((ret = getGRing(fileName, verbose, gring_lat, gring_lon))) {
+        if ((ret = getGRing(fileName, verbose, gring_lat, gring_lon)))
+        {
             cerr <<"Error with GRing, maybe retry with --walk_perimeter 1.\n";
             return ret;
         }
@@ -391,7 +397,8 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
         // Note the hardcoded 4 for the 4 corners or the gring.
         perimeter.resize(4); // Use 4 here until we find a granule with more than 4.
         pk = 3;
-        for (int i=0; i< 4; ++i) {
+        for (int i=0; i< 4; ++i)
+        {
             perimeter[pk].lat = gring_lat[i];
             perimeter[pk].lon = gring_lon[i];
             --pk;
@@ -400,11 +407,10 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
 
-    if ( cover_level == -1 ) {
+    if (cover_level == -1)
         this->cover_level = finest_resolution;
-    } else {
+    else
         this->cover_level = cover_level;
-    }
 
     if (verbose) std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
 
@@ -416,9 +422,8 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     geo_num_cover_values1[0] = cover.size();
     if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
         return SSC_ENOMEM;
-    for(int k=0; k<geo_num_cover_values1[0]; ++k) {
+    for (int k = 0; k < geo_num_cover_values1[0]; ++k)
         geo_cover1[0][k] = cover[k];
-    }
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
@@ -463,7 +468,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
         return SSC_EHDF4ERR;
     if (verbose) std::cout << "nattr " << nattr << " " << attrlist << " strbufsize " <<
                      strbufsize << "\n";
-
 
     // if (SWmapinfo(swathid, "Latitude", "Cell_Across_Swath_5km/Cell_Across_Swath_1km",
     //            offset, increment))
