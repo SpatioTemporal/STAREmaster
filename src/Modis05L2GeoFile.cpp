@@ -1,9 +1,9 @@
-// This class is a GeoFile for HDF4 format files.
-
-// Ed Hartnett 4/4/20
+/// @file
+/// This class handles the MOD05 L2 files from MODIS.
+/// @author Ed Hartnett @date 4/4/20
 
 #include "config.h"
-#include "ModisL2GeoFile.h"
+#include "Modis05L2GeoFile.h"
 #include <mfhdf.h>
 #include <hdf.h>
 #include <HdfEosDef.h>
@@ -21,22 +21,22 @@
 #define MAX_ALONG 406
 #define MAX_ACROSS 270
 
-/** Construct a ModisL2GeoFile.
+/** Construct a Modis05L2GeoFile.
  *
- * @return a ModisL2GeoFile
+ * @return a Modis05L2GeoFile
  */
-ModisL2GeoFile::ModisL2GeoFile()
+Modis05L2GeoFile::Modis05L2GeoFile()
 {
-    cout<<"ModisL2GeoFile constructor\n";
+    cout<<"Modis05L2GeoFile constructor\n";
 
 }
 
-/** Destroy a ModisL2GeoFile.
+/** Destroy a Modis05L2GeoFile.
  *
  */
-ModisL2GeoFile::~ModisL2GeoFile()
+Modis05L2GeoFile::~Modis05L2GeoFile()
 {
-    cout<<"ModisL2GeoFile destructor\n";
+    cout<<"Modis05L2GeoFile destructor\n";
 }
 
 /** Read the GRing info.
@@ -46,7 +46,7 @@ ModisL2GeoFile::~ModisL2GeoFile()
  * @return 0 for success, error code otherwise.
  */
 int
-ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon)
+Modis05L2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon)
 {
     char attr_name[SSC_MAX_NAME];
     char *sm_attr;
@@ -150,9 +150,9 @@ ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_l
  * @return 0 for no error, error code otherwise.
  */
 int
-ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
-                         int build_level, int cover_level,
-                         bool use_gring, int perimeter_stride)
+Modis05L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
+                           int build_level, int cover_level,
+                           bool use_gring, int perimeter_stride)
 {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
@@ -182,7 +182,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
 
     // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
     // The same 1km geolocation data can be found in MOD03.
-    //
     stare_index_name.push_back("5km");
 
     // stare_index_name.push_back("1km");
