@@ -49,7 +49,6 @@ int
 ModisL2GeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon)
 {
     char attr_name[SSC_MAX_NAME];
-    char sds_name[SSC_MAX_NAME];
     char *sm_attr;
     string sm;
     string lon_str = "GRINGPOINTLONGITUDE";
@@ -211,10 +210,6 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
         return SSC_ENOMEM;
     if (!(geo_cover1 = (unsigned long long **)malloc(num_cover * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
-    /*
-      if (!(cover1 = (STARE_SpatialIntervals *)malloc(num_cover * sizeof(STARE_SpatialIntervals))))
-      return SSC_ENOMEM;
-    */
 
     // Open the swath file.
     if ((swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY)) < 0)
@@ -225,13 +220,16 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";
 
     // Attach to a swath.
-    if ((swathid = SWattach(swathfileid, SSC_MOD05)) < 0)
+    string ssc_mod05 = SSC_MOD05;
+    if ((swathid = SWattach(swathfileid, (char *)ssc_mod05.c_str())) < 0)
         return SSC_EHDF4ERR;
 
     // Get lat and lon values.
-    if (SWreadfield(swathid, SSC_LON_NAME, NULL, NULL, NULL, longitude))
+    string ssc_lon_name = SSC_LON_NAME;
+    if (SWreadfield(swathid, (char *)ssc_lon_name.c_str(), NULL, NULL, NULL, longitude))
         return SSC_EHDF4ERR;
-    if (SWreadfield(swathid, SSC_LAT_NAME, NULL, NULL, NULL, latitude))
+    string ssc_lat_name = SSC_LAT_NAME;
+    if (SWreadfield(swathid, (char *)ssc_lat_name.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
 
     geo_num_i1[0] = MAX_ALONG;
@@ -405,22 +403,24 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
         }
     }
 
-    if (verbose) std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
+    if (verbose)
+        std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
 
     if (cover_level == -1)
         this->cover_level = finest_resolution;
     else
         this->cover_level = cover_level;
 
-    if (verbose) std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
+    if (verbose)
+        std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
 
-    //    cover1[0]                = index.NonConvexHull(perimeter,finest_resolution);
     cover = index.NonConvexHull(perimeter,this->cover_level);
 
     if (verbose) std::cout << "cover size = " << cover.size()  << "\n";
 
     geo_num_cover_values1[0] = cover.size();
-    if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],sizeof(unsigned long long))))
+    if (!(geo_cover1[0] = (unsigned long long *)calloc(geo_num_cover_values1[0],
+                                                       sizeof(unsigned long long))))
         return SSC_ENOMEM;
     for (int k = 0; k < geo_num_cover_values1[0]; ++k)
         geo_cover1[0][k] = cover[k];
@@ -428,7 +428,8 @@ ModisL2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
         return SSC_EHDF4ERR;
-    if (verbose) std::cout << "ndims " << ndims << " " << dimnames << "\n";
+    if (verbose)
+        std::cout << "ndims " << ndims << " " << dimnames << "\n";
 
     std::stringstream ss(dimnames);
     std::vector<std::string> result;
