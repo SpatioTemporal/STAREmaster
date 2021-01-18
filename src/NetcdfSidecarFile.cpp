@@ -24,6 +24,12 @@ using namespace std;
 
 /**
  * Create a sidecar file.
+ *
+ * @param fileName The name of the sidecar file to create.
+ * @param verbose Set to non-zero for verbose output.
+ * @param institution_c Pointer to char array with text describing the
+ * creating insitution, to support CF convention.
+ * @return 0 for success, error code otherwise.
  */
 int
 NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *institution_c)
