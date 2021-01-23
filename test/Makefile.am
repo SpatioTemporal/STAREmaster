@@ -25,7 +25,8 @@ endif
 # These files also must be included with distribution.
 EXTRA_DIST = CMakeLists.txt run_tests.sh run_large_file_tests.sh	\
 ref_MOD05_L2.A2005349.2125.061.2017294065400_stare.cdl			\
-ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl
+ref_MYD09.A2020058.1515.006.2020060020205_stare.cdl			\
+ref_MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl
 
 CLEANFILES = *.nc *_out.cdl
 
