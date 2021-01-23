@@ -1,0 +1,7 @@
+netcdf MOD09GA.A2020009.h00v08.006.2020011025435_stare {
+
+// global attributes:
+		:Conventions = "CF-1.8" ;
+		:title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file" ;
+		:source = "STAREmaster 1.0.0" ;
+}
