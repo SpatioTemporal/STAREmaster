@@ -2,6 +2,15 @@
 set -e
 set -x
 
+echo "*** running test t1..."
+./t1
+
+echo "*** creating CDL of t1 sidecar file..."
+ncdump t1_sidecar.nc > t1_sidecar_out.cdl
+
+# Remove the line that has the history attribute, containing date/time.
+sed '20d' t1_sidecar_out.cdl > t1_sidecar_no_hist_out.cdl
+
 echo "*** creating sidecar file for MOD09GA..."
 ../src/createSidecarFile -w 1 -d MOD09GA data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf
 
