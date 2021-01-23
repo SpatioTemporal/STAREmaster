@@ -19,6 +19,12 @@ main()
     
     std::cout << "Howdy!\n";
 
+    // Test getting sidecarFileName.
+    if (gf.sidecarFileName("bb") != "bb_stare.nc")
+        return ERR;
+    if (gf.sidecarFileName("bb.nc") != "bb_stare.nc")
+        return ERR;
+
     // What type of file is this?
     if (gf.determineFormat(fileName, &gf_format))
 	return ERR;
