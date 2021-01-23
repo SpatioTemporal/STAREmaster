@@ -183,6 +183,11 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose, int quiet,
     // Geolocation data stored in MOD05 is at 5km and may be interpolated to 1km.
     // The same 1km geolocation data can be found in MOD03.
     stare_index_name.push_back("5km");
+    var_name[0].push_back("Scan_Start_Time");
+    var_name[0].push_back("Solar_Zenith");
+    var_name[0].push_back("Solar_Azimuth");
+    var_name[0].push_back("Water_Vapor_Infrared");
+    var_name[0].push_back("Quality_Assurance_Infrared");
 
     // stare_index_name.push_back("1km");
     // stare_index_name.push_back("500m");

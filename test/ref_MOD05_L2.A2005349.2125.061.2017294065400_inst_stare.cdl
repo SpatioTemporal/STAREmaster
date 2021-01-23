@@ -12,7 +12,7 @@ variables:
 		Longitude_5km:units = "degrees_east" ;
 	uint64 STARE_index_5km(i_5km, j_5km) ;
 		STARE_index_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) index" ;
-		STARE_index_5km:variables = "" ;
+		STARE_index_5km:variables = "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared" ;
 	uint64 STARE_cover_5km(l_5km) ;
 		STARE_cover_5km:long_name = "SpatioTemporal Adaptive Resolution Encoding (STARE) cover" ;
 
