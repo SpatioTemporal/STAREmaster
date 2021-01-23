@@ -112,18 +112,10 @@ Arguments parseArguments(int argc, char *argv[]) {
  * @return The path and name of the sidecar file.
  */
 string
-pickOutputName(char *file_in_char, char *output_dir_char)
+pickOutputName(const char *file_in_char, char *output_dir_char)
 {
-    string file_in(file_in_char);
     string file_out(file_in_char);
     string output_dir(output_dir_char);
-
-    // Is there a file extension?
-    size_t f = file_in.rfind(".");
-    if (f != string::npos)
-	file_out = file_in.substr(0, f) + "_stare.nc";
-    else
-	file_out.append("_stare.nc");
 
     // Do we want this in a different directory?
     if (strlen(output_dir_char))
@@ -157,12 +149,6 @@ main(int argc, char *argv[])
 	return SSC_EINPUT;
     }
 
-    // Determine the output filename.
-    if (strlen(arg.output_file))
-	file_out = arg.output_file;
-    else
-	file_out = pickOutputName(argv[optind], arg.output_dir);
-
     if (arg.err_code) {
 	return arg.err_code;
     }
@@ -195,6 +181,12 @@ main(int argc, char *argv[])
 	    return 99;
 	}
     }
+
+    // Determine the output filename.
+    if (strlen(arg.output_file))
+	file_out = arg.output_file;
+    else
+	file_out = pickOutputName(gf->sidecarFileName(argv[optind]).c_str(), arg.output_dir);
 
     // Create the sidecar file.
     sf.createFile(file_out, arg.verbose, arg.institution);
