@@ -2,14 +2,17 @@
 set -e
 set -x
 
-#echo "*** creating sidecar file for MOD09GA..."
+echo "*** creating sidecar file for MOD09GA..."
 ../src/createSidecarFile -w 1 -d MOD09GA data/MOD09GA.A2020009.h00v08.006.2020011025435.hdf
 
-#echo "*** creating CDL of MOD05 sidecar file header..."
-#ncdump -h data/MOD09GA.h00v08_stare.nc > MOD09GA.h00v08_stare_out.cdl
+echo "*** creating CDL of MOD09 sidecar file header..."
+ncdump -h data/MOD09GA.A2020009.h00v08.006.2020011025435_stare.nc > MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl
 
-#echo "*** checking that sidecar header is correct..."
-#diff -b -w MOD09GA.h00v08_stare_out.cdl ref_MOD09GA.h00v08_stare.cdl
+# Remove the line that has the history attribute, containing date/time.
+sed '7d' MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl > MOD09GA.A2020009.h00v08.006.2020011025435_stare_no_hist_out.cdl
+
+echo "*** checking that sidecar header is correct..."
+diff -b -w MOD09GA.A2020009.h00v08.006.2020011025435_stare_no_hist_out.cdl ref_MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl
 
 echo "*** creating sidecar file for MOD05..."
 ../src/createSidecarFile -w 1 data/MOD05_L2.A2005349.2125.061.2017294065400.hdf
