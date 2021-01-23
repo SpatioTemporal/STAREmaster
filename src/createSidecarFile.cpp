@@ -103,6 +103,14 @@ Arguments parseArguments(int argc, char *argv[]) {
     return arguments;
 };
 
+/** Pick an output filename for the STARE index file, including output
+ * directory.
+ *
+ * @param file_in_char Name of the data file.
+ * @param output_dir_char If present, the name of the output directory
+ * for the STARE index sidecar file.
+ * @return The path and name of the sidecar file.
+ */
 string
 pickOutputName(char *file_in_char, char *output_dir_char)
 {
