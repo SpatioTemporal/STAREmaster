@@ -30,15 +30,16 @@ public:
     ~GeoFile();
     
     int determineFormat(const std::string fileName, int *gf_format);
+
     /** Read file. */
-    int readFile(const std::string fileName, int verbose, int quiet, int build_level);
+    int readFile(const string fileName, int verbose, int quiet, int build_level);
+
+    /** Get STARE index sidecar filename. */
+    string sidecarFileName(const string fileName);
 
     int num_index; /**< Number of STARE indicies needed for this file. */
     int *geo_num_i1; /**< Number of I. */
     int *geo_num_j1; /**< Number of J. */
-    // double *geo_lat; /**< Array of latitude values. */
-    // double *geo_lon; /**< Array of longitude values. */
-    // unsigned long long *geo_index; /**< Array of STARE index. */
     double **geo_lat1; /**< Array of latitude values. */
     double **geo_lon1; /**< Array of longitude values. */
     unsigned long long **geo_index1; /**< Array of STARE index. */
@@ -46,7 +47,6 @@ public:
     int num_cover;
     unsigned long long **geo_cover1; /**< Array of STARE index intervals. */
     int *geo_num_cover_values1;
-    //    STARE_SpatialIntervals *cover1;
     vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
     STARE_SpatialIntervals cover;
 

@@ -171,3 +171,21 @@ GeoFile::determineFormat(const std::string fileName, int *gf_format)
     return 0;
 }
 
+string
+GeoFile::sidecarFileName(const string fileName)
+{
+    string sidecarFileName;
+    
+    // Is there a file extension?
+    size_t f = fileName.rfind(".");
+    if (f != string::npos)
+	sidecarFileName = fileName.substr(0, f) + "_stare.nc";
+    else
+    {
+        sidecarFileName = fileName;
+	sidecarFileName.append("_stare.nc");
+    }
+
+    return sidecarFileName;
+}
+
