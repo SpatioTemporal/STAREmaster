@@ -39,11 +39,10 @@ private:
     
 public:
     int createFile(const std::string fileName, int verbose, char *institution);
-    int writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
+    int writeSTAREIndex(int verbose, int build_level, int i, int j,
 			double *geo_lat, double *geo_lon, unsigned long long *stare_index,
 			vector<string> var_name, string stare_index_name);
-    int writeSTARECover(int verbose, int quiet,
-			int stare_cover_size, unsigned long long *stare_cover,
+    int writeSTARECover(int verbose, int stare_cover_size, unsigned long long *stare_cover,
 			string stare_cover_name);
     int closeFile();
 };

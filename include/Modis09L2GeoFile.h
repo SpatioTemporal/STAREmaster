@@ -23,7 +23,7 @@
 class Modis09L2GeoFile: public GeoFile
 {
 public:
-    int readFile(const std::string fileName, int verbose, int quiet, int build_level);
+    int readFile(const std::string fileName, int verbose, int build_level);
 };
 
 #endif /* MODIS09_L2_GEO_FILE_H_ */
