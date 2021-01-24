@@ -25,7 +25,6 @@ void usage(char *name) {
         << "Options:" << endl
         << "  " << " -h, --help        : print this help" << endl
         << "  " << " -v, --verbose     : verbose: print all" << endl
-        << "  " << " -q, --quiet       : don't chat, just give back index" << endl
         << "  " << " -b, --build_level : Higher levels -> longer initialization time. (default is 5)" << endl
         << "  " << " -c, --cover_level    : Cover resolution, level 10 ~ 10 km." << endl
         << "  " << " -g, --use_gring      : Use GRING data to construct cover (default)" << endl
@@ -40,7 +39,6 @@ void usage(char *name) {
 
 struct Arguments {
     bool verbose = false;
-    bool quiet = false;
     int build_level = SSC_DEFAULT_BUILD_LEVEL;
     int cover_level = -1;
     bool cover_gring = false; 
@@ -58,7 +56,6 @@ Arguments parseArguments(int argc, char *argv[]) {
     static struct option long_options[] = {
         {"help", no_argument, 0, 'h'},
         {"verbose", no_argument, 0, 'v'},
-        {"quiet", no_argument, 0, 'q'},
         {"build_level", required_argument, 0, 'b'},
 	{"cover_level", required_argument,0,'c'},
 	{"use_gring", no_argument, 0, 'g'},
@@ -76,7 +73,6 @@ Arguments parseArguments(int argc, char *argv[]) {
         switch (opt) {
         case 'h': usage(argv[0]);
         case 'v': arguments.verbose = true; break;
-        case 'q': arguments.quiet = true; break;
         case 'b': arguments.build_level = atoi(optarg); break;
 	case 'c': arguments.cover_level = atoi(optarg); break;
 	case 'g': arguments.cover_gring = true; break;
@@ -156,7 +152,7 @@ main(int argc, char *argv[])
     if (arg.data_type == MOD09)
     {
 	gf = new Modis09L2GeoFile();
-	if (((Modis09L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	if (((Modis09L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.build_level))
 	{
 	    cerr<<"Error reading MOD09 L2 file.\n";
 	    return 99;
@@ -165,7 +161,7 @@ main(int argc, char *argv[])
     else if (arg.data_type == MOD09GA)
     {
 	gf = new Modis09GAGeoFile();
-	if (((Modis09GAGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level))
+	if (((Modis09GAGeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.build_level))
 	{
 	    cerr<<"Error reading MOD09GA file.\n";	    
 	    return 99;
@@ -174,7 +170,7 @@ main(int argc, char *argv[])
     else
     {
 	gf = new Modis05L2GeoFile();
-	if (((Modis05L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.quiet, arg.build_level,
+	if (((Modis05L2GeoFile *)gf)->readFile(argv[optind], arg.verbose, arg.build_level,
                                                arg.cover_level, arg.cover_gring, arg.stride))
 	{
 	    cerr<<"Error reading MOD05 file.\n";
@@ -194,7 +190,7 @@ main(int argc, char *argv[])
     // Write the sidecar file.
     for (int i = 0; i < gf->num_index; i++)
     {
-	if (sf.writeSTAREIndex(arg.verbose, arg.quiet, arg.build_level, gf->geo_num_i1[i],
+	if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i1[i],
                                gf->geo_num_j1[i], gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i],
                                gf->var_name[i], gf->stare_index_name.at(i)))
 	{
@@ -207,8 +203,7 @@ main(int argc, char *argv[])
     for (int i = 0; i < gf->num_cover; i++) {
 	std::cout << "writing cover i = " << i << ", name = " <<
             gf->stare_cover_name.at(i)  << std::endl;
-	if (sf.writeSTARECover(arg.verbose, arg.quiet,
-			       gf->geo_num_cover_values1[i], gf->geo_cover1[i],
+	if (sf.writeSTARECover(arg.verbose, gf->geo_num_cover_values1[i], gf->geo_cover1[i],
 			       gf->stare_cover_name.at(i)))
 	{
 	    cerr << "Error writing STARE cover.\n";

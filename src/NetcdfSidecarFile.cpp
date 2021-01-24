@@ -40,12 +40,12 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
     string source = "";
     string history = "";
     string cf_version = CF_VERSION;
-    
+
     if (verbose) std::cout << "Creating NETCDF sidecar file " << fileName << "\n";
 
     // Create a netCDF/HDF5 file.
     if ((ret = nc_create(fileName.c_str(), NC_CLOBBER|NC_NETCDF4, &ncid)))
-	NCERR(ret);
+        NCERR(ret);
 
     // Write some attributes to conform with CF conventions. See
     // https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#_attributes.
@@ -54,18 +54,18 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
     // must indicate this by setting the NUG defined global attribute
     // Conventions to a string value that contains "CF-1.8".
     if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_CONVENTIONS, cf_version.size() + 1, cf_version.c_str())))
-	NCERR(ret);
+        NCERR(ret);
 
     // title - A succinct description of what is in the dataset.
     if ((ret = nc_put_att_text(ncid, NC_GLOBAL, SSC_TITLE_NAME, title.size() + 1, title.c_str())))
-	NCERR(ret);
+        NCERR(ret);
 
     // institution - Specifies where the original data was produced.
     if (institution_c)
-	institution.append(institution_c);
+        institution.append(institution_c);
     if (institution.size())
-	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_INSTITUTION, institution.size() + 1, institution.c_str())))
-	    NCERR(ret);
+        if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_INSTITUTION, institution.size() + 1, institution.c_str())))
+            NCERR(ret);
 
     // source - The method of production of the original data. If it
     // was model-generated, source should name the model and its
@@ -75,8 +75,8 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
     source.append("STAREmaster ");
     source.append(PACKAGE_VERSION);
     if (source.size())
-	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_SOURCE, source.size() + 1, source.c_str())))
-	    NCERR(ret);
+        if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_SOURCE, source.size() + 1, source.c_str())))
+            NCERR(ret);
 
     // history - Provides an audit trail for modifications to the
     // original data. Well-behaved generic netCDF filters will
@@ -88,14 +88,14 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
 
     // Get the current date/time.
     char time_str[MAX_TIME_STR + 1];
-    time_t time_ptr = time(NULL); 
+    time_t time_ptr = time(NULL);
     strftime(time_str, MAX_TIME_STR, "%F %T", localtime(&time_ptr));
     history.append(time_str);
     history.append(" - STAREmaster ");
     history.append(fileName);
     if (history.size())
-	if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_HISTORY, history.size() + 1, history.c_str())))
-	    NCERR(ret);
+        if ((ret = nc_put_att_text(ncid, NC_GLOBAL, NAME_HISTORY, history.size() + 1, history.c_str())))
+            NCERR(ret);
 
     return 0;
 }
@@ -104,7 +104,6 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
  * Write a sidecar file.
  *
  * @param verbose Set to non-zero for verbose output.
- * @param quiet Unused
  * @param build_level STARE build level.
  * @param i Size of latitude array.
  * @param j Size of longitude array.
@@ -118,16 +117,16 @@ NetcdfSidecarFile::createFile(const std::string fileName, int verbose, char *ins
  * @return 0 for success, error code otherwise.
  */
 int
-NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int i, int j,
-				   double *geo_lat, double *geo_lon, unsigned long long *stare_index,
-				   vector<string> var_name, string stare_index_name)
+NetcdfSidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
+                                   double *geo_lat, double *geo_lon, unsigned long long *stare_index,
+                                   vector<string> var_name, string stare_index_name)
 {
     int dimid[SSC_NDIM2];
     int lat_varid, lon_varid, index_varid;
     string var_att;
     string dim_name;
     int ret;
-    
+
     if (verbose) std::cout << "Writing NETCDF sidecar indicies with build level " << build_level << "\n";
 
     // Define dimensions.
@@ -135,14 +134,14 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
     dim_name.append("_");
     dim_name.append(stare_index_name);
     if ((ret = nc_def_dim(ncid, dim_name.c_str(), i, &dimid[0])))
-	NCERR(ret);
+        NCERR(ret);
 
     dim_name.clear();
     dim_name.append(SSC_J_NAME);
     dim_name.append("_");
     dim_name.append(stare_index_name);
     if ((ret = nc_def_dim(ncid, dim_name.c_str(), j, &dimid[1])))
-	NCERR(ret);
+        NCERR(ret);
 
     // Define latitude.
     string lat_name;
@@ -150,15 +149,15 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
     lat_name.append("_");
     lat_name.append(stare_index_name);
     if ((ret = nc_def_var(ncid, lat_name.c_str(), NC_DOUBLE, SSC_NDIM2, dimid, &lat_varid)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_def_var_deflate(ncid, lat_varid, 1, 1, 3)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, lat_varid, SSC_LONG_NAME, sizeof(SSC_LAT_LONG_NAME),
-			       SSC_LAT_LONG_NAME)))
-	NCERR(ret);
+                               SSC_LAT_LONG_NAME)))
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, lat_varid, SSC_UNITS, sizeof(SSC_LAT_UNITS),
-			       SSC_LAT_UNITS)))
-	NCERR(ret);
+                               SSC_LAT_UNITS)))
+        NCERR(ret);
 
     // Define longitude.
     string lon_name;
@@ -166,15 +165,15 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
     lon_name.append("_");
     lon_name.append(stare_index_name);
     if ((ret = nc_def_var(ncid, lon_name.c_str(), NC_DOUBLE, SSC_NDIM2, dimid, &lon_varid)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_def_var_deflate(ncid, lon_varid, 1, 1, 3)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, lon_varid, SSC_LONG_NAME, sizeof(SSC_LON_LONG_NAME),
-			       SSC_LON_LONG_NAME)))
-	NCERR(ret);
+                               SSC_LON_LONG_NAME)))
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, lon_varid, SSC_UNITS, sizeof(SSC_LON_UNITS),
-			       SSC_LON_UNITS)))
-	NCERR(ret);
+                               SSC_LON_UNITS)))
+        NCERR(ret);
 
     // Define STARE index.
     string index_name;
@@ -182,31 +181,31 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
     index_name.append("_");
     index_name.append(stare_index_name);
     if ((ret = nc_def_var(ncid, index_name.c_str(), NC_UINT64, SSC_NDIM2, dimid, &index_varid)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_def_var_deflate(ncid, index_varid, 1, 1, 3)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, index_varid, SSC_LONG_NAME, sizeof(SSC_INDEX_LONG_NAME),
-			       SSC_INDEX_LONG_NAME)))
-	NCERR(ret);
+                               SSC_INDEX_LONG_NAME)))
+        NCERR(ret);
 
     // Add attribute with list of variables.
     for (int i = 0; i < (int)var_name.size(); i++)
     {
-	var_att.append(var_name.at(i).c_str());
-	if (i < (int)var_name.size() - 1)
-	    var_att.append(", ");
+        var_att.append(var_name.at(i).c_str());
+        if (i < (int)var_name.size() - 1)
+            var_att.append(", ");
     }
     if ((ret = nc_put_att_text(ncid, index_varid, SSC_INDEX_VAR_ATT_NAME, var_att.size() + 1,
-			       var_att.c_str())))
-	NCERR(ret);
+                               var_att.c_str())))
+        NCERR(ret);
 
     // Write data.
     if ((ret = nc_put_var(ncid, lat_varid, geo_lat)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_var(ncid, lon_varid, geo_lon)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_var(ncid, index_varid, stare_index)))
-    	NCERR(ret);
+        NCERR(ret);
 
     return 0;
 }
@@ -214,13 +213,19 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int quiet, int build_level, int 
 
 /**
  * Write a cover to the file.
+ *
+ * @param verbose Set to non-zero for verbose output to stdout.
+ * @param stare_cover_size Size of the STARE cover.
+ * @param stare_cover Pointer to array which is the STARE cover.
+ * @param stare_cover_name Name of the STARE cover.
+ * @return zero for success, error code otherwise.
  */
 int
-NetcdfSidecarFile::writeSTARECover(int verbose, int quiet,
-				   int stare_cover_size, unsigned long long *stare_cover,
-				   string stare_cover_name) {
-  
-  if (verbose) std::cout << "Writing NETCDF sidecar cover." << "\n";
+NetcdfSidecarFile::writeSTARECover(int verbose, int stare_cover_size, unsigned long long *stare_cover,
+                                   string stare_cover_name)
+{
+
+    if (verbose) std::cout << "Writing NETCDF sidecar cover." << "\n";
 
     string dim_name;
 
@@ -230,13 +235,13 @@ NetcdfSidecarFile::writeSTARECover(int verbose, int quiet,
     int ret;
 
     // Define STARE cover.
-    
+
     dim_name.clear();
     dim_name.append(SSC_L_NAME);
     dim_name.append("_");
     dim_name.append(stare_cover_name);
     if ((ret = nc_def_dim(ncid, dim_name.c_str(), stare_cover_size, &cover_dimid[0])))
-	NCERR(ret);
+        NCERR(ret);
 
     string cover_name;
     cover_name.append(SSC_COVER_NAME);
@@ -245,16 +250,16 @@ NetcdfSidecarFile::writeSTARECover(int verbose, int quiet,
 
     // SSC_NDIM?
     if ((ret = nc_def_var(ncid, cover_name.c_str(), NC_UINT64, SSC_NDIM1, cover_dimid, &cover_varid)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_def_var_deflate(ncid, cover_varid, 1, 1, 3)))
-	NCERR(ret);
+        NCERR(ret);
     if ((ret = nc_put_att_text(ncid, cover_varid, SSC_LONG_NAME, sizeof(SSC_COVER_LONG_NAME),
-			       SSC_COVER_LONG_NAME)))
-	NCERR(ret);
+                               SSC_COVER_LONG_NAME)))
+        NCERR(ret);
 
     if ((ret = nc_put_var(ncid, cover_varid, stare_cover)))
-    	NCERR(ret);
-  
+        NCERR(ret);
+
     return 0;
 }
 
@@ -266,4 +271,3 @@ NetcdfSidecarFile::closeFile()
 {
     return nc_close(ncid);
 }
-
