@@ -21,7 +21,7 @@ ncdump -h data/MOD09GA.A2020009.h00v08.006.2020011025435_stare.nc > MOD09GA.A202
 sed '7d' MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl > MOD09GA.A2020009.h00v08.006.2020011025435_stare_no_hist_out.cdl
 
 echo "*** checking that sidecar header is correct..."
-diff -b -w MOD09GA.A2020009.h00v08.006.2020011025435_stare_no_hist_out.cdl ref_MOD09GA.A2020009.h00v08.006.2020011025435_stare_out.cdl
+diff -b -w MOD09GA.A2020009.h00v08.006.2020011025435_stare_no_hist_out.cdl ref_MOD09GA.A2020009.h00v08.006.2020011025435_stare.cdl
 
 echo "*** creating sidecar file for MOD05..."
 ../src/createSidecarFile -w 1 data/MOD05_L2.A2005349.2125.061.2017294065400.hdf
