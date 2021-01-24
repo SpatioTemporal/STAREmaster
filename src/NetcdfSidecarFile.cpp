@@ -213,6 +213,12 @@ NetcdfSidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
 
 /**
  * Write a cover to the file.
+ *
+ * @param verbose Set to non-zero for verbose output to stdout.
+ * @param stare_cover_size Size of the STARE cover.
+ * @param stare_cover Pointer to array which is the STARE cover.
+ * @param stare_cover_name Name of the STARE cover.
+ * @return zero for success, error code otherwise.
  */
 int
 NetcdfSidecarFile::writeSTARECover(int verbose, int stare_cover_size, unsigned long long *stare_cover,
