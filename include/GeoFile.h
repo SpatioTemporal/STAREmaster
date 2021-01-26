@@ -18,7 +18,7 @@
 #include "STARE.h"
 using namespace std;
 
-#define MAX_NUM_INDEX 5 /**< Max number of STARE index vars in a file. */
+#define MAX_NUM_INDEX 10 /**< Max number of STARE index vars in a file. */
 
 /**
  * This is the base class for a data file with geolocation.
@@ -36,6 +36,14 @@ public:
 
     /** Get STARE index sidecar filename. */
     string sidecarFileName(const string fileName);
+
+    int readSidecarFile(const std::string fileName, int verbose, int &ncid);
+
+    /** Get STARE index for data varaible. */
+    int getSTAREIndex(const std::string varName, int verbose, int ncid);
+
+    /** Close sidecar file. */
+    int closeSidecarFile(int verbose, int ncid);
 
     int num_index; /**< Number of STARE indicies needed for this file. */
     int *geo_num_i1; /**< Number of I. */

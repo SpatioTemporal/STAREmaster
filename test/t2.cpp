@@ -1,3 +1,5 @@
+/* This is a test file for the STAREmaster project. */
+#include "config.h"
 #include <string>
 #include <sstream>
 #include <iostream>
