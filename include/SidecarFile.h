@@ -6,6 +6,7 @@
 
 #include <config.h>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
@@ -13,6 +14,8 @@
 
 #ifndef SIDECAR_FILE_H_
 #define SIDECAR_FILE_H_
+
+using std::vector, std::string;
 
 class SidecarFile
 {
@@ -31,7 +34,8 @@ public:
 			int stare_cover_size, unsigned long long *stare_cover);
 
     /* Read a STARE sidecar file. */
-    int readSidecarFile(const std::string fileName, int verbose);
+    int readSidecarFile(const std::string fileName, int verbose, int &num_index,
+                        vector<string> &stare_index_name);
     
     /** Close the file. */
     int closeFile();

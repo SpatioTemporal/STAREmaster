@@ -18,7 +18,7 @@
 #include "STARE.h"
 using namespace std;
 
-#define MAX_NUM_INDEX 5 /**< Max number of STARE index vars in a file. */
+#define MAX_NUM_INDEX 10 /**< Max number of STARE index vars in a file. */
 
 /**
  * This is the base class for a data file with geolocation.

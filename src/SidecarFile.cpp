@@ -32,10 +32,15 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
  * @param fileName Name of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
  * debugging.
+ * @param num_index Reference to an int that will get the number of
+ * STARE indexes in the file.
+ * @param stare_index_name Reference to a vector of string which hold
+ * the names of the STARE index variables.
  * @return 0 for success, error code otherwise.
  */
 int
-SidecarFile::readSidecarFile(const std::string fileName, int verbose)
+SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
+                             vector<string> &stare_index_name)
 {
     int ncid;
     char title_in[NC_MAX_NAME + 1];
@@ -86,7 +91,8 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose)
             // What variables does this STARE index apply to?
             if ((ret = nc_get_att_text(ncid, v, SSC_INDEX_VAR_ATT_NAME, variables_in)))
                 return ret;
-            
+
+            stare_index_name.push_back(var_name);
 
             num_index++;
             if (verbose)

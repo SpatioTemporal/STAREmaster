@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
@@ -48,7 +49,9 @@ main()
 	return ERR;
 
     // Read the sidecar file.
-    if (sf.readSidecarFile(fileNameOut, verbose))
+    int num_index;
+    vector<string> stare_index_name;    
+    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name))
         return ERR;
 
     return 0;
