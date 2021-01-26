@@ -40,7 +40,8 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
  */
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
-                             vector<string> &stare_index_name)
+                             vector<string> &stare_index_name, vector<size_t> &size_i,
+                             vector<size_t> &size_j)
 {
     int ncid;
     char title_in[NC_MAX_NAME + 1];
@@ -70,6 +71,7 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         char long_name_in[NC_MAX_NAME + 1];
         nc_type xtype;
         int ndims, dimids[NDIM2], natts;
+        size_t dimlen[NDIM2];
 
         // Learn about this var.
         if ((ret = nc_inq_var(ncid, v, var_name, &xtype, &ndims, dimids, &natts)))
@@ -87,13 +89,25 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
         {
             char variables_in[NC_MAX_NAME + 1];
+
+            // Find the length of the dimensions.
+            if ((ret = nc_inq_dimlen(ncid, dimids[0], &dimlen[0])))
+                return ret;
+            if ((ret = nc_inq_dimlen(ncid, dimids[1], &dimlen[1])))
+                return ret;
             
             // What variables does this STARE index apply to?
             if ((ret = nc_get_att_text(ncid, v, SSC_INDEX_VAR_ATT_NAME, variables_in)))
                 return ret;
 
+            // Save the name of this STARE index variable.
             stare_index_name.push_back(var_name);
 
+            // Save the dimensions of the STARE index var.
+            size_i.push_back(dimlen[0]);
+            size_j.push_back(dimlen[1]);
+
+            // Keep count of how many STARE indexes we find in the file.
             num_index++;
             if (verbose)
                 std::cout << "variable_in " << variables_in << "\n";

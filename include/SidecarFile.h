@@ -35,7 +35,8 @@ public:
 
     /* Read a STARE sidecar file. */
     int readSidecarFile(const std::string fileName, int verbose, int &num_index,
-                        vector<string> &stare_index_name);
+                        vector<string> &stare_index_name, vector<size_t> &size_i,
+                        vector<size_t> &size_j);
     
     /** Close the file. */
     int closeFile();

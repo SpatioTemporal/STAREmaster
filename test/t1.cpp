@@ -50,8 +50,9 @@ main()
 
     // Read the sidecar file.
     int num_index;
-    vector<string> stare_index_name;    
-    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name))
+    vector<string> stare_index_name;
+    vector<size_t> size_i, size_j;
+    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i, size_j))
         return ERR;
 
     return 0;
