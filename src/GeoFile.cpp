@@ -72,6 +72,7 @@ Options:
  */
 #include "config.h"
 #include "GeoFile.h"
+#include <netcdf.h>
 #include <mfhdf.h>
 #include <hdf.h>
 #include <HdfEosDef.h>
@@ -188,4 +189,53 @@ GeoFile::sidecarFileName(const string fileName)
 
     return sidecarFileName;
 }
+
+/**
+ * Read a sidecare file.
+ *
+ * @param fileName Name of the sidecar file.
+ * @param verbose Set to non-zero to enable verbose output for
+ * debugging.
+ * @return 0 for success, error code otherwise.
+ */
+int
+GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
+{
+    return 0;
+}
+
+/**
+ * Get STARE index for data varaible.
+ *
+ * @param ncid ID of the sidecar file.
+ * @param verbose Set to non-zero to enable verbose output for
+ * debugging.
+ * @return 0 for success, error code otherwise.
+ */
+int
+GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid)
+{
+    return 0;
+}
+
+/**
+ * Close sidecar file.
+ *
+ * @param ncid ID of the sidecar file.
+ * @param verbose Set to non-zero to enable verbose output for
+ * debugging.
+ * @return 0 for success, error code otherwise.
+ */
+int
+GeoFile::closeSidecarFile(int verbose, int ncid)
+{
+    int ret;
+    
+    if (verbose) std::cout << "Closing sidecar file with ncid " << ncid << "\n";
+    if ((ret = nc_close(ncid)))
+        return ret;
+    
+    return 0;
+}
+
 

@@ -41,9 +41,8 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
                              vector<string> &stare_index_name, vector<size_t> &size_i,
-                             vector<size_t> &size_j)
+                             vector<size_t> &size_j, int &ncid)
 {
-    int ncid;
     char title_in[NC_MAX_NAME + 1];
     int ndims, nvars;
     int ret;
@@ -114,10 +113,6 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         }
     }
 
-    // Close the sidecar file.
-    if ((ret = nc_close(ncid)))
-        return ret;
-    
     return 0;
 }
     
