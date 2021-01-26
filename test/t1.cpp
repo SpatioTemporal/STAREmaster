@@ -14,6 +14,7 @@
 int
 main()
 {
+    GeoFile gf_in;
     Modis05L2GeoFile gf;
     NetcdfSidecarFile sf;
     std::string fileName = "data/MOD05_L2.A2005349.2125.061.2017294065400.hdf";
@@ -60,6 +61,12 @@ main()
     if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i, size_j, ncid))
         return ERR;
     if (nc_close(ncid))
+        return ERR;
+
+    // Read it again with GeoFile.
+    if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
+        return ERR;
+    if (gf_in.closeSidecarFile(verbose, ncid))
         return ERR;
     
     return 0;
