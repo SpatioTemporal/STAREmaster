@@ -72,6 +72,7 @@ Options:
  */
 #include "config.h"
 #include "GeoFile.h"
+#include "NetcdfSidecarFile.h"
 #include <netcdf.h>
 #include <mfhdf.h>
 #include <hdf.h>
@@ -89,12 +90,11 @@ GeoFile::GeoFile()
     num_index = 0;
     geo_num_i1 = NULL;
     geo_num_j1 = NULL;
+    geo_cover1 = NULL;
+    geo_num_cover_values1 = NULL;
     geo_lat1 = NULL;
     geo_lon1 = NULL;
     geo_index1 = NULL;
-    geo_cover1 = NULL;
-    //    cover1 = NULL;
-    geo_num_cover_values1 = NULL;
 }
 
 /** Destroy a GeoFile.
@@ -105,23 +105,34 @@ GeoFile::~GeoFile()
     cout<<"GeoFile destructor\n";
 
     // Free any allocated memory.
-    for (int i = 0; i < num_index; i++)
+    if (geo_lat1)
     {
-	free(geo_lat1[i]);
-	free(geo_lon1[i]);
-	free(geo_index1[i]);
+        for (int i = 0; i < num_index; i++)
+            if (geo_lat1[i])
+                free(geo_lat1[i]);
+	free(geo_lat1);
+    }
+
+    if (geo_lon1)
+    {
+        for (int i = 0; i < num_index; i++)
+            if (geo_lon1[i])
+                free(geo_lon1[i]);
+	free(geo_lon1);
     }
     
+    if (geo_index1)
+    {
+        for (int i = 0; i < num_index; i++)
+            if (geo_index1[i])
+                free(geo_index1[i]);
+	free(geo_index1);
+    }
+        
     if (geo_num_i1)
 	free(geo_num_i1);
     if (geo_num_j1)
 	free(geo_num_j1);
-    if (geo_lat1)
-	free(geo_lat1);
-    if (geo_lon1)
-	free(geo_lon1);
-    if (geo_index1)
-	free(geo_index1);
 
     for (int i = 0; i < num_cover; i++)
     {
@@ -201,6 +212,12 @@ GeoFile::sidecarFileName(const string fileName)
 int
 GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
 {
+    NetcdfSidecarFile sf;
+    vector<size_t> size_i, size_j;
+    int ret;
+    
+    if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name, size_i, size_j, ncid)))
+        return ret;
     return 0;
 }
 
