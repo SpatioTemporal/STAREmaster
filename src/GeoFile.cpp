@@ -214,6 +214,7 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
 {
     NetcdfSidecarFile sf;
     vector<size_t> size_i, size_j;
+    vector<string> variables;
     int ret;
     
     if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name, size_i, size_j, variables, ncid)))
