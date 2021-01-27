@@ -36,6 +36,11 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
  * STARE indexes in the file.
  * @param stare_index_name Reference to a vector of string which hold
  * the names of the STARE index variables.
+ * @param size_i vector with the sizes of I for each STARE index.
+ * @param size_j vector with the sizes of J for each STARE index.
+ * @param variables vector of strings with variables each STARE index
+ * applies to.
+ * @param ncid The ncid of the opened sidecar file.
  * @return 0 for success, error code otherwise.
  */
 int
@@ -98,6 +103,8 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
             // What variables does this STARE index apply to?
             if ((ret = nc_get_att_text(ncid, v, SSC_INDEX_VAR_ATT_NAME, variables_in)))
                 return ret;
+	    std::string var_list = variables_in;
+	    variables.push_back(var_list);
 
             // Save the name of this STARE index variable.
             stare_index_name.push_back(var_name);

@@ -228,11 +228,19 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
  * @param ncid ID of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
  * debugging.
+ * @param varid A reference that gets the varid of the STARE index.
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid)
+GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid)
 {
+    for (string v : variables)
+    {
+	cout << v << endl;
+	if (v.find(varName) != string::npos) {
+	    //.. found.
+	} 
+    }
     return 0;
 }
 

@@ -58,7 +58,8 @@ main()
     vector<string> stare_index_name, variables;
     vector<size_t> size_i, size_j;
     string varName = "Scan_Start_Time";
-    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i, size_j, variables, ncid))
+    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i,
+			   size_j, variables, ncid))
         return ERR;
     if (nc_close(ncid))
         return ERR;
