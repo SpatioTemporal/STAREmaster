@@ -57,8 +57,9 @@ main()
     int num_index;
     vector<string> stare_index_name, variables;
     vector<size_t> size_i, size_j;
+    vector<int> stare_varid;
     if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i,
-			   size_j, variables, ncid))
+			   size_j, variables, stare_varid, ncid))
         return ERR;
     if (nc_close(ncid))
         return ERR;
@@ -70,14 +71,17 @@ main()
     if (variables.at(0) != "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared") ERR;
     if (size_i.size() != 1 || size_i.at(0) != 406) ERR;
     if (size_j.size() != 1 || size_j.at(0) != 270) ERR;
+    if (stare_varid.size() != 1 || stare_varid.at(0) != 2) ERR;
 
     // Read it again with GeoFile.
     if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
         return ERR;
     string varName = "Scan_Start_Time";
     int varid;
-    if (gf_in.getSTAREIndex(varName, 1, ncid, varid))
+    size_t si, sj;
+    if (gf_in.getSTAREIndex(varName, 1, ncid, varid, si, sj))
 	return ERR;
+    if (varid != 3) ERR;
     if (gf_in.closeSidecarFile(verbose, ncid))
         return ERR;
     

@@ -213,10 +213,10 @@ int
 GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
 {
     NetcdfSidecarFile sf;
-    vector<size_t> size_i, size_j;
     int ret;
     
-    if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name, size_i, size_j, variables, ncid)))
+    if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,
+				  size_i, size_j, variables, stare_varid, ncid)))
         return ret;
     return 0;
 }
@@ -231,7 +231,8 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid)
+GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
+		       size_t &my_size_i, size_t &my_size_j)
 {
     // Check all of our STARE indexes.
     for (int v = 0; v < variables.size(); v++)
@@ -242,6 +243,9 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
 	// Is the desired variable listed in the vars string?
 	if (vars.find(varName) != string::npos) {
 	    cout << "found!" << endl;
+	    varid = stare_varid.at(0);
+	    my_size_i = size_i.at(0);
+	    my_size_j = size_j.at(0);
 	} 
     }
     return 0;

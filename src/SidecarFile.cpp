@@ -46,7 +46,8 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
                              vector<string> &stare_index_name, vector<size_t> &size_i,
-                             vector<size_t> &size_j, vector<string> &variables, int &ncid)
+                             vector<size_t> &size_j, vector<string> &variables,
+			     vector<int> &stare_varid, int &ncid)
 {
     char title_in[NC_MAX_NAME + 1];
     int ndims, nvars;
@@ -93,6 +94,9 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
         {
             char variables_in[NC_MAX_NAME + 1];
+
+	    // Save the varid.
+	    stare_varid.push_back(v);
 
             // Find the length of the dimensions.
             if ((ret = nc_inq_dimlen(ncid, dimids[0], &dimlen[0])))
