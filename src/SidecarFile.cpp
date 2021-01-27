@@ -69,6 +69,7 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         return ret;
 
     // Find all variables that are STARE indexes.
+    num_index = 0;
     for (int v = 0; v < nvars; v++)
     {
         char var_name[NC_MAX_NAME + 1];
@@ -89,7 +90,6 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
             continue;
 
         // If this is a STARE index, learn about it.
-        num_index = 0;
         if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
         {
             char variables_in[NC_MAX_NAME + 1];

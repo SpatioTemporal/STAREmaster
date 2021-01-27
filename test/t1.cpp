@@ -64,6 +64,14 @@ main()
     if (nc_close(ncid))
         return ERR;
 
+    // Check results.
+    if (num_index != 1) ERR;
+    if (stare_index_name.size() != 1 || variables.size() != 1) ERR;
+    if (stare_index_name.at(0) != "STARE_index_1km") ERR;
+    if (variables.at(0) != "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared") ERR;
+    if (size_i.size() != 1 || size_i.at(0) != 406) ERR;
+    if (size_j.size() != 1 || size_j.at(0) != 270) ERR;
+
     // Read it again with GeoFile.
     if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
         return ERR;
