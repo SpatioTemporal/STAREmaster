@@ -40,7 +40,8 @@ public:
     int readSidecarFile(const std::string fileName, int verbose, int &ncid);
 
     /** Get STARE index for data varaible. */
-    int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid);
+    int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
+		      size_t &my_size_i, size_t &my_size_j);
 
     /** Close sidecar file. */
     int closeSidecarFile(int verbose, int ncid);
@@ -64,6 +65,9 @@ public:
     vector<string> stare_index_name;
     vector<string> stare_cover_name;
     vector<string> variables;
+
+    vector<size_t> size_i, size_j;
+    vector<int> stare_varid;
 };
 
 #endif /* GEO_FILE_H_ */
