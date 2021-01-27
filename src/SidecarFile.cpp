@@ -41,7 +41,7 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
                              vector<string> &stare_index_name, vector<size_t> &size_i,
-                             vector<size_t> &size_j, int &ncid)
+                             vector<size_t> &size_j, vector<string> &variables, int &ncid)
 {
     char title_in[NC_MAX_NAME + 1];
     int ndims, nvars;
