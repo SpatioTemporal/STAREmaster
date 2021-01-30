@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <netcdf.h>
 #include "Modis05L2GeoFile.h"
-#include "NetcdfSidecarFile.h"
+#include "SidecarFile.h"
 
 #define MAX_STR 256
 #define ERR 1
@@ -16,7 +16,7 @@ main()
 {
     GeoFile gf_in;
     Modis05L2GeoFile gf;
-    NetcdfSidecarFile sf;
+    SidecarFile sf;
     std::string fileName = "data/MOD05_L2.A2005349.2125.061.2017294065400.hdf";
     std::string fileNameOut = "t1_sidecar.nc";
     int gf_format;
@@ -65,13 +65,13 @@ main()
         return ERR;
 
     // Check results.
-    if (num_index != 1) ERR;
-    if (stare_index_name.size() != 1 || variables.size() != 1) ERR;
-    if (stare_index_name.at(0) != "STARE_index_1km") ERR;
-    if (variables.at(0) != "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared") ERR;
-    if (size_i.size() != 1 || size_i.at(0) != 406) ERR;
-    if (size_j.size() != 1 || size_j.at(0) != 270) ERR;
-    if (stare_varid.size() != 1 || stare_varid.at(0) != 2) ERR;
+    if (num_index != 1) return ERR;
+    if (stare_index_name.size() != 1 || variables.size() != 1) return ERR;
+    if (stare_index_name.at(0) != "STARE_index_1km") return ERR;
+    if (variables.at(0) != "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared") return ERR;
+    if (size_i.size() != 1 || size_i.at(0) != 406) return ERR;
+    if (size_j.size() != 1 || size_j.at(0) != 270) return ERR;
+    if (stare_varid.size() != 1 || stare_varid.at(0) != 2) return ERR;
 
     // Read it again with GeoFile.
     if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
@@ -81,7 +81,7 @@ main()
     size_t si, sj;
     if (gf_in.getSTAREIndex(varName, 1, ncid, varid, si, sj))
 	return ERR;
-    if (varid != 3) ERR;
+    if (varid != 2) return ERR;
     if (gf_in.closeSidecarFile(verbose, ncid))
         return ERR;
     

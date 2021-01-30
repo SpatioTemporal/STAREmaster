@@ -72,7 +72,7 @@ Options:
  */
 #include "config.h"
 #include "GeoFile.h"
-#include "NetcdfSidecarFile.h"
+#include "SidecarFile.h"
 #include <netcdf.h>
 #include <mfhdf.h>
 #include <hdf.h>
@@ -212,7 +212,7 @@ GeoFile::sidecarFileName(const string fileName)
 int
 GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
 {
-    NetcdfSidecarFile sf;
+    SidecarFile sf;
     int ret;
     
     if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,

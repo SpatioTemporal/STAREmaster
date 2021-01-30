@@ -10,7 +10,7 @@
 #include "Modis05L2GeoFile.h"
 #include "Modis09L2GeoFile.h"
 #include "Modis09GAGeoFile.h"
-#include "NetcdfSidecarFile.h"
+#include "SidecarFile.h"
 
 using namespace std;
 
@@ -131,7 +131,7 @@ main(int argc, char *argv[])
 {
     Arguments arg = parseArguments(argc, argv);
     GeoFile *gf;
-    NetcdfSidecarFile sf;
+    SidecarFile sf;
     string file_out;
     const string MOD09 = "MOD09";
     const string MOD09GA = "MOD09GA";
