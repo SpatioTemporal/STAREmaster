@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include "Modis05L2GeoFile.h"
-#include "NetcdfSidecarFile.h"
+#include "SidecarFile.h"
 
 #define MAX_STR 256
 #define ERR 1
@@ -13,7 +13,7 @@ int
 main()
 {
     Modis05L2GeoFile gf;
-    NetcdfSidecarFile sf;
+    SidecarFile sf;
     std::string fileName = "data/MOD05_L2.A2005349.2125.061.2017294065400.hdf";
     std::string fileNameOut = "t2_sidecar.nc";
     int gf_format;
