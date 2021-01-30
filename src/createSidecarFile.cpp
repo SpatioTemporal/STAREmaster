@@ -10,6 +10,7 @@
 #include "Modis05L2GeoFile.h"
 #include "Modis09L2GeoFile.h"
 #include "Modis09GAGeoFile.h"
+#include "SidecarFile.h"
 #include "NetcdfSidecarFile.h"
 
 using namespace std;
