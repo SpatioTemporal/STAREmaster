@@ -22,7 +22,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hyrax-dependencies
-        key: hyrax-dependencies-${{ runner.os }}-3
+        key: hyrax-dependencies-${{ runner.os }}-4
 
     - name: build-hyrax-dependencies
       if: steps.cache-hyrax-dependencies.outputs.cache-hit != 'true'
@@ -38,6 +38,11 @@ jobs:
         make -j bison
         make -j jpeg
         make -j openjpeg
+        make -j hdf4
+        make -j hdfeos
+        make -j hdf5
+        make -j netcdf4
+        make -j stare
         ls -l /home/runner/hyrax-dependencies/deps
         ls -l /home/runner/hyrax-dependencies/deps/include
         ls -l /home/runner/hyrax-dependencies/deps/lib
