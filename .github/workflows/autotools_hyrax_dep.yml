@@ -22,7 +22,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hyrax-dependencies
-        key: hyrax-dependencies-${{ runner.os }}
+        key: hyrax-dependencies-${{ runner.os }}-1
 
     - name: build-hyrax-dependencies
       if: steps.cache-hyrax-dependencies.outputs.cache-hit != 'true'
@@ -33,8 +33,9 @@ jobs:
         ls -l
         cd hyrax-dependencies-hyrax-1.16.2
         export CXXFLAGS=-std=c++11
-        export prefix=/home/runner/hyrax-dependencies 
-        make -j hdf4
+        export prefix=/home/runner/hyrax-dependencies
+        export BUILD_STARE=1
+        make -j hdf4 hdfeos hdf5 netcdf4 stare
         ls -l /home/runner/hyrax-dependencies/deps
         ls -l /home/runner/hyrax-dependencies/deps/include
         ls -l /home/runner/hyrax-dependencies/deps/lib
