@@ -22,7 +22,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hyrax-dependencies
-        key: hyrax-dependencies-${{ runner.os }}-2
+        key: hyrax-dependencies-${{ runner.os }}-3
 
     - name: build-hyrax-dependencies
       if: steps.cache-hyrax-dependencies.outputs.cache-hit != 'true'
@@ -35,7 +35,7 @@ jobs:
         export CXXFLAGS=-std=c++11
         export prefix=/home/runner/hyrax-dependencies
         export BUILD_STARE=1
-        make -j cmake bison jpeg openjpeg gdal2 gridfields hdf4 hdfeos hdf5 netcdf4 fits icu stare
+        make -j for-static-rpm
         ls -l /home/runner/hyrax-dependencies/deps
         ls -l /home/runner/hyrax-dependencies/deps/include
         ls -l /home/runner/hyrax-dependencies/deps/lib
