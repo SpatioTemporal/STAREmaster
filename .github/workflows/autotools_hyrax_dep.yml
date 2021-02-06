@@ -34,7 +34,7 @@ jobs:
         cd hyrax-dependencies-hyrax-1.16.2
         export CXXFLAGS=-std=c++11
         export prefix=/home/runner/hyrax-dependencies 
-        make -j
+        make -j hdf4
         ls -l /home/runner/hyrax-dependencies/deps
         ls -l /home/runner/hyrax-dependencies/deps/include
         ls -l /home/runner/hyrax-dependencies/deps/lib
