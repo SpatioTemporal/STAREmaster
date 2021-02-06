@@ -30,6 +30,7 @@ jobs:
         set -x
         wget https://github.com/OPENDAP/hyrax-dependencies/archive/hyrax-1.16.2.tar.gz
         tar zxf hyrax-1.16.2.tar.gz
+        ls -l
         cd hyrax-dependencies
         export CXXFLAGS=-std=c++11
         export prefix=/home/runner/hyrax-dependencies 
