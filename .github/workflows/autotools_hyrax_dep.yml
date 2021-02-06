@@ -31,7 +31,7 @@ jobs:
         wget https://github.com/OPENDAP/hyrax-dependencies/archive/hyrax-1.16.2.tar.gz
         tar zxf hyrax-1.16.2.tar.gz
         ls -l
-        cd hyrax-dependencies
+        cd hyrax-dependencies-hyrax-1.16.2
         export CXXFLAGS=-std=c++11
         export prefix=/home/runner/hyrax-dependencies 
         make -j
