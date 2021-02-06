@@ -35,7 +35,7 @@ jobs:
         export CXXFLAGS=-std=c++11
         export prefix=/home/runner/hyrax-dependencies
         export BUILD_STARE=1
-        make -j hdf4 hdfeos hdf5 netcdf4 stare
+        make -j jpeg openjpeg bison hdf4 hdfeos hdf5 netcdf4 stare
         ls -l /home/runner/hyrax-dependencies/deps
         ls -l /home/runner/hyrax-dependencies/deps/include
         ls -l /home/runner/hyrax-dependencies/deps/lib
