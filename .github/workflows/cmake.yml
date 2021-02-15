@@ -51,7 +51,7 @@ jobs:
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
         set -x
-	wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z &> /dev/null
+        wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z &> /dev/null
         tar zxf HDF-EOS2.19v1.00.tar.Z && ls -l
         cd hdfeos
         ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
