@@ -52,7 +52,8 @@ jobs:
       run: |
         set -x
         wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z &> /dev/null
-        zcat HDF-EOS2.19v1.00.tar.Z | tar -xvf - && ls -l
+        uncompress HDF-EOS2.19v1.00.tar.Z
+        tar xvf HDF-EOS2.19v1.00.tar && ls -l
         cd hdfeos
         ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
