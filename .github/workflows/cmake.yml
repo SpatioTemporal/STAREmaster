@@ -45,13 +45,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/hdfeos2
-        key: hdfeos2-${{ runner.os }}-20v1.00
+        key: hdfeos2-${{ runner.os }}-19v1
 
     - name: build-hdfeos2
       if: steps.cache-hdfeos2.outputs.cache-hit != 'true'
       run: |
-        wget https://observer.gsfc.nasa.gov/ftp/edhs/hdfeos/latest_release/HDF-EOS2.20v1.00.tar.Z  &> /dev/null
-        tar zxf HDF-EOS2.20v1.00.tar.Z
+        set -x
+        wget https://github.com/OPENDAP/hyrax-dependencies/raw/master/downloads/HDF-EOS2.19v1.00.tar.Z &> /dev/null
+        uncompress HDF-EOS2.19v1.00.tar.Z
+        tar xvf HDF-EOS2.19v1.00.tar && ls -l
         cd hdfeos
         ./configure  --enable-install-include --prefix=${PWD_DIR}/hdfeos2
         make
