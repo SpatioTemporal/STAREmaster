@@ -100,10 +100,10 @@ jobs:
     - name: autoreconf
       run: autoreconf -i
     - name: configure
-      export PWD_DIR=`pwd`
-      export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
-      export LDFLAGS="-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
       run: |
+        export PWD_DIR=`pwd`
+        export CPPFLAGS="-I/usr/include -I/usr/local/include -I${PWD_DIR}/hdf4/include -I${PWD_DIR}/stare/include -I${PWD_DIR}/hdfeos2/include"
+        export LDFLAGS="-L${PWD_DIR}/hdf4/lib -L${PWD_DIR}/stare/lib -L${PWD_DIR}/hdfeos2/lib"
         ./configure
         make -j distcheck
 
