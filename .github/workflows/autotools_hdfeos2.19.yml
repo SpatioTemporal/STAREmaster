@@ -33,7 +33,7 @@ jobs:
       if: steps.cache-hdf4.outputs.cache-hit != 'true'
       run: |
         set -x
-        wget https://support.hdfgroup.org/ftp/HDF/HDF_Current/src/hdf-4.2.13.tar.gz &> /dev/null
+	wget https://github.com/OPENDAP/hyrax-dependencies/blob/master/downloads/HDF-EOS2.19v1.00.tar.Z &> /dev/null
         tar zxf hdf-4.2.13.tar.gz
         cd hdf-4.2.13
         export CFLAGS=-fPIC
