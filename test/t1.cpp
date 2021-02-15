@@ -58,6 +58,8 @@ main()
     vector<string> stare_index_name, variables;
     vector<size_t> size_i, size_j;
     string varName = "Scan_Start_Time";
+    int varid;
+    
     if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i, size_j, variables, ncid))
         return ERR;
     if (nc_close(ncid))
@@ -66,6 +68,12 @@ main()
     // Read it again with GeoFile.
     if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
         return ERR;
+
+    // Find STARE index for a var.
+    if (gf_in.getSTAREIndex(varName, 1, ncid, varid))
+      return ERR;
+    
+    // Close it again with GeoFile.
     if (gf_in.closeSidecarFile(verbose, ncid))
         return ERR;
     
