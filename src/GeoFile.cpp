@@ -183,6 +183,11 @@ GeoFile::determineFormat(const std::string fileName, int *gf_format)
     return 0;
 }
 
+/**
+ * Return the name of the STARE sidecar file for the given main file.
+ * @param fileName The name of the main data file
+ * @return The name of the companion STARE index file
+ */
 string
 GeoFile::sidecarFileName(const string fileName)
 {
@@ -202,11 +207,14 @@ GeoFile::sidecarFileName(const string fileName)
 }
 
 /**
- * Read a sidecare file.
+ * Read a sidecar file.
+ *
+ * Sets internal state values for this sidecar file including the mapping
+ * between sets of indices and different variables in the main data file.
  *
  * @param fileName Name of the sidecar file.
- * @param verbose Set to non-zero to enable verbose output for
- * debugging.
+ * @param verbose Set to non-zero to enable verbose output for debugging.
+ * @param ncid Value-result parameter used to return the sidecar file 'ncid.'
  * @return 0 for success, error code otherwise.
  */
 int
@@ -222,31 +230,33 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
 }
 
 /**
- * Get STARE index for data varaible.
+ * Get STARE index for data variable.
  *
  * @param ncid ID of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
  * debugging.
  * @param varid A reference that gets the varid of the STARE index.
+ * @param my_size_i A reference that gets the size of the X-axis (longitude)
+ * for the array of STARE indices.
+ * @param my_size_j A reference that gets the size of the Y-axis (latitude)
+ * for the array of STARE indices.
  * @return 0 for success, error code otherwise.
  */
 int
 GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
-		       size_t &my_size_i, size_t &my_size_j)
-{
+                       size_t &my_size_i, size_t &my_size_j) {
     // Check all of our STARE indexes.
-    for (int v = 0; v < variables.size(); v++)
-    {
-	string vars = variables.at(v);
-	cout << vars << endl;
+    for (int v = 0; v < variables.size(); v++) {
+        string vars = variables.at(v);
+        if (verbose) std::cout << vars << endl;
 
-	// Is the desired variable listed in the vars string?
-	if (vars.find(varName) != string::npos) {
-	    cout << "found!" << endl;
-	    varid = stare_varid.at(0);
-	    my_size_i = size_i.at(0);
-	    my_size_j = size_j.at(0);
-	} 
+        // Is the desired variable listed in the vars string?
+        if (vars.find(varName) != string::npos) {
+            if (verbose) std::cout << "found!" << endl;
+            varid = stare_varid.at(0);
+            my_size_i = size_i.at(0);
+            my_size_j = size_j.at(0);
+        }
     }
     return 0;
 }
