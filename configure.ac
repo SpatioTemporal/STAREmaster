@@ -25,6 +25,10 @@ AC_PROG_CPP
 # Find the C++ compiler.
 AC_PROG_CXX
 
+# Make sure C++11 features are turned on.
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [
+                        CXXFLAGS="$CXXFLAGS -std=c++0x"])
+
 # Find the install program.
 AC_PROG_INSTALL
 
