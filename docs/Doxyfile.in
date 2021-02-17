@@ -707,8 +707,10 @@ CITE_BIB_FILES         =
 # standard output by doxygen. If QUIET is set to YES this implies that the
 # messages are off.
 # The default value is: NO.
+#
+# I set this to YES to quiet the output. Undo this later. jhrg 2/17/21
 
-QUIET                  = NO
+QUIET                  = YES
 
 # The WARNINGS tag can be used to turn on/off the warning messages that are
 # generated to standard error (stderr) by doxygen. If WARNINGS is set to YES

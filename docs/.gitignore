@@ -1,0 +1,9 @@
+*.html
+*.map
+*.md5
+*.png
+*.css
+*.js
+
+Doxyfile
+doxywarn.log

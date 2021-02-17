@@ -12,7 +12,7 @@ SUBDIRS = data
 check_PROGRAMS = t1 t2
 t1_SOURCES = t1.cpp
 t2_SOURCES = t2.cpp
-TESTS = t2
+TESTS = t1 t2
 
 # The script runs the t1 and also the createSidecarFile command line
 # utility and checks results.

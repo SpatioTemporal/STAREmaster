@@ -46,8 +46,14 @@ src/libssc.la
 stamp-h1
 test-driver
 test/.deps/
+test/.libs/
+test/*.log
+test/*.trs
+test/*_out.cdl
 test/Makefile
 test/Makefile.in
+test/test-suite.log
+test/run_large_file_tests.sh
 test/data/MOD05_L2.A2005349.2125.061.2017294065400_stare.nc
 test/data/Makefile
 test/data/Makefile.in
