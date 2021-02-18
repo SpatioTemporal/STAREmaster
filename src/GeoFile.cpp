@@ -9,7 +9,7 @@
  *
  * @section intro Introduction
  *
- * The STAREmaster utility computes STARE indicies for common NASA
+ * The STAREmaster utility computes STARE indices for common NASA
  * datasets.
  *
  * STAREmaster consists of:
@@ -17,7 +17,7 @@
  * - a C++ library to read geo-location information from selected data sets.
  *
  * STAREmaster also uses the STARE library, which computes the
- * spacio-temporal indicies for the geo-location data that STAREmaster
+ * spacio-temporal indices for the geo-location data that STAREmaster
  * reads from the data file.
  * 
  * @section createSidecarFile Command Line Tool createSidecarFile
@@ -78,13 +78,16 @@ Options:
 #include <hdf.h>
 #include <HdfEosDef.h>
 
+#undef DEBUG
+
 /** Construct a GeoFile.
  *
  * @return a GeoFile
  */
-GeoFile::GeoFile()
-{
-    cout<<"GeoFile constructor\n";
+GeoFile::GeoFile() {
+#if DEBUG
+    cout << "GeoFile constructor\n";
+#endif
 
     // Initialize values.
     num_index = 0;
@@ -100,55 +103,51 @@ GeoFile::GeoFile()
 /** Destroy a GeoFile.
  *
  */
-GeoFile::~GeoFile()
-{
-    cout<<"GeoFile destructor\n";
+GeoFile::~GeoFile() {
+#if DEBUG
+    cout << "GeoFile destructor\n";
+#endif
 
     // Free any allocated memory.
-    if (geo_lat1)
-    {
+    if (geo_lat1) {
         for (int i = 0; i < num_index; i++)
             if (geo_lat1[i])
                 free(geo_lat1[i]);
-	free(geo_lat1);
+        free(geo_lat1);
     }
 
-    if (geo_lon1)
-    {
+    if (geo_lon1) {
         for (int i = 0; i < num_index; i++)
             if (geo_lon1[i])
                 free(geo_lon1[i]);
-	free(geo_lon1);
+        free(geo_lon1);
     }
-    
-    if (geo_index1)
-    {
+
+    if (geo_index1) {
         for (int i = 0; i < num_index; i++)
             if (geo_index1[i])
                 free(geo_index1[i]);
-	free(geo_index1);
+        free(geo_index1);
     }
-        
-    if (geo_num_i1)
-	free(geo_num_i1);
-    if (geo_num_j1)
-	free(geo_num_j1);
 
-    for (int i = 0; i < num_cover; i++)
-    {
-	if (geo_cover1)
-	    free(geo_cover1[i]);
-	// if (cover1)
-	//     free(cover1[i]);
+    if (geo_num_i1)
+        free(geo_num_i1);
+    if (geo_num_j1)
+        free(geo_num_j1);
+
+    for (int i = 0; i < num_cover; i++) {
+        if (geo_cover1)
+            free(geo_cover1[i]);
+        // if (cover1)
+        //     free(cover1[i]);
     }
 
     if (geo_cover1)
-	free(geo_cover1);
+        free(geo_cover1);
     if (geo_num_cover_values1)
-	free(geo_num_cover_values1);
+        free(geo_num_cover_values1);
     //    if (cover1)
     //	free(cover1);
-
 }
 
 /**
@@ -161,25 +160,23 @@ GeoFile::~GeoFile()
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::determineFormat(const std::string fileName, int *gf_format)
-{
+GeoFile::determineFormat(const std::string fileName, int *gf_format) {
     int32 swathfileid;
-    
+
     if (gf_format)
-	*gf_format = SSC_FORMAT_HDF4;
+        *gf_format = SSC_FORMAT_HDF4;
 
     // Try to open as swath file with the HDF-EOS library.
-    swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY);
-    if (swathfileid != -1)
-    {
-	if (gf_format)
-	    *gf_format = SSC_FORMAT_MODIS_L2;	
+    swathfileid = SWopen((char *) fileName.c_str(), DFACC_RDONLY);
+    if (swathfileid != -1) {
+        if (gf_format)
+            *gf_format = SSC_FORMAT_MODIS_L2;
 
-	// Close the swath file.
-	if (SWclose(swathfileid) < 0)
-	    return SSC_EHDF4ERR;
+        // Close the swath file.
+        if (SWclose(swathfileid) < 0)
+            return SSC_EHDF4ERR;
     }
-    
+
     return 0;
 }
 
@@ -188,19 +185,17 @@ GeoFile::determineFormat(const std::string fileName, int *gf_format)
  * @param fileName The name of the main data file
  * @return The name of the companion STARE index file
  */
-string
-GeoFile::sidecarFileName(const string fileName)
-{
-    string sidecarFileName;
-    
+std::string
+GeoFile::sidecarFileName(const std::string fileName) {
+    std::string sidecarFileName;
+
     // Is there a file extension?
     size_t f = fileName.rfind(".");
-    if (f != string::npos)
-	sidecarFileName = fileName.substr(0, f) + "_stare.nc";
-    else
-    {
+    if (f != std::string::npos)
+        sidecarFileName = fileName.substr(0, f) + "_stare.nc";
+    else {
         sidecarFileName = fileName;
-	sidecarFileName.append("_stare.nc");
+        sidecarFileName.append("_stare.nc");
     }
 
     return sidecarFileName;
@@ -218,14 +213,14 @@ GeoFile::sidecarFileName(const string fileName)
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
-{
+GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid) {
     SidecarFile sf;
     int ret;
-    
+
     if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,
-				  size_i, size_j, variables, stare_varid, ncid)))
+                                  size_i, size_j, variables, stare_varid, ncid)))
         return ret;
+
     return 0;
 }
 
@@ -270,14 +265,13 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::closeSidecarFile(int verbose, int ncid)
-{
+GeoFile::closeSidecarFile(int verbose, int ncid) {
     int ret;
-    
+
     if (verbose) std::cout << "Closing sidecar file with ncid " << ncid << "\n";
     if ((ret = nc_close(ncid)))
         return ret;
-    
+
     return 0;
 }
 
