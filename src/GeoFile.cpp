@@ -253,9 +253,9 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
         // Is the desired variable listed in the vars string?
         if (vars.find(varName) != string::npos) {
             if (verbose) std::cout << "found!" << endl;
-            varid = stare_varid.at(0);
-            my_size_i = size_i.at(0);
-            my_size_j = size_j.at(0);
+            varid = stare_varid.at(v);
+            my_size_i = size_i.at(v);
+            my_size_j = size_j.at(v);
         }
     }
     return 0;
