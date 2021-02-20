@@ -8,6 +8,8 @@ LDADD = ${top_builddir}/src/libstaremaster.la
 
 SUBDIRS = data
 
+# These tests require HDF4 and the HDFEOS2 library.
+if USE_HDF4
 # This is the test program.
 check_PROGRAMS = t1 t2
 t1_SOURCES = t1.cpp
@@ -22,6 +24,7 @@ TESTS += run_tests.sh
 if LARGE_FILE_TESTS
 TESTS += run_large_file_tests.sh
 endif
+endif # USE_HDF4
 
 # These files also must be included with distribution.
 EXTRA_DIST = CMakeLists.txt run_tests.sh run_large_file_tests.sh	\

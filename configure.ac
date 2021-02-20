@@ -45,6 +45,15 @@ test "x$enable_large_file_tests" = xyes || enable_large_file_tests=no
 AC_MSG_RESULT([$enable_large_file_tests])
 AM_CONDITIONAL(LARGE_FILE_TESTS, [test "x$enable_large_file_tests" = xyes])
 
+# Does the user want to enable HDF4?
+AC_MSG_CHECKING([whether HDF4 and HDFEOS2 libraries should be used])
+AC_ARG_ENABLE([hdf4],
+              [AS_HELP_STRING([--disable-hdf4],
+                              [disable use of HDF4 and HDFEOS2 libraries.])])
+test "x$enable_hdf4" = xno || enable_hdf4=yes
+AC_MSG_RESULT([$enable_hdf4])
+AM_CONDITIONAL(USE_HDF4, [test "x$enable_hdf4" = xyes])
+
 # If the env. variable TEST_LARGE is set, or if
 # --with-temp-large=<directory>, use it as a place for the large
 # (i.e. > 2 GiB) files created during the large file testing.
@@ -142,8 +151,7 @@ fi
 AC_LANG_POP()
 
 # We need the math library
-#AC_CHECK_LIB([m], [floor], [],
-#[AC_MSG_ERROR([Can't find or link to the math library.])])
+AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([math library required])])
 
 # Check for netCDF C library and header. It is required.
 AC_SEARCH_LIBS([nc_create], [netcdf], [USE_NETCDF=yes],
@@ -161,25 +169,25 @@ if test "$USE_HDF5" = yes; then
 fi
 
 # Find HDF4 and all the trimmings.
-AC_CHECK_HEADERS([mfhdf.h], [], [AC_MSG_ERROR([Cannot find mfhdf.h, set CPPFLAGS.])])
-AC_CHECK_HEADERS([hdf.h], [], [AC_MSG_ERROR([Cannot find hdf.h, set CPPFLAGS.])])
-AC_CHECK_LIB([z], [deflate], [], [])
-AC_CHECK_LIB([jpeg], [jpeg_set_quality], [], [])
-AC_CHECK_LIB([df], [Hclose], [], [])
-AC_CHECK_LIB([mfhdf], [NC_arrayfill], [AC_MSG_ERROR([HDF4 library must be built with --disable-netcdf.])])
-AC_SEARCH_LIBS([SDcreate], [mfhdf], [USE_HDF4=yes], [USE_HDF4=no])
+if test "$enable_hdf4" = yes; then
+   AC_CHECK_HEADERS([hdf.h], [], [AC_MSG_ERROR([Cannot find hdf.h, set CPPFLAGS.])])
+   AC_CHECK_HEADERS([mfhdf.h], [], [AC_MSG_ERROR([Cannot find mfhdf.h, set CPPFLAGS.])])
+   AC_CHECK_LIB([z], [deflate], [], [])
+   AC_CHECK_LIB([jpeg], [jpeg_set_quality], [], [])
+   AC_CHECK_LIB([df], [Hclose], [], [])
+   AC_CHECK_LIB([mfhdf], [NC_arrayfill], [AC_MSG_ERROR([HDF4 library must be built with --disable-netcdf.])])
+   AC_SEARCH_LIBS([SDcreate], [mfhdf], [USE_HDF4=yes], [USE_HDF4=no])
+fi
 
 AC_MSG_CHECKING([whether to use HDF4])			    
 AC_MSG_RESULT([$USE_HDF4])
 if test "$USE_HDF4" = yes; then
    AC_DEFINE([USE_HDF4], [1], [If true, use HDF4.])
+   AC_SEARCH_LIBS([SWopen], [hdfeos], [], [AC_MSG_ERROR([hdfeos library required])])
+   AC_CHECK_HEADERS([HdfEosDef.h], [], [AC_MSG_ERROR([Cannot find HdfEosDef.h, set CPPFLAGS.])], [#include "mfhdf.h"])
 else
-   AC_MSG_ERROR([HDF4 is required]) # temporarily true
+   AC_MSG_WARN([HDF4 and HDFEOS2 disabled, STAREmaster will not be able to create sidecar files for MODIS data.])
 fi
-
-AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([math library required])])
-AC_SEARCH_LIBS([SWopen], [hdfeos], [], [AC_MSG_ERROR([hdfeos library required])])
-AC_CHECK_HEADERS([HdfEosDef.h], [], [AC_MSG_ERROR([Cannot find HdfEosDef.h, set CPPFLAGS.])], [#include "mfhdf.h"])
 
 # We need ncdump for testing.
 AC_CHECK_PROG(NCDUMP,[ncdump],[ncdump],[no])
