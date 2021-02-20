@@ -170,7 +170,7 @@ fi
 
 # Find HDF4 and all the trimmings.
 if test "$enable_hdf4" = yes; then
-   AC_CHECK_HEADERS([hdf.h], [], [AC_MSG_ERROR([Cannot find hdf.h, set CPPFLAGS.])])
+   AC_CHECK_HEADERS([hdf.h], [], [AC_MSG_ERROR([Cannot find HDF4 header hdf.h, set CPPFLAGS or build with --disable-hdf4.])])
    AC_CHECK_HEADERS([mfhdf.h], [], [AC_MSG_ERROR([Cannot find mfhdf.h, set CPPFLAGS.])])
    AC_CHECK_LIB([z], [deflate], [], [])
    AC_CHECK_LIB([jpeg], [jpeg_set_quality], [], [])
