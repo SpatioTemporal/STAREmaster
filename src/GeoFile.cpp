@@ -1,6 +1,7 @@
 /// @file
-/// This class contains the main functionality for reading a file for
-/// which STARE sidecar files may be constructed.
+/// THis is the root class for the STAREmaster functionality. Derived
+/// classes read different format input files and create sidecar files
+/// for them.
 
 // Ed Hartnett 4/4/20
 
@@ -74,9 +75,6 @@ Options:
 #include "GeoFile.h"
 #include "SidecarFile.h"
 #include <netcdf.h>
-#include <mfhdf.h>
-#include <hdf.h>
-#include <HdfEosDef.h>
 
 /** Construct a GeoFile.
  *
@@ -149,38 +147,6 @@ GeoFile::~GeoFile()
     //    if (cover1)
     //	free(cover1);
 
-}
-
-/**
- * Determine the format of the target file.
- *
- * @param fileName Name of the target file.
- * @param gf_format Pointer to int that gets a constant indicating the
- * format. Ignored if NULL.
- *
- * @return 0 for success, error code otherwise.
- */
-int
-GeoFile::determineFormat(const std::string fileName, int *gf_format)
-{
-    int32 swathfileid;
-    
-    if (gf_format)
-	*gf_format = SSC_FORMAT_HDF4;
-
-    // Try to open as swath file with the HDF-EOS library.
-    swathfileid = SWopen((char *)fileName.c_str(), DFACC_RDONLY);
-    if (swathfileid != -1)
-    {
-	if (gf_format)
-	    *gf_format = SSC_FORMAT_MODIS_L2;	
-
-	// Close the swath file.
-	if (SWclose(swathfileid) < 0)
-	    return SSC_EHDF4ERR;
-    }
-    
-    return 0;
 }
 
 string

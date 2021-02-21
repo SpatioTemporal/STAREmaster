@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <vector>
 #include "ssc.h"
-#include "GeoFile.h"
+#include "ModisGeoFile.h"
 
 #ifndef MODIS09_GA_GEO_FILE_H_
 #define MODIS09_GA_GEO_FILE_H_
@@ -21,7 +21,7 @@
 /**
  * This class reads HDF4 data files.
  */
-class Modis09GAGeoFile: public GeoFile
+class Modis09GAGeoFile: public ModisGeoFile
 {
 public:
     bool fileExists(const std::string& name);
