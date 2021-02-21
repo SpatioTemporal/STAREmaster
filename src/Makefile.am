@@ -7,14 +7,19 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 
 # Create a library for STARE sidecar functionality.
 lib_LTLIBRARIES = libstaremaster.la
-libstaremaster_la_SOURCES = SidecarFile.cpp GeoFile.cpp		\
-Modis05L2GeoFile.cpp Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp
+libstaremaster_la_SOURCES = SidecarFile.cpp GeoFile.cpp
+
+# HDF4 and HDFEOS2 is required for these.
+if USE_HDF4
+libstaremaster_la_SOURCES += Modis05L2GeoFile.cpp		\
+Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp ModisGeoFile.cpp
 
 # This is the command line utility to create STARE sidecar files for
-# data files.
+# data files. 
 bin_PROGRAMS = createSidecarFile
 LDADD = libstaremaster.la
-createSidecarFile_SOURCES = createSidecarFile.cpp 
+createSidecarFile_SOURCES = createSidecarFile.cpp
+endif # USE_HDF4
 
 EXTRA_DIST = CMakeLists.txt
 

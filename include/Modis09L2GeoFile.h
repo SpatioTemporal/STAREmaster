@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <vector>
 #include "ssc.h"
-#include "GeoFile.h"
+#include "ModisGeoFile.h"
 
 #ifndef MODIS09_L2_GEO_FILE_H_
 #define MODIS09_L2_GEO_FILE_H_
@@ -20,7 +20,7 @@
 /**
  * This class reads HDF4 data files.
  */
-class Modis09L2GeoFile: public GeoFile
+class Modis09L2GeoFile: public ModisGeoFile
 {
 public:
     int readFile(const std::string fileName, int verbose, int build_level);
