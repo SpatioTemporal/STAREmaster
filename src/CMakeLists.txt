@@ -2,13 +2,9 @@
 
 # Ed Hartnett 7/18/20
 
-# These are the code files.
-set(CSF_FILES SidecarFile.cpp GeoFile.cpp Modis05L2GeoFile.cpp NetcdfSidecarFile.cpp
-  Modis09L2GeoFile.cpp createSidecarFile.cpp)
-
 # This is the library we create.
 add_library(ssc SidecarFile.cpp GeoFile.cpp Modis05L2GeoFile.cpp Modis09L2GeoFile.cpp
-  Modis09GAGeoFile.cpp)
+  Modis09GAGeoFile.cpp ModisGeoFile.cpp)
 
 # This is the executable we create.
 add_executable(createSidecarFile createSidecarFile.cpp)
