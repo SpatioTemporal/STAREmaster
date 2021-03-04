@@ -24,7 +24,7 @@
  * @param fileName The name of the sidecar file to create.
  * @param verbose Set to non-zero for verbose output.
  * @param institution_c Pointer to char array with text describing the
- * creating insitution, to support CF convention.
+ * creating institution, to support CF convention.
  * @return 0 for success, error code otherwise.
  */
 int
@@ -121,7 +121,7 @@ SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
     string dim_name;
     int ret;
 
-    if (verbose) std::cout << "Writing NETCDF sidecar indicies with build level " << build_level << "\n";
+    if (verbose) std::cout << "Writing NETCDF sidecar indices with build level " << build_level << "\n";
 
     // Define dimensions.
     dim_name.append(SSC_I_NAME);
