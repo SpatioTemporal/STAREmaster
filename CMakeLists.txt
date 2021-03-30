@@ -13,7 +13,7 @@ endif()
 include(CMakePrintHelpers)
 
 # set the project name
-project(STAREmaster VERSION 1.0.0)
+project(STAREmaster VERSION 1.1.0)
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 cmake_print_variables(PACKAGE_VERSION PROJECT_VERSION)
 
