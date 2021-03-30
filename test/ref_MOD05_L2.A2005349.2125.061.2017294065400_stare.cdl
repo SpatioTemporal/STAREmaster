@@ -19,5 +19,5 @@ variables:
 // global attributes:
 		:Conventions = "CF-1.8" ;
 		:title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file" ;
-		:source = "STAREmaster 1.0.0" ;
+		:source = "STAREmaster 1.1.0" ;
 }

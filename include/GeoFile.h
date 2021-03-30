@@ -8,7 +8,6 @@
 #ifndef GEO_FILE_H_ /**< Protect file from double include. */
 #define GEO_FILE_H_
 
-#include <config.h>
 #include <string>
 #include <sstream>
 #include <iostream>

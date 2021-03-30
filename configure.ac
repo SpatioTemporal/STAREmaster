@@ -5,7 +5,7 @@
 AC_PREREQ([2.59])
 
 # Initialize with name, version, and support email address.
-AC_INIT([STAREmaster], [1.0.0], [edwardjameshartnett@gmail.com])
+AC_INIT([STAREmaster], [1.1.0], [edwardjameshartnett@gmail.com])
 
 AM_INIT_AUTOMAKE([foreign dist-zip subdir-objects])
 
