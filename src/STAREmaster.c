@@ -10,5 +10,5 @@
 const char *
 STAREmaster_inq_libvers(void)
 {
-    return PACKAGE_STRING;
+    return PACKAGE_VERSION;
 }
