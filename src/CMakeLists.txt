@@ -4,7 +4,7 @@
 
 # This is the library we create.
 add_library(ssc SidecarFile.cpp GeoFile.cpp Modis05L2GeoFile.cpp Modis09L2GeoFile.cpp
-  Modis09GAGeoFile.cpp ModisGeoFile.cpp)
+  Modis09GAGeoFile.cpp ModisGeoFile.cpp STAREmaster.c)
 
 # This is the executable we create.
 add_executable(createSidecarFile createSidecarFile.cpp)
