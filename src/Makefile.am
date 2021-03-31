@@ -12,7 +12,8 @@ libstaremaster_la_SOURCES = SidecarFile.cpp GeoFile.cpp
 # HDF4 and HDFEOS2 is required for these.
 if USE_HDF4
 libstaremaster_la_SOURCES += Modis05L2GeoFile.cpp		\
-Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp ModisGeoFile.cpp
+Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp ModisGeoFile.cpp	\
+STAREmaster.c
 
 # This is the command line utility to create STARE sidecar files for
 # data files. 

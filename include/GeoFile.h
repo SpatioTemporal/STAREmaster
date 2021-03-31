@@ -8,7 +8,6 @@
 #ifndef GEO_FILE_H_ /**< Protect file from double include. */
 #define GEO_FILE_H_
 
-#include <config.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -40,6 +39,8 @@ public:
     /** Get STARE index for data varaible. */
     int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
 		      size_t &my_size_i, size_t &my_size_j);
+    int getSTAREIndex_2(const std::string varName, int verbose, int ncid,
+			vector<unsigned long long> &values);
 
     /** Close sidecar file. */
     int closeSidecarFile(int verbose, int ncid);

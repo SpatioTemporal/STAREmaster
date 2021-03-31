@@ -20,5 +20,5 @@ variables:
 		:Conventions = "CF-1.8" ;
 		:title = "SpatioTemporal Adaptive Resolution Encoding (STARE) sidecar file" ;
 		:institution = "Institute for the Study of Institutes" ;
-		:source = "STAREmaster 1.0.0" ;
+		:source = "STAREmaster 1.1.0" ;
 }

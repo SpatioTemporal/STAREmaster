@@ -218,6 +218,51 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
 }
 
 /**
+ * Get STARE index for data varaible.
+ *
+ * @param ncid ID of the sidecar file.
+ * @param verbose Set to non-zero to enable verbose output for
+ * debugging.
+ * @param varid A reference that gets the varid of the STARE index.
+ * @return 0 for success, error code otherwise.
+ */
+int
+GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
+			 vector<unsigned long long> &values)
+{
+    size_t my_size_i, my_size_j;
+    int varid;
+    int ret;
+    
+    // Check all of our STARE indexes.
+    for (int v = 0; v < variables.size(); v++)
+    {
+	string vars = variables.at(v);
+	cout << vars << endl;
+
+	// Is the desired variable listed in the vars string?
+	if (vars.find(varName) != string::npos) {
+	    cout << "found!" << endl;
+	    varid = stare_varid.at(v);
+	    my_size_i = size_i.at(v);
+	    my_size_j = size_j.at(v);
+
+	    // Copy the variables stare index data.
+	    {
+		unsigned long long *data;
+		if (!(data = (unsigned long long *)malloc(my_size_i * my_size_j * sizeof(unsigned long long))))
+		    return 99;
+		if ((ret = nc_get_var(ncid, varid, data)))
+		    return ret;
+		values.insert(values.end(), &data[0], &data[my_size_i * my_size_j]);
+		free(data);
+	    }
+	} 
+    }
+    return 0;
+}
+
+/**
  * Close sidecar file.
  *
  * @param ncid ID of the sidecar file.

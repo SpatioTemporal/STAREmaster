@@ -13,7 +13,7 @@ endif()
 include(CMakePrintHelpers)
 
 # set the project name
-project(STAREmaster VERSION 1.0.0)
+project(STAREmaster VERSION 1.1.0)
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 cmake_print_variables(PACKAGE_VERSION PROJECT_VERSION)
 
@@ -102,7 +102,10 @@ if (NOT STARE_FOUND)
 endif()
 
 # STARE requires C++11
-add_compile_options( -std=c++11 )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+#add_compile_options( -std=c++11 )
 
 # Check STARE version, must be 0.16.3 or later.
 set(CMAKE_REQUIRED_INCLUDES "${STARE_INCLUDE_DIR}")
@@ -112,7 +115,7 @@ set(CMAKE_REQUIRED_LINK_OPTIONS "-L${STARE_LIBRARIES}")
 set(CMAKE_REQUIRED_LIBRARIES "STARE")
 INCLUDE(CheckCXXSourceCompiles)
 FILE(READ "${STARE_INCLUDE_DIR}/STARE.h" LOGFILE)
-cmake_print_variables(LOGFILE)
+#cmake_print_variables(LOGFILE)
 CHECK_CXX_SOURCE_COMPILES("
 #include <STARE.h>
 #if STARE_VERSION_MAJOR == 0

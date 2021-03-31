@@ -34,4 +34,3 @@ ref_MOD09GA.A2020009.h00v08.006.2020011025435_stare.cdl			\
 ref_t1_sidecar.cdl
 
 CLEANFILES = *.nc *_out.cdl
-
