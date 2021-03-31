@@ -250,12 +250,13 @@ GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
 	    // Copy the variables stare index data.
 	    {
 		unsigned long long *data;
-		if (!(data = malloc(my_size_i * my_size_j * sizeof(unsigned long long))))
+		if (!(data = (unsigned long long *)malloc(my_size_i * my_size_j * sizeof(unsigned long long))))
 		    return 99;
 		if ((ret = nc_get_var(ncid, varid, data)))
 		    return ret;
 		values.insert(values.end(), &data[0], &data[my_size_i * my_size_j]);
 		free(data);
+	    }
 	} 
     }
     return 0;
