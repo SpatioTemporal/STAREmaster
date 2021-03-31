@@ -102,6 +102,9 @@ if (NOT STARE_FOUND)
 endif()
 
 # STARE requires C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 #add_compile_options( -std=c++11 )
 
 # Check STARE version, must be 0.16.3 or later.
