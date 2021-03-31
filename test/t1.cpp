@@ -82,8 +82,12 @@ main()
     if (gf_in.getSTAREIndex(varName, 1, ncid, varid, si, sj))
 	return ERR;
     if (varid != 2) return ERR;
+
+    vector <unsigned long long> values;
+    if (gf_in.getSTAREIndex_2(varName, 1, ncid, values))
+	return ERR;
+    
     if (gf_in.closeSidecarFile(verbose, ncid))
         return ERR;
-    
     return 0;
 }
