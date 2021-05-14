@@ -147,6 +147,50 @@ command line arguments.
 To enable OpenMP multithreading, you may need to set the environment
 variable OMP_NUM_THREADS to the number of threads you wish used.
 
+## Adding New Data Types
+
+Each input data set requires custom programming in order to generate the sidecar files.
+
+To handle a new MODIS data type, take a subclass of ModisGeoFile.
+
+To handle a new non-MODIS data type, take a subclass of GeoFile.h.
+
+The GeoFile class has a function that must be implemented for every
+derived class: the readFile() function.
+
+In the readFile() function, open a data file and use the STARE library
+to create the sidecar file. To do this:
+
+* Determine what data variables exist in the file, and their grid
+  information. Store the variables in the variables vector of
+  GeoFile.h.
+
+* One set of STARE indexes are needed for each gridding system in use
+  in the file. For example, if the file contains data at two different
+  resolutions, two sets of STARE indexes will be required, one for
+  each resolution.
+
+* Use the STARE library to construct the STARE indexes, and store them
+  in the geo_index1 variable of GeoFile.h.
+
+* Use the STARE library to calculate a "cover" for the data
+  file. Store in the cover variable (see GeoFile.h).
+
+Once the data file has been read, and the STARE indexes constructed,
+an instance of the SidecarFile class can be instantiated. To construct
+a sidecar file:
+
+* Call the createFile() method to start the creation of a sidecar file.
+
+* Call the writeSTARECover() function to write the cover information
+  to the file.
+
+* Call the writeSTAREIndex() function once for each STARE index in the
+  file.
+
+* Call the closeFile() function to close the netCDF file and release
+  all resources.
+
 ## References
 
 Kuo, K-S and ML Rilee, “STARE – Toward unprecedented geo-data
