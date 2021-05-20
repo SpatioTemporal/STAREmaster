@@ -15,6 +15,7 @@
 #include <vector>
 #include "ssc.h"
 #include "STARE.h"
+
 using namespace std;
 
 #define MAX_NUM_INDEX 10 /**< Max number of STARE index vars in a file. */
@@ -22,12 +23,12 @@ using namespace std;
 /**
  * This is the base class for a data file with geolocation.
  */
-class GeoFile
-{
+class GeoFile {
 public:
     GeoFile();
+
     ~GeoFile();
-    
+
     /** Read file. */
     int readFile(const string fileName, int verbose, int quiet, int build_level);
 
@@ -38,9 +39,10 @@ public:
 
     /** Get STARE index for data varaible. */
     int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
-		      size_t &my_size_i, size_t &my_size_j);
+                      size_t &my_size_i, size_t &my_size_j);
+
     int getSTAREIndex_2(const std::string varName, int verbose, int ncid,
-			vector<unsigned long long> &values);
+                        vector<unsigned long long> &values);
 
     /** Close sidecar file. */
     int closeSidecarFile(int verbose, int ncid);

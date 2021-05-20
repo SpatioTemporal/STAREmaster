@@ -20,8 +20,7 @@
 /**
  * This class reads HDF4 data files.
  */
-class Modis09L2GeoFile: public ModisGeoFile
-{
+class Modis09L2GeoFile : public ModisGeoFile {
 public:
     int readFile(const std::string fileName, int verbose, int build_level);
 };

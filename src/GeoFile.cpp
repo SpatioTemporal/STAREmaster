@@ -80,9 +80,8 @@ Options:
  *
  * @return a GeoFile
  */
-GeoFile::GeoFile()
-{
-    cout<<"GeoFile constructor\n";
+GeoFile::GeoFile() {
+    cout << "GeoFile constructor\n";
 
     // Initialize values.
     num_index = 0;
@@ -98,70 +97,63 @@ GeoFile::GeoFile()
 /** Destroy a GeoFile.
  *
  */
-GeoFile::~GeoFile()
-{
-    cout<<"GeoFile destructor\n";
+GeoFile::~GeoFile() {
+    cout << "GeoFile destructor\n";
 
     // Free any allocated memory.
-    if (geo_lat1)
-    {
+    if (geo_lat1) {
         for (int i = 0; i < num_index; i++)
             if (geo_lat1[i])
                 free(geo_lat1[i]);
-	free(geo_lat1);
+        free(geo_lat1);
     }
 
-    if (geo_lon1)
-    {
+    if (geo_lon1) {
         for (int i = 0; i < num_index; i++)
             if (geo_lon1[i])
                 free(geo_lon1[i]);
-	free(geo_lon1);
+        free(geo_lon1);
     }
-    
-    if (geo_index1)
-    {
+
+    if (geo_index1) {
         for (int i = 0; i < num_index; i++)
             if (geo_index1[i])
                 free(geo_index1[i]);
-	free(geo_index1);
+        free(geo_index1);
     }
-        
-    if (geo_num_i1)
-	free(geo_num_i1);
-    if (geo_num_j1)
-	free(geo_num_j1);
 
-    for (int i = 0; i < num_cover; i++)
-    {
-	if (geo_cover1)
-	    free(geo_cover1[i]);
-	// if (cover1)
-	//     free(cover1[i]);
+    if (geo_num_i1)
+        free(geo_num_i1);
+    if (geo_num_j1)
+        free(geo_num_j1);
+
+    for (int i = 0; i < num_cover; i++) {
+        if (geo_cover1)
+            free(geo_cover1[i]);
+        // if (cover1)
+        //     free(cover1[i]);
     }
 
     if (geo_cover1)
-	free(geo_cover1);
+        free(geo_cover1);
     if (geo_num_cover_values1)
-	free(geo_num_cover_values1);
+        free(geo_num_cover_values1);
     //    if (cover1)
     //	free(cover1);
 
 }
 
 string
-GeoFile::sidecarFileName(const string fileName)
-{
+GeoFile::sidecarFileName(const string fileName) {
     string sidecarFileName;
-    
+
     // Is there a file extension?
     size_t f = fileName.rfind(".");
     if (f != string::npos)
-	sidecarFileName = fileName.substr(0, f) + "_stare.nc";
-    else
-    {
+        sidecarFileName = fileName.substr(0, f) + "_stare.nc";
+    else {
         sidecarFileName = fileName;
-	sidecarFileName.append("_stare.nc");
+        sidecarFileName.append("_stare.nc");
     }
 
     return sidecarFileName;
@@ -176,13 +168,12 @@ GeoFile::sidecarFileName(const string fileName)
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
-{
+GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid) {
     SidecarFile sf;
     int ret;
-    
+
     if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,
-				  size_i, size_j, variables, stare_varid, ncid)))
+                                  size_i, size_j, variables, stare_varid, ncid)))
         return ret;
     return 0;
 }
@@ -198,21 +189,19 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
  */
 int
 GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
-		       size_t &my_size_i, size_t &my_size_j)
-{
+                       size_t &my_size_i, size_t &my_size_j) {
     // Check all of our STARE indexes.
-    for (int v = 0; v < variables.size(); v++)
-    {
-	string vars = variables.at(v);
-	cout << vars << endl;
+    for (int v = 0; v < variables.size(); v++) {
+        string vars = variables.at(v);
+        cout << vars << endl;
 
-	// Is the desired variable listed in the vars string?
-	if (vars.find(varName) != string::npos) {
-	    cout << "found!" << endl;
-	    varid = stare_varid.at(0);
-	    my_size_i = size_i.at(0);
-	    my_size_j = size_j.at(0);
-	} 
+        // Is the desired variable listed in the vars string?
+        if (vars.find(varName) != string::npos) {
+            cout << "found!" << endl;
+            varid = stare_varid.at(0);
+            my_size_i = size_i.at(0);
+            my_size_j = size_j.at(0);
+        }
     }
     return 0;
 }
@@ -228,36 +217,34 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
  */
 int
 GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
-			 vector<unsigned long long> &values)
-{
+                         vector<unsigned long long> &values) {
     size_t my_size_i, my_size_j;
     int varid;
     int ret;
-    
+
     // Check all of our STARE indexes.
-    for (int v = 0; v < variables.size(); v++)
-    {
-	string vars = variables.at(v);
-	cout << vars << endl;
+    for (int v = 0; v < variables.size(); v++) {
+        string vars = variables.at(v);
+        cout << vars << endl;
 
-	// Is the desired variable listed in the vars string?
-	if (vars.find(varName) != string::npos) {
-	    cout << "found!" << endl;
-	    varid = stare_varid.at(v);
-	    my_size_i = size_i.at(v);
-	    my_size_j = size_j.at(v);
+        // Is the desired variable listed in the vars string?
+        if (vars.find(varName) != string::npos) {
+            cout << "found!" << endl;
+            varid = stare_varid.at(v);
+            my_size_i = size_i.at(v);
+            my_size_j = size_j.at(v);
 
-	    // Copy the variables stare index data.
-	    {
-		unsigned long long *data;
-		if (!(data = (unsigned long long *)malloc(my_size_i * my_size_j * sizeof(unsigned long long))))
-		    return 99;
-		if ((ret = nc_get_var(ncid, varid, data)))
-		    return ret;
-		values.insert(values.end(), &data[0], &data[my_size_i * my_size_j]);
-		free(data);
-	    }
-	} 
+            // Copy the variables stare index data.
+            {
+                unsigned long long *data;
+                if (!(data = (unsigned long long *) malloc(my_size_i * my_size_j * sizeof(unsigned long long))))
+                    return 99;
+                if ((ret = nc_get_var(ncid, varid, data)))
+                    return ret;
+                values.insert(values.end(), &data[0], &data[my_size_i * my_size_j]);
+                free(data);
+            }
+        }
     }
     return 0;
 }
@@ -271,14 +258,13 @@ GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::closeSidecarFile(int verbose, int ncid)
-{
+GeoFile::closeSidecarFile(int verbose, int ncid) {
     int ret;
-    
+
     if (verbose) std::cout << "Closing sidecar file with ncid " << ncid << "\n";
     if ((ret = nc_close(ncid)))
         return ret;
-    
+
     return 0;
 }
 

@@ -9,12 +9,12 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-    
-    extern const char *STAREmaster_inq_libvers(void);
+
+extern const char *STAREmaster_inq_libvers(void);
 
 #if defined(__cplusplus)
 }
 #endif
-    
+
 
 #endif /* _STAREmaster_ */
