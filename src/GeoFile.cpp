@@ -10,7 +10,7 @@
  *
  * @section intro Introduction
  *
- * The STAREmaster utility computes STARE indicies for common NASA
+ * The STAREmaster utility computes STARE indices for common NASA
  * datasets.
  *
  * STAREmaster consists of:
@@ -18,7 +18,7 @@
  * - a C++ library to read geo-location information from selected data sets.
  *
  * STAREmaster also uses the STARE library, which computes the
- * spacio-temporal indicies for the geo-location data that STAREmaster
+ * spacio-temporal indices for the geo-location data that STAREmaster
  * reads from the data file.
  * 
  * @section createSidecarFile Command Line Tool createSidecarFile
@@ -178,8 +178,9 @@ GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid) {
     return 0;
 }
 
+#if 0
 /**
- * Get STARE index for data varaible.
+ * Get STARE index for data variable.
  *
  * @param ncid ID of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
@@ -205,6 +206,7 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
     }
     return 0;
 }
+#endif
 
 /**
  * Get STARE index for data varaible.

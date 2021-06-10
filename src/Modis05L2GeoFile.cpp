@@ -254,7 +254,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                 geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
                 geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
 
-                // Calculate the stare indicies.
+                // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
                                                                                   (double) longitude[i][j], level);
             }

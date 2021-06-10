@@ -34,6 +34,8 @@ netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
 
 ### Build Notes
 
+*Note*: To build with Hyrax, see below
+
 When building HDF4 and HDFEOS2, there are some build issues. As
 demonstrated in the GitHub workflow
 builds(ex. https://github.com/SpatioTemporal/STAREmaster/blob/master/.github/workflows/autotools.yml),
@@ -86,6 +88,32 @@ unzip hdfeos2_19.zip
 cd hdfeos2_19/hdfeos2.19/hdfeos
 chmod ug+x configure
 </pre>
+
+### Building with Hyrax
+The hyrax-dependencies repo contains all the libraries STAREmaster needs built as it needs them. Assuming you
+are working from within the 'hyrax' meta project/repo, build using autotools with the following environment
+variables (but see the notes that follow for more information):
+
+<pre>
+CPPFLAGS=-I$prefix/deps/include
+CXXFLAGS="--std=c++11 -g3 -O0"
+LDFLAGS=-L$prefix/deps/lib
+</pre>
+
+*Note*:
+1. This assumes you've correctly configured the 'hyrax' repo for a build. 
+   You should 'source spath.h' in it's top-level directory to get $prefix defined correctly
+2. CXXFLAGS needs --std=c++11 to find a 'usable' STARE.h header.
+3. Adding "-g3 -O0" enables debugging in CLion
+   
+Once the environment variables are set, run autoreconf, configure and make
+as per the usual, with the following exception:
+
+<pre>
+./configure --prefix=$prefix/deps
+</pre>
+
+This will install the library and createSidecarFile command line tool in $prefix/deps/{lib,bin}
 
 ### Building with Autotools
 

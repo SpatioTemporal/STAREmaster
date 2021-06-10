@@ -3,9 +3,12 @@
 // Ed Hartnett 3/14/2020
 
 #include "config.h"
-#include "STARE.h"
-#include "VarStr.h"
+
 #include <getopt.h>
+
+#include <STARE.h>
+#include "VarStr.h"
+
 #include "ssc.h"
 #include "Modis05L2GeoFile.h"
 #include "Modis09L2GeoFile.h"
@@ -154,7 +157,6 @@ main(int argc, char *argv[]) {
     const string MOD09 = "MOD09";
     const string MOD09GA = "MOD09GA";
     const string SIN_TABLE = "sn_bound_10deg.txt";
-
 
     // Input file must be provided.
     if (!argv[optind]) {

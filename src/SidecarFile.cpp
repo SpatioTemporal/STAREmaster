@@ -121,7 +121,7 @@ SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
     string dim_name;
     int ret;
 
-    if (verbose) std::cout << "Writing NETCDF sidecar indicies with build level " << build_level << "\n";
+    if (verbose) std::cout << "Writing NETCDF sidecar indices with build level " << build_level << "\n";
 
     // Define dimensions.
     dim_name.append(SSC_I_NAME);

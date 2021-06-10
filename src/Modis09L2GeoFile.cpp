@@ -36,8 +36,7 @@ using namespace std;
  * @return 0 for no error, error code otherwise.
  */
 int
-Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
-                           int build_level) {
+Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_level) {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
     float32 *longitude;
@@ -65,6 +64,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
         std::cout << "Reading HDF4 file " << fileName <<
                   " with build level " << build_level << "\n";
 
+    // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     num_index = 3;
     if (!(geo_num_i1 = (int *) malloc(num_index * sizeof(int))))
         return SSC_ENOMEM;
@@ -80,6 +80,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
     if (!(geo_num_cover_values1 = (int *) malloc(num_index * sizeof(int))))
         return SSC_ENOMEM;
 
+    stare_index_name.push_back("1km");  //Added jhrg 6/9/21
+    stare_cover_name.push_back("1km");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 3");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 8");
@@ -105,7 +107,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
         return SSC_ENOMEM;
     if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
         return SSC_ENOMEM;
-
+#if 1
     // Get lat and lon values.
     string LONGITUDE = "Longitude";
     if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
@@ -113,21 +115,22 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
     string LATITUDE = "Latitude";
     if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
-
+#endif
     geo_num_i1[0] = MAX_ALONG;
     geo_num_j1[0] = MAX_ACROSS;
     if (!(geo_lat1[0] = (double *) calloc(geo_num_i1[0] * geo_num_j1[0], sizeof(double))))
         return SSC_ENOMEM;
     if (!(geo_lon1[0] = (double *) calloc(geo_num_i1[0] * geo_num_j1[0], sizeof(double))))
         return SSC_ENOMEM;
-    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i1[0] * geo_num_j1[0],
-                                                        sizeof(unsigned long long))))
+    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i1[0] * geo_num_j1[0], sizeof(unsigned long long))))
         return SSC_ENOMEM;
 
     int level = 27;
     int finest_resolution = 0;
 
-    // Calculate STARE index for each point. 
+    // Calculate STARE index for each point.
+
+#if 0
 #pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
@@ -137,23 +140,47 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
                 geo_lat1[0][i * MAX_ACROSS + j] = latitude[i * MAX_ACROSS + j];
                 geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
 
-                // Calculate the stare indicies.
+                // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
                                                                                   (double) longitude[i * MAX_ACROSS +
                                                                                                      j], level);
             }
-
+#if 0
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-
+            // finest_resolution is never used. jhrg 6/9/21
             for (int j = 0; j < MAX_ACROSS; j++) {
                 int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
                 if (test_resolution > finest_resolution) {
                     finest_resolution = test_resolution;
                 }
             }
+#endif
         }
     }
+#endif
 
+#if 1
+    {
+        STARE index1(level, build_level);
+
+        // geo_lat1, _lon1 and _index1 are each three arrays of MAX_ALONG by MAX_ACROSS
+        // values that will hold the lat, lon, and index values. 'latitude' and longitude'
+        // are arrays of lat and lon values.
+
+        unsigned long length = MAX_ALONG * MAX_ACROSS;
+        for (unsigned long i = 0; i < length; ++i) {
+            geo_lat1[0][i] = (double) latitude[i];
+            geo_lon1[0][i] = (double) longitude[i];
+
+            // Calculate the stare indices.
+            geo_index1[0][i] = index1.ValueFromLatLonDegrees(geo_lat1[0][i], geo_lon1[0][i], level);
+        }
+#if 0
+        for (unsigned long i = 0; i < MAX_ALONG; ++i)
+            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+#endif
+    }
+#endif
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
@@ -226,20 +253,19 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
         // Calculate STARE index for each point.
         int m = 0;
         for (int i = 0; i < MAX_ALONG_500; i++) {
-            if (i && !i % 2) m++;
+            if (i && !(i % 2)) m++;
             int n = 0;
             for (int j = 0; j < MAX_ACROSS_500; j++) {
-                if (j && !j % 2) n++;
+                if (j && !(j % 2)) n++;
                 geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n];
                 geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n];
 
-                // Calculate the stare indicies.
                 geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
-                // geo_index1[1][i * MAX_ACROSS_500 + j] = index.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                // 								     (double)longitude[m * MAX_ACROSS + n], level);
             }
         }
 
+        stare_index_name.push_back("500m");
+        stare_cover_name.push_back("500m");
         var_name[1].push_back("500m Surface Reflectance Band 1");
         var_name[1].push_back("500m Surface Reflectance Band 2");
         var_name[1].push_back("500m Surface Reflectance Band 3");
@@ -262,20 +288,22 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose,
         // Calculate STARE index for each point.
         int m = 0;
         for (int i = 0; i < MAX_ALONG_250; i++) {
-            if (i && !i % 4) m++;
+            if (i && !(i % 4)) m++;
             int n = 0;
             for (int j = 0; j < MAX_ACROSS_250; j++) {
-                if (j && !j % 4) n++;
+                if (j && !(j % 4)) n++;
                 geo_lat1[2][i * MAX_ACROSS_250 + j] = latitude[m * MAX_ACROSS + n];
                 geo_lon1[2][i * MAX_ACROSS_250 + j] = longitude[m * MAX_ACROSS + n];
 
-                // Calculate the stare indicies.
+                // Calculate the stare indices.
                 geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
                 // geo_index1[2][i * MAX_ACROSS_250 + j] = index.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
                 // 								     (double)longitude[m * MAX_ACROSS + n], level);
             }
         }
 
+        stare_index_name.push_back("250m");
+        stare_cover_name.push_back("250m");
         var_name[2].push_back("250m Surface Reflectance Band 1");
         var_name[2].push_back("250m Surface Reflectance Band 2");
         var_name[2].push_back("250m Surface Reflectance Band 3");
