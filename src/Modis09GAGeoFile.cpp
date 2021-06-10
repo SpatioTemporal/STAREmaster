@@ -45,8 +45,7 @@ Modis09GAGeoFile::fileExists(const std::string &name) {
  * @return 0 for no error, error code otherwise.
  */
 int
-Modis09GAGeoFile::readFile(const std::string fileName, int verbose,
-                           int build_level) {
+Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int build_level) {
 
     if (verbose)
         std::cout << "Reading HDF4 file " << fileName <<
