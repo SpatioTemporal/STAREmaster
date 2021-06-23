@@ -18,12 +18,12 @@
  * - a C++ library to read geo-location information from selected data sets.
  *
  * STAREmaster also uses the STARE library, which computes the
- * spacio-temporal indices for the geo-location data that STAREmaster
+ * spatio-temporal indices for the geo-location data that STAREmaster
  * reads from the data file.
  * 
  * @section createSidecarFile Command Line Tool createSidecarFile
  *
- * The command line tool creates a sidecar file for a scienfic data
+ * The command line tool creates a sidecar file for a scientific data
  * set.
  *
  * Use the command line tool like this:
@@ -81,42 +81,36 @@ Options:
  * @return a GeoFile
  */
 GeoFile::GeoFile() {
-    cout << "GeoFile constructor\n";
-
-    // Initialize values.
-    num_index = 0;
-    geo_num_i1 = NULL;
-    geo_num_j1 = NULL;
-    geo_cover1 = NULL;
-    geo_num_cover_values1 = NULL;
-    geo_lat1 = NULL;
-    geo_lon1 = NULL;
-    geo_index1 = NULL;
+    d_num_index = 0;
+    geo_num_i1 = nullptr;
+    geo_num_j1 = nullptr;
+    geo_cover1 = nullptr;
+    geo_num_cover_values1 = nullptr;
+    geo_lat1 = nullptr;
+    geo_lon1 = nullptr;
+    geo_index1 = nullptr;
 }
 
 /** Destroy a GeoFile.
  *
  */
 GeoFile::~GeoFile() {
-    cout << "GeoFile destructor\n";
-
-    // Free any allocated memory.
     if (geo_lat1) {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_lat1[i])
                 free(geo_lat1[i]);
         free(geo_lat1);
     }
 
     if (geo_lon1) {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_lon1[i])
                 free(geo_lon1[i]);
         free(geo_lon1);
     }
 
     if (geo_index1) {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_index1[i])
                 free(geo_index1[i]);
         free(geo_index1);
@@ -130,21 +124,16 @@ GeoFile::~GeoFile() {
     for (int i = 0; i < num_cover; i++) {
         if (geo_cover1)
             free(geo_cover1[i]);
-        // if (cover1)
-        //     free(cover1[i]);
     }
 
     if (geo_cover1)
         free(geo_cover1);
     if (geo_num_cover_values1)
         free(geo_num_cover_values1);
-    //    if (cover1)
-    //	free(cover1);
-
 }
 
 string
-GeoFile::sidecarFileName(const string fileName) {
+GeoFile::sidecar_filename(const string &fileName) {
     string sidecarFileName;
 
     // Is there a file extension?
@@ -168,12 +157,12 @@ GeoFile::sidecarFileName(const string fileName) {
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid) {
+GeoFile::read_sidecar_file(const std::string fileName, int &ncid) {
     SidecarFile sf;
     int ret;
 
-    if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,
-                                  size_i, size_j, variables, stare_varid, ncid)))
+    if ((ret = sf.readSidecarFile(fileName, false /*verbose*/, d_num_index, d_stare_index_name,
+                                  d_size_i, d_size_j, d_variables, d_stare_varid, ncid)))
         return ret;
     return 0;
 }
@@ -218,23 +207,22 @@ GeoFile::getSTAREIndex(const std::string varName, int verbose, int ncid, int &va
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
-                         vector<unsigned long long> &values) {
+GeoFile::get_stare_indices(const std::string varName, int ncid, vector<unsigned long long> &values) {
     size_t my_size_i, my_size_j;
     int varid;
     int ret;
 
     // Check all of our STARE indexes.
-    for (int v = 0; v < variables.size(); v++) {
-        string vars = variables.at(v);
+    for (int v = 0; v < d_variables.size(); v++) {
+        string vars = d_variables.at(v);
         cout << vars << endl;
 
         // Is the desired variable listed in the vars string?
         if (vars.find(varName) != string::npos) {
             cout << "found!" << endl;
-            varid = stare_varid.at(v);
-            my_size_i = size_i.at(v);
-            my_size_j = size_j.at(v);
+            varid = d_stare_varid.at(v);
+            my_size_i = d_size_i.at(v);
+            my_size_j = d_size_j.at(v);
 
             // Copy the variables stare index data.
             {
@@ -260,10 +248,9 @@ GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::closeSidecarFile(int verbose, int ncid) {
+GeoFile::close_sidecar_file(int ncid) {
     int ret;
 
-    if (verbose) std::cout << "Closing sidecar file with ncid " << ncid << "\n";
     if ((ret = nc_close(ncid)))
         return ret;
 

@@ -65,22 +65,22 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
                   " with build level " << build_level << "\n";
 
     // TODO Make these vector<vector<float32>>. jhrg 6/9/21
-    num_index = 3;
-    if (!(geo_num_i1 = (int *) malloc(num_index * sizeof(int))))
+    d_num_index = 3;
+    if (!(geo_num_i1 = (int *) malloc(d_num_index * sizeof(int))))
         return SSC_ENOMEM;
-    if (!(geo_num_j1 = (int *) malloc(num_index * sizeof(int))))
+    if (!(geo_num_j1 = (int *) malloc(d_num_index * sizeof(int))))
         return SSC_ENOMEM;
-    if (!(geo_lat1 = (double **) malloc(num_index * sizeof(double *))))
+    if (!(geo_lat1 = (double **) malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
-    if (!(geo_lon1 = (double **) malloc(num_index * sizeof(double *))))
+    if (!(geo_lon1 = (double **) malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
-    if (!(geo_index1 = (unsigned long long **) malloc(num_index * sizeof(unsigned long long *))))
-        return SSC_ENOMEM;
-
-    if (!(geo_num_cover_values1 = (int *) malloc(num_index * sizeof(int))))
+    if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
-    stare_index_name.push_back("1km");  //Added jhrg 6/9/21
+    if (!(geo_num_cover_values1 = (int *) malloc(d_num_index * sizeof(int))))
+        return SSC_ENOMEM;
+
+    d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
     stare_cover_name.push_back("1km");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 3");
@@ -175,6 +175,11 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             // Calculate the stare indices.
             geo_index1[0][i] = index1.ValueFromLatLonDegrees(geo_lat1[0][i], geo_lon1[0][i], level);
         }
+
+#if 0
+        for (unsigned long i = 0; i < MAX_ALONG; ++i)
+            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+#endif
 #if 0
         for (unsigned long i = 0; i < MAX_ALONG; ++i)
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
@@ -264,7 +269,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             }
         }
 
-        stare_index_name.push_back("500m");
+        d_stare_index_name.push_back("500m");
         stare_cover_name.push_back("500m");
         var_name[1].push_back("500m Surface Reflectance Band 1");
         var_name[1].push_back("500m Surface Reflectance Band 2");
@@ -302,7 +307,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             }
         }
 
-        stare_index_name.push_back("250m");
+        d_stare_index_name.push_back("250m");
         stare_cover_name.push_back("250m");
         var_name[2].push_back("250m Surface Reflectance Band 1");
         var_name[2].push_back("250m Surface Reflectance Band 2");

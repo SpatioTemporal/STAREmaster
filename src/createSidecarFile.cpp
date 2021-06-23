@@ -195,16 +195,16 @@ main(int argc, char *argv[]) {
     if (strlen(arg.output_file))
         file_out = arg.output_file;
     else
-        file_out = pickOutputName(gf->sidecarFileName(argv[optind]).c_str(), arg.output_dir);
+        file_out = pickOutputName(gf->sidecar_filename(argv[optind]).c_str(), arg.output_dir);
 
     // Create the sidecar file.
     sf.createFile(file_out, arg.verbose, arg.institution);
 
     // Write the sidecar file.
-    for (int i = 0; i < gf->num_index; i++) {
+    for (int i = 0; i < gf->d_num_index; i++) {
         if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i1[i],
                                gf->geo_num_j1[i], gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i],
-                               gf->var_name[i], gf->stare_index_name.at(i))) {
+                               gf->var_name[i], gf->d_stare_index_name.at(i))) {
             cerr << "Error writing STARE index.\n";
             return 99;
         }

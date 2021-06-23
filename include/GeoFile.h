@@ -33,9 +33,9 @@ public:
     int readFile(const string fileName, int verbose, int quiet, int build_level);
 
     /** Get STARE index sidecar filename. */
-    string sidecarFileName(string fileName);
+    string sidecar_filename(const string &file_name);
 
-    int readSidecarFile(std::string fileName, int verbose, int &ncid);
+    int read_sidecar_file(const std::string fileName, int &ncid);
 
 #if 0
     /** Get STARE index for data variable. */
@@ -44,12 +44,12 @@ public:
 #endif
 
     /** Get STARE indices for data variable. */
-    int getSTAREIndex_2(std::string varName, int verbose, int ncid, vector<unsigned long long> &values);
+    int get_stare_indices(const std::string varName, int ncid, vector<unsigned long long> &values);
 
     /** Close sidecar file. */
-    int closeSidecarFile(int verbose, int ncid);
+    int close_sidecar_file(int ncid);
 
-    int num_index; /**< Number of STARE index sets needed for this file. */
+    int d_num_index; /**< Number of STARE index sets needed for this file. */
     int *geo_num_i1; /**< Number of I. */
     int *geo_num_j1; /**< Number of J. */
     double **geo_lat1; /**< Array of 'index sets' (e.g., 2) latitude values. */
@@ -65,14 +65,14 @@ public:
     int cover_level;
     int perimeter_stride;
 
-    vector<string> stare_index_name;
+    vector<string> d_stare_index_name;
     vector<string> stare_cover_name;
-    vector<string> variables;
+    vector<string> d_variables;
 
 #if 1
     // I think these are only used by the old getSTAREIndex() method
-    vector<size_t> size_i, size_j;
-    vector<int> stare_varid;
+    vector<size_t> d_size_i, d_size_j;
+    vector<int> d_stare_varid;
 #endif
 };
 

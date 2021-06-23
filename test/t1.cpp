@@ -25,9 +25,9 @@ main() {
     std::cout << "Howdy!\n";
 
     // Test getting sidecarFileName.
-    if (gf.sidecarFileName("bb") != "bb_stare.nc")
+    if (gf.sidecar_filename("bb") != "bb_stare.nc")
         return ERR;
-    if (gf.sidecarFileName("bb.nc") != "bb_stare.nc")
+    if (gf.sidecar_filename("bb.nc") != "bb_stare.nc")
         return ERR;
 
     // What type of file is this?
@@ -76,20 +76,22 @@ main() {
     if (stare_varid.size() != 1 || stare_varid.at(0) != 2) return ERR;
 
     // Read it again with GeoFile.
-    if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
+    if (gf_in.read_sidecar_file(fileNameOut, ncid))
         return ERR;
     string varName = "Scan_Start_Time";
+#if 0
     int varid;
     size_t si, sj;
     if (gf_in.getSTAREIndex(varName, 1, ncid, varid, si, sj))
         return ERR;
     if (varid != 2) return ERR;
+#endif
 
     vector<unsigned long long> values;
-    if (gf_in.getSTAREIndex_2(varName, 1, ncid, values))
+    if (gf_in.get_stare_indices(varName, ncid, values))
         return ERR;
 
-    if (gf_in.closeSidecarFile(verbose, ncid))
+    if (gf_in.close_sidecar_file(ncid))
         return ERR;
     return 0;
 }
