@@ -17,9 +17,10 @@ STAREmaster.c
 
 # This is the command line utility to create STARE sidecar files for
 # data files. 
-bin_PROGRAMS = createSidecarFile
+bin_PROGRAMS = mk_stare
+ # print_stare
 LDADD = libstaremaster.la
-createSidecarFile_SOURCES = createSidecarFile.cpp
+mk_stare_SOURCES = createSidecarFile.cpp
 endif # USE_HDF4
 
 EXTRA_DIST = CMakeLists.txt
