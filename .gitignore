@@ -41,9 +41,8 @@ src/NetcdfSidecarFile.lo
 src/NetcdfSidecarFile.o
 src/SidecarFile.lo
 src/SidecarFile.o
-src/createSidecarFile
 src/createSidecarFile.o
-src/libssc.la
+src/mk_stare
 stamp-h1
 test-driver
 test/.deps/
@@ -52,3 +51,4 @@ test/Makefile.in
 test/data/MOD05_L2.A2005349.2125.061.2017294065400_stare.nc
 test/data/Makefile
 test/data/Makefile.in
+

@@ -27,4 +27,7 @@ add_executable(createSidecarFile
 		include/ModisGeoFile.h
 		include/STAREmaster.h
 		include/ssc.h
-		)
+		src/print_stare.cpp)
+
+add_executable(print_stare
+		src/print_stare.cpp)
