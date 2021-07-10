@@ -27,15 +27,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/stare
-        key: stare-${{ runner.os }}-0.16.3
+        key: stare-${{ runner.os }}-0.16.7
 
     - name: build-stare
       if: steps.cache-stare.outputs.cache-hit != 'true'
       run: |
         set -x
-        wget https://github.com/SpatioTemporal/STARE/archive/0.16.3-beta.tar.gz  &> /dev/null
-        tar zxf 0.16.3-beta.tar.gz
-        cd STARE-0.16.3-beta/
+        wget https://github.com/SpatioTemporal/STARE/archive/0.16.7-beta.tar.gz  &> /dev/null
+        tar zxf 0.16.7-beta.tar.gz
+        cd STARE-0.16.7-beta/
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=~/stare ..
