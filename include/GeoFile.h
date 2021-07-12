@@ -43,7 +43,7 @@ public:
 			vector<unsigned long long> &values);
 
     /** Close sidecar file. */
-    int closeSidecarFile(int verbose, int ncid);
+    int close_sidecar_file(int verbose, int ncid);
 
     int d_ncid; ///< id of the open netCDF4 file    
     int d_num_index; /**< Number of STARE indicies needed for this file. */
