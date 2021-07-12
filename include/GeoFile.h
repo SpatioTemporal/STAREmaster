@@ -34,7 +34,7 @@ public:
     /** Get STARE index sidecar filename. */
     string sidecarFileName(const string fileName);
 
-    int readSidecarFile(const std::string fileName, int verbose, int &ncid);
+    int read_sidecar_file(const std::string fileName, int verbose, int &ncid);
 
     /** Get STARE index for data varaible. */
     int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
