@@ -49,7 +49,7 @@ main()
 	return ERR;
 
     // Close the sidecar file.
-    if (sf.closeFile())
+    if (sf.close_file())
 	return ERR;
 
     // Read the sidecar file.
@@ -58,7 +58,7 @@ main()
     vector<string> stare_index_name, variables;
     vector<size_t> size_i, size_j;
     vector<int> stare_varid;
-    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i,
+    if (sf.read_sidecar_file(fileNameOut, verbose, num_index, stare_index_name, size_i,
 			   size_j, variables, stare_varid, ncid))
         return ERR;
     if (nc_close(ncid))
@@ -74,7 +74,7 @@ main()
     if (stare_varid.size() != 1 || stare_varid.at(0) != 2) return ERR;
 
     // Read it again with GeoFile.
-    if (gf_in.readSidecarFile(fileNameOut, verbose, ncid))
+    if (gf_in.read_sidecar_file(fileNameOut, verbose, ncid))
         return ERR;
     string varName = "Scan_Start_Time";
     int varid;
