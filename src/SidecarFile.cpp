@@ -263,7 +263,7 @@ SidecarFile::writeSTARECover(int verbose, int stare_cover_size, unsigned long lo
  * Close a sidecar file.
  */
 int
-SidecarFile::closeFile()
+SidecarFile::close_file()
 {
     return nc_close(ncid);
 }

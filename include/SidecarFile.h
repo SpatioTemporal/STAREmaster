@@ -61,7 +61,7 @@ public:
 			string stare_cover_name);
 
     /** Close the file. */
-    int closeFile();
+    int close_file();
 };
 
 #endif /* SIDECAR_FILE_H_ */

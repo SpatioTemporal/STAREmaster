@@ -212,7 +212,7 @@ main(int argc, char *argv[])
     }
 
     // Close the sidecar file.
-    sf.closeFile();
+    sf.close_file();
 
     delete gf;
     return 0;
