@@ -34,7 +34,7 @@ public:
     /** Get STARE index sidecar filename. */
     string sidecarFileName(const string fileName);
 
-    int readSidecarFile(const std::string fileName, int verbose, int &ncid);
+    int read_sidecar_file(const std::string fileName, int verbose, int &ncid);
 
     /** Get STARE index for data varaible. */
     int getSTAREIndex(const std::string varName, int verbose, int ncid, int &varid,
@@ -43,9 +43,10 @@ public:
 			vector<unsigned long long> &values);
 
     /** Close sidecar file. */
-    int closeSidecarFile(int verbose, int ncid);
+    int close_sidecar_file(int verbose, int ncid);
 
-    int num_index; /**< Number of STARE indicies needed for this file. */
+    int d_ncid; ///< id of the open netCDF4 file    
+    int d_num_index; /**< Number of STARE indicies needed for this file. */
     int *geo_num_i1; /**< Number of I. */
     int *geo_num_j1; /**< Number of J. */
     double **geo_lat1; /**< Array of latitude values. */

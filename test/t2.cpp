@@ -39,7 +39,7 @@ main()
 	return ERR;
 
     // Close the sidecar file.
-    if (sf.closeFile())
+    if (sf.close_file())
 	return ERR;
     
     return 0;

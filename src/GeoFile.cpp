@@ -85,7 +85,7 @@ GeoFile::GeoFile()
     cout<<"GeoFile constructor\n";
 
     // Initialize values.
-    num_index = 0;
+    d_num_index = 0;
     geo_num_i1 = NULL;
     geo_num_j1 = NULL;
     geo_cover1 = NULL;
@@ -105,7 +105,7 @@ GeoFile::~GeoFile()
     // Free any allocated memory.
     if (geo_lat1)
     {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_lat1[i])
                 free(geo_lat1[i]);
 	free(geo_lat1);
@@ -113,7 +113,7 @@ GeoFile::~GeoFile()
 
     if (geo_lon1)
     {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_lon1[i])
                 free(geo_lon1[i]);
 	free(geo_lon1);
@@ -121,7 +121,7 @@ GeoFile::~GeoFile()
     
     if (geo_index1)
     {
-        for (int i = 0; i < num_index; i++)
+        for (int i = 0; i < d_num_index; i++)
             if (geo_index1[i])
                 free(geo_index1[i]);
 	free(geo_index1);
@@ -150,17 +150,17 @@ GeoFile::~GeoFile()
 }
 
 string
-GeoFile::sidecarFileName(const string fileName)
+GeoFile::sidecarFileName(const string file_name)
 {
     string sidecarFileName;
     
     // Is there a file extension?
-    size_t f = fileName.rfind(".");
+    size_t f = file_name.rfind(".");
     if (f != string::npos)
-	sidecarFileName = fileName.substr(0, f) + "_stare.nc";
+	sidecarFileName = file_name.substr(0, f) + "_stare.nc";
     else
     {
-        sidecarFileName = fileName;
+        sidecarFileName = file_name;
 	sidecarFileName.append("_stare.nc");
     }
 
@@ -170,18 +170,18 @@ GeoFile::sidecarFileName(const string fileName)
 /**
  * Read a sidecare file.
  *
- * @param fileName Name of the sidecar file.
+ * @param file_name Name of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
  * debugging.
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::readSidecarFile(const std::string fileName, int verbose, int &ncid)
+GeoFile::read_sidecar_file(const std::string file_name, int verbose, int &ncid)
 {
     SidecarFile sf;
     int ret;
     
-    if ((ret = sf.readSidecarFile(fileName, verbose, num_index, stare_index_name,
+    if ((ret = sf.read_sidecar_file(file_name, verbose, d_num_index, stare_index_name,
 				  size_i, size_j, variables, stare_varid, ncid)))
         return ret;
     return 0;
@@ -271,7 +271,7 @@ GeoFile::getSTAREIndex_2(const std::string varName, int verbose, int ncid,
  * @return 0 for success, error code otherwise.
  */
 int
-GeoFile::closeSidecarFile(int verbose, int ncid)
+GeoFile::close_sidecar_file(int verbose, int ncid)
 {
     int ret;
     
