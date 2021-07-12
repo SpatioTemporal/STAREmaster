@@ -87,7 +87,7 @@ main()
     if (gf_in.getSTAREIndex_2(varName, 1, ncid, values))
 	return ERR;
     
-    if (gf_in.closeSidecarFile(verbose, ncid))
+    if (gf_in.close_sidecar_file(verbose, ncid))
         return ERR;
     return 0;
 }
