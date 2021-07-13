@@ -137,7 +137,7 @@ GeoFile::sidecar_filename(const string &fileName) {
     string sidecarFileName;
 
     // Is there a file extension?
-    size_t f = file_name.rfind(".");
+    size_t f = fileName.rfind(".");
     if (f != string::npos)
         sidecarFileName = fileName.substr(0, f) + "_stare.nc";
     else {
@@ -151,7 +151,7 @@ GeoFile::sidecar_filename(const string &fileName) {
 /**
  * Read a sidecare file.
  *
- * @param file_name Name of the sidecar file.
+ * @param fileName Name of the sidecar file.
  * @param verbose Set to non-zero to enable verbose output for
  * debugging.
  * @return 0 for success, error code otherwise.
