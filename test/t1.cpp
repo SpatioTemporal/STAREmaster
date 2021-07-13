@@ -11,9 +11,9 @@
 
 #define MAX_STR 256
 #define ERR 1
+
 int
-main()
-{
+main() {
     GeoFile gf_in;
     Modis05L2GeoFile gf;
     SidecarFile sf;
@@ -21,32 +21,32 @@ main()
     std::string fileNameOut = "t1_sidecar.nc";
     int gf_format;
     int verbose = 1;
-    
+
     std::cout << "Howdy!\n";
 
     // Test getting sidecarFileName.
-    if (gf.sidecarFileName("bb") != "bb_stare.nc")
+    if (gf.sidecar_filename("bb") != "bb_stare.nc")
         return ERR;
-    if (gf.sidecarFileName("bb.nc") != "bb_stare.nc")
+    if (gf.sidecar_filename("bb.nc") != "bb_stare.nc")
         return ERR;
 
     // What type of file is this?
     if (gf.determineFormat(fileName, &gf_format))
-	return ERR;
+        return ERR;
     if (gf_format != SSC_FORMAT_MODIS_L2) return 1;
 
     // Read the file.
     if (gf.readFile(fileName, 1, 5, -1, false, 1))
-	return ERR;
+        return ERR;
 
     // Create the sidecar file.
     if (sf.createFile(fileNameOut, 1, NULL))
-	return ERR;
-    
+        return ERR;
+
     // Write the sidecar file.
     if (sf.writeSTAREIndex(1, 5, gf.geo_num_i1[0], gf.geo_num_j1[0],
-			   gf.geo_lat1[0], gf.geo_lon1[0], gf.geo_index1[0], gf.var_name[0], "1km"))
-	return ERR;
+                           gf.geo_lat1[0], gf.geo_lon1[0], gf.geo_index1[0], gf.var_name[0], "1km"))
+        return ERR;
 
     // Close the sidecar file.
     if (sf.close_file())
@@ -55,8 +55,8 @@ main()
     // Read the sidecar file.
     int ncid;
     int num_index;
-    vector<string> stare_index_name, variables;
-    vector<size_t> size_i, size_j;
+    vector <string> stare_index_name, variables;
+    vector <size_t> size_i, size_j;
     vector<int> stare_varid;
     if (sf.read_sidecar_file(fileNameOut, verbose, num_index, stare_index_name, size_i,
 			   size_j, variables, stare_varid, ncid))
@@ -68,26 +68,30 @@ main()
     if (num_index != 1) return ERR;
     if (stare_index_name.size() != 1 || variables.size() != 1) return ERR;
     if (stare_index_name.at(0) != "STARE_index_1km") return ERR;
-    if (variables.at(0) != "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared") return ERR;
+    if (variables.at(0) !=
+        "Scan_Start_Time, Solar_Zenith, Solar_Azimuth, Water_Vapor_Infrared, Quality_Assurance_Infrared")
+        return ERR;
     if (size_i.size() != 1 || size_i.at(0) != 406) return ERR;
     if (size_j.size() != 1 || size_j.at(0) != 270) return ERR;
     if (stare_varid.size() != 1 || stare_varid.at(0) != 2) return ERR;
 
     // Read it again with GeoFile.
-    if (gf_in.read_sidecar_file(fileNameOut, verbose, ncid))
+    if (gf_in.read_sidecar_file(fileNameOut, ncid))
         return ERR;
     string varName = "Scan_Start_Time";
+#if 0
     int varid;
     size_t si, sj;
     if (gf_in.getSTAREIndex(varName, 1, ncid, varid, si, sj))
-	return ERR;
+        return ERR;
     if (varid != 2) return ERR;
+#endif
 
-    vector <unsigned long long> values;
-    if (gf_in.getSTAREIndex_2(varName, 1, ncid, values))
-	return ERR;
-    
-    if (gf_in.close_sidecar_file(verbose, ncid))
+    vector<unsigned long long> values;
+    if (gf_in.get_stare_indices(varName, ncid, values))
+        return ERR;
+
+    if (gf_in.close_sidecar_file(ncid))
         return ERR;
     return 0;
 }
