@@ -38,11 +38,7 @@ public:
     int read_sidecar_file(const std::string fileName, int &ncid);
 
 
-#if 0
-    /** Get STARE index for data variable. */
-    int getSTAREIndex(std::string varName, int verbose, int ncid, int &varid,
-                      size_t &my_size_i, size_t &my_size_j);
-#endif
+    int read_sidecar_file(const std::string fileName, int verbose, int &ncid);
 
     /** Get STARE indices for data variable. */
     int get_stare_indices(const std::string varName, int ncid, vector<unsigned long long> &values);
