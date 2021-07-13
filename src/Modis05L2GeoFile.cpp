@@ -192,15 +192,15 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    if (!(geo_num_i1 = (int *) malloc(d_num_index * sizeof(int))))
+    if (!(geo_num_i1 = (int *)malloc(d_num_index * sizeof(int))))
         return SSC_ENOMEM;
-    if (!(geo_num_j1 = (int *) malloc(d_num_index * sizeof(int))))
+    if (!(geo_num_j1 = (int *)malloc(d_num_index * sizeof(int))))
         return SSC_ENOMEM;
-    if (!(geo_lat1 = (double **) malloc(d_num_index * sizeof(double *))))
+    if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
-    if (!(geo_lon1 = (double **) malloc(d_num_index * sizeof(double *))))
+    if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
-    if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
+    if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
     num_cover = 1;

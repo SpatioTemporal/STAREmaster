@@ -59,10 +59,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
-
-    if (verbose)
-        std::cout << "Reading HDF4 file " << fileName <<
-                  " with build level " << build_level << "\n";
+    
+    if (verbose) std::cout << "Reading HDF4 file " << fileName <<
+		     " with build level " << build_level << "\n";
 
     // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     d_num_index = 3;

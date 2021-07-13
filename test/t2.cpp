@@ -39,8 +39,8 @@ main() {
         return ERR;
 
     // Close the sidecar file.
-    if (sf.closeFile())
-        return ERR;
-
+    if (sf.close_file())
+	return ERR;
+    
     return 0;
 }

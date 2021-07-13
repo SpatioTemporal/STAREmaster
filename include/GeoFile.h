@@ -37,6 +37,7 @@ public:
 
     int read_sidecar_file(const std::string fileName, int &ncid);
 
+
 #if 0
     /** Get STARE index for data variable. */
     int getSTAREIndex(std::string varName, int verbose, int ncid, int &varid,
@@ -50,6 +51,7 @@ public:
     int close_sidecar_file(int ncid);
 
     int d_num_index; /**< Number of STARE index sets needed for this file. */
+    int d_ncid; ///< id of the open netCDF4 file    
     int *geo_num_i1; /**< Number of I. */
     int *geo_num_j1; /**< Number of J. */
     double **geo_lat1; /**< Array of 'index sets' (e.g., 2) latitude values. */

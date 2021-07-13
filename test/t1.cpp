@@ -49,8 +49,8 @@ main() {
         return ERR;
 
     // Close the sidecar file.
-    if (sf.closeFile())
-        return ERR;
+    if (sf.close_file())
+	return ERR;
 
     // Read the sidecar file.
     int ncid;
@@ -58,8 +58,8 @@ main() {
     vector <string> stare_index_name, variables;
     vector <size_t> size_i, size_j;
     vector<int> stare_varid;
-    if (sf.readSidecarFile(fileNameOut, verbose, num_index, stare_index_name, size_i,
-                           size_j, variables, stare_varid, ncid))
+    if (sf.read_sidecar_file(fileNameOut, verbose, num_index, stare_index_name, size_i,
+			   size_j, variables, stare_varid, ncid))
         return ERR;
     if (nc_close(ncid))
         return ERR;

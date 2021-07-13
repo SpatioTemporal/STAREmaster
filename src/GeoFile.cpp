@@ -161,8 +161,8 @@ GeoFile::read_sidecar_file(const std::string fileName, int &ncid) {
     SidecarFile sf;
     int ret;
 
-    if ((ret = sf.readSidecarFile(fileName, false /*verbose*/, d_num_index, d_stare_index_name,
-                                  d_size_i, d_size_j, d_variables, d_stare_varid, ncid)))
+    if ((ret = sf.read_sidecar_file(fileName, false /*verbose*/, d_num_index, d_stare_index_name,
+				    d_size_i, d_size_j, d_variables, d_stare_varid, ncid)))
         return ret;
     return 0;
 }

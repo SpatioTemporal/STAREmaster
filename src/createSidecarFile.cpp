@@ -201,8 +201,9 @@ main(int argc, char *argv[]) {
     sf.createFile(file_out, arg.verbose, arg.institution);
 
     // Write the sidecar file.
-    for (int i = 0; i < gf->d_num_index; i++) {
-        if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i1[i],
+    for (int i = 0; i < gf->d_num_index; i++)
+    {
+	if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i1[i],
                                gf->geo_num_j1[i], gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i],
                                gf->var_name[i], gf->d_stare_index_name.at(i))) {
             cerr << "Error writing STARE index.\n";
@@ -222,7 +223,7 @@ main(int argc, char *argv[]) {
     }
 
     // Close the sidecar file.
-    sf.closeFile();
+    sf.close_file();
 
     delete gf;
     return 0;
