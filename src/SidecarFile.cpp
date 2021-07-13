@@ -28,8 +28,7 @@
  * @return 0 for success, error code otherwise.
  */
 int
-SidecarFile::createFile(const std::string fileName, int verbose, char *institution_c)
-{
+SidecarFile::createFile(const std::string fileName, int verbose, char *institution_c) {
     int ret;
     string title = SSC_TITLE;
     string institution = "";
@@ -40,7 +39,7 @@ SidecarFile::createFile(const std::string fileName, int verbose, char *instituti
     if (verbose) std::cout << "Creating NETCDF sidecar file " << fileName << "\n";
 
     // Create a netCDF/HDF5 file.
-    if ((ret = nc_create(fileName.c_str(), NC_CLOBBER|NC_NETCDF4, &ncid)))
+    if ((ret = nc_create(fileName.c_str(), NC_CLOBBER | NC_NETCDF4, &ncid)))
         NCERR(ret);
 
     // Write some attributes to conform with CF conventions. See
@@ -114,16 +113,15 @@ SidecarFile::createFile(const std::string fileName, int verbose, char *instituti
  */
 int
 SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
-                                   double *geo_lat, double *geo_lon, unsigned long long *stare_index,
-                                   vector<string> var_name, string stare_index_name)
-{
+                             double *geo_lat, double *geo_lon, unsigned long long *stare_index,
+                             vector <string> var_name, string stare_index_name) {
     int dimid[SSC_NDIM2];
     int lat_varid, lon_varid, index_varid;
     string var_att;
     string dim_name;
     int ret;
 
-    if (verbose) std::cout << "Writing NETCDF sidecar indicies with build level " << build_level << "\n";
+    if (verbose) std::cout << "Writing NETCDF sidecar indices with build level " << build_level << "\n";
 
     // Define dimensions.
     dim_name.append(SSC_I_NAME);
@@ -185,10 +183,9 @@ SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
         NCERR(ret);
 
     // Add attribute with list of variables.
-    for (int i = 0; i < (int)var_name.size(); i++)
-    {
+    for (int i = 0; i < (int) var_name.size(); i++) {
         var_att.append(var_name.at(i).c_str());
-        if (i < (int)var_name.size() - 1)
+        if (i < (int) var_name.size() - 1)
             var_att.append(", ");
     }
     if ((ret = nc_put_att_text(ncid, index_varid, SSC_INDEX_VAR_ATT_NAME, var_att.size() + 1,
@@ -218,8 +215,7 @@ SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
  */
 int
 SidecarFile::writeSTARECover(int verbose, int stare_cover_size, unsigned long long *stare_cover,
-                                   string stare_cover_name)
-{
+                             string stare_cover_name) {
 
     if (verbose) std::cout << "Writing NETCDF sidecar cover." << "\n";
 
@@ -263,8 +259,7 @@ SidecarFile::writeSTARECover(int verbose, int stare_cover_size, unsigned long lo
  * Close a sidecar file.
  */
 int
-SidecarFile::closeFile()
-{
+SidecarFile::closeFile() {
     return nc_close(ncid);
 }
 
@@ -273,12 +268,12 @@ SidecarFile::closeFile()
  */
 int
 SidecarFile::writeFile(const std::string fileName, int verbose,
-		       int quiet, int build_level, int i, int j,
-		       double *geo_lat, double *geo_lon,
-		       unsigned long long *index)
-{
-    if (verbose) std::cout << "Writing sidecar file " << fileName <<
-		     " with build level " << build_level << "\n";
+                       int quiet, int build_level, int i, int j,
+                       double *geo_lat, double *geo_lon,
+                       unsigned long long *index) {
+    if (verbose)
+        std::cout << "Writing sidecar file " << fileName <<
+                  " with build level " << build_level << "\n";
     return 0;
 }
 
@@ -301,14 +296,13 @@ SidecarFile::writeFile(const std::string fileName, int verbose,
  */
 int
 SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_index,
-                             vector<string> &stare_index_name, vector<size_t> &size_i,
-                             vector<size_t> &size_j, vector<string> &variables,
-			     vector<int> &stare_varid, int &ncid)
-{
+                             vector <string> &stare_index_name, vector <size_t> &size_i,
+                             vector <size_t> &size_j, vector <string> &variables,
+                             vector<int> &stare_varid, int &ncid) {
     char title_in[NC_MAX_NAME + 1];
     int ndims, nvars;
     int ret;
-    
+
     if (verbose) std::cout << "Reading sidecar file " << fileName << "\n";
 
     // Open the sidecar file.
@@ -327,8 +321,7 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
 
     // Find all variables that are STARE indexes.
     num_index = 0;
-    for (int v = 0; v < nvars; v++)
-    {
+    for (int v = 0; v < nvars; v++) {
         char var_name[NC_MAX_NAME + 1];
         char long_name_in[NC_MAX_NAME + 1];
         nc_type xtype;
@@ -339,32 +332,32 @@ SidecarFile::readSidecarFile(const std::string fileName, int verbose, int &num_i
         if ((ret = nc_inq_var(ncid, v, var_name, &xtype, &ndims, dimids, &natts)))
             return ret;
 
-        if (verbose) std::cout << "var " << var_name << " type " << xtype <<
-                         " ndims " << ndims << "\n";
+        if (verbose)
+            std::cout << "var " << var_name << " type " << xtype <<
+                      " ndims " << ndims << "\n";
 
         // Get the long_name attribute value.
         if ((ret = nc_get_att_text(ncid, v, SSC_LONG_NAME, long_name_in)))
             continue;
 
         // If this is a STARE index, learn about it.
-        if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME))
-        {
+        if (!strncmp(long_name_in, SSC_INDEX_LONG_NAME, NC_MAX_NAME)) {
             char variables_in[NC_MAX_NAME + 1];
 
-	    // Save the varid.
-	    stare_varid.push_back(v);
+            // Save the varid.
+            stare_varid.push_back(v);
 
             // Find the length of the dimensions.
             if ((ret = nc_inq_dimlen(ncid, dimids[0], &dimlen[0])))
                 return ret;
             if ((ret = nc_inq_dimlen(ncid, dimids[1], &dimlen[1])))
                 return ret;
-            
+
             // What variables does this STARE index apply to?
             if ((ret = nc_get_att_text(ncid, v, SSC_INDEX_VAR_ATT_NAME, variables_in)))
                 return ret;
-	    std::string var_list = variables_in;
-	    variables.push_back(var_list);
+            std::string var_list = variables_in;
+            variables.push_back(var_list);
 
             // Save the name of this STARE index variable.
             stare_index_name.push_back(var_name);

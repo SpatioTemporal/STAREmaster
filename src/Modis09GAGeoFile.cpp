@@ -9,6 +9,7 @@
 #include <vector>
 #include <HdfEosDef.h>
 #include "STARE.h"
+
 using namespace std;
 
 #define MAX_NAME 256
@@ -24,14 +25,14 @@ using namespace std;
 
 /** Does a file exist? */
 bool
-Modis09GAGeoFile::fileExists(const std::string& name)
-{
-    if (FILE *file = fopen(name.c_str(), "r")) {
+Modis09GAGeoFile::fileExists(const std::string &name) {
+    if (FILE * file = fopen(name.c_str(), "r")) {
         fclose(file);
         return true;
-    } else {
+    }
+    else {
         return false;
-    }   
+    }
 }
 
 /**
@@ -44,13 +45,11 @@ Modis09GAGeoFile::fileExists(const std::string& name)
  * @return 0 for no error, error code otherwise.
  */
 int
-Modis09GAGeoFile::readFile(const std::string fileName, int verbose,
-			   int build_level)
+Modis09GAGeoFile::readFile(const std::string fileName, int verbose, int build_level) {
 
-{
-    
-    if (verbose) std::cout << "Reading HDF4 file " << fileName <<
-		     " with build level " << build_level << "\n";
+    if (verbose)
+        std::cout << "Reading HDF4 file " << fileName <<
+                  " with build level " << build_level << "\n";
 
     string dir_name, base_name;
     string h_str, v_str;
@@ -63,9 +62,9 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose,
     string fileOut;
     int h, v;
 
-    stare_index_name.push_back("1km");
-    stare_index_name.push_back("500m");
-    stare_index_name.push_back("250m");
+    d_stare_index_name.push_back("1km");
+    d_stare_index_name.push_back("500m");
+    d_stare_index_name.push_back("250m");
     stare_cover_name.push_back("1km");
 
     // Create the output file name and find the h and v tile numbers.
@@ -83,34 +82,33 @@ Modis09GAGeoFile::readFile(const std::string fileName, int verbose,
     cout << "fileOut = " << fileOut << "\n";
 
     // If this file already exists, assume we are done. ;-)
-    if (fileExists(fileOut))
-    {
-	cout << fileOut << " exists\n";
-	return 0;
+    if (fileExists(fileOut)) {
+        cout << fileOut << " exists\n";
+        return 0;
     }
 
     // Open the table file and get the lat/lons for this v/h.
     cout << "creating " << fileOut << "\n";
     fstream newfile;
     const int SKIP_LINES = 7;
-    
+
     newfile.open(TABLE_NAME, ios::in);
-    if (newfile.is_open()) { 
-	string tp;
-	int c = 0;
-	while (getline(newfile, tp)) {
-	    if (c++ <= SKIP_LINES)
-		continue;
-	    cout << tp << "\n";
-	}
-	newfile.close();
+    if (newfile.is_open()) {
+        string tp;
+        int c = 0;
+        while (getline(newfile, tp)) {
+            if (c++ <= SKIP_LINES)
+                continue;
+            cout << tp << "\n";
+        }
+        newfile.close();
     }
 
     // Calculate the rest of the lat/lons.
 
     // Calculate the STARE indexes.
 
-    
+
     return 0;
 }
 

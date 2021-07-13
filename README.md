@@ -34,6 +34,8 @@ netcdf-c| 4.x                   | https://github.com/Unidata/netcdf-c/releases
 
 ### Build Notes
 
+*Note*: To build with Hyrax, see below
+
 When building HDF4 and HDFEOS2, there are some build issues. As
 demonstrated in the GitHub workflow
 builds(ex. https://github.com/SpatioTemporal/STAREmaster/blob/master/.github/workflows/autotools.yml),
@@ -87,6 +89,32 @@ cd hdfeos2_19/hdfeos2.19/hdfeos
 chmod ug+x configure
 </pre>
 
+### Building with Hyrax
+The hyrax-dependencies repo contains all the libraries STAREmaster requires. Assuming you
+are working from within the 'hyrax' meta project/repo, build using autotools with the following environment
+variables (but see the notes that follow for more information):
+
+<pre>
+CPPFLAGS=-I$prefix/deps/include
+CXXFLAGS="--std=c++11 -g3 -O0"
+LDFLAGS=-L$prefix/deps/lib
+</pre>
+
+*Note*:
+1. This assumes you've correctly configured the 'hyrax' repo for a build. 
+   You should 'source spath.h' in it's top-level directory to get $prefix defined correctly
+2. CXXFLAGS needs --std=c++11 to find a 'usable' STARE.h header.
+3. Adding "-g3 -O0" enables debugging in CLion
+   
+Once the environment variables are set, run autoreconf, configure and make
+as per the usual, with the following exception:
+
+<pre>
+./configure --prefix=$prefix/deps
+</pre>
+
+This will install the library and mk_stare command line tool in $prefix/deps/{lib,bin}
+
 ### Building with Autotools
 
 When building with autotools locations of all required header files
@@ -122,7 +150,7 @@ make VERBOSE=1
 make VERBOSE=1 test
 </pre>
 
-Sometimes the FindNetCDF.cmake module has difficulty finding all the netCDF libraries needed for linking. This has been identified as an issue but the fix is non-trivial (see https://github.com/SpatioTemporal/STAREmaster/issues/11). A workaround is to set the CMAKE_CXX_STANDARD_LIBRARIES variable when invoking cmake. For example:
+Sometimes the FindNetCDF.cmake module has difficulty finding all the netCDF libraries needed for linking. This has been identified as an issue, but the fix is non-trivial (see https://github.com/SpatioTemporal/STAREmaster/issues/11). A workaround is to set the CMAKE_CXX_STANDARD_LIBRARIES variable when invoking cmake. For example:
 
 <pre>
 cmake -DTEST_LARGE=/home/ed -DENABLE_LARGE_FILE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug --trace-source=CMakeLists.txt -DNETCDF_INCLUDES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/include -DNETCDF_LIBRARIES=/usr/local/netcdf-c-4.7.4_hdf5-1.10.6/lib -DSTARE_INCLUDE_DIR=/usr/local/STARE-0.16.3/include -DSTARE_LIBRARY=/usr/local/STARE-0.16.3/lib -DCMAKE_PREFIX_PATH="/usr/local/hdf-4.2.15;/usr/local/hdfeos" -DCMAKE_CXX_STANDARD_LIBRARIES="-lcurl" ..
@@ -133,15 +161,15 @@ to the cmake command line.
 
 ## Using STAREmaster
 
-The STAREmaster package installs a binary createSidecarFile, whcih may
+The STAREmaster package installs a binary mk_stare, which may
 be used to create a sidecar file for any of the supported datasets. To
 use:
 
 <pre>
-createSidecarFile -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
+mk_stare -d MOD09 data/MYD09.A2020058.1515.006.2020060020205.hdf
 </pre>
 
-To see a number usage options execute _createSidecarFile_ without any
+To see a number usage options execute _mk_stare_ without any
 command line arguments.
 
 To enable OpenMP multithreading, you may need to set the environment
@@ -195,7 +223,7 @@ a sidecar file:
 
 Kuo, K-S and ML Rilee, “STARE – Toward unprecedented geo-data
 interoperability,” 2017 Conference on Big Data from Space. Toulouse,
-France. 28-30 November 2017, retrieved on Sep 19,2020 from
+France. 28-30 November 2017, retrieved on Sep 19, 2020 from
 https://www.researchgate.net/publication/320908197_STARE_-_TOWARD_UNPRECEDENTED_GEO-DATA_INTEROPERABILITY.
 
 Kuo, K-S, H. YuYu, and ML Rilee, "Leveraging STARE for Co-aligned Data

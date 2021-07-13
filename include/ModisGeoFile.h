@@ -18,12 +18,12 @@ using namespace std;
 /**
  * This is the base class for a Modis data file with geolocation.
  */
-class ModisGeoFile : public GeoFile
-{
+class ModisGeoFile : public GeoFile {
 public:
     ModisGeoFile();
+
     ~ModisGeoFile();
-    
+
     int determineFormat(const std::string fileName, int *gf_format);
 };
 

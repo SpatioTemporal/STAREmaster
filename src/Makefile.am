@@ -9,6 +9,8 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 lib_LTLIBRARIES = libstaremaster.la
 libstaremaster_la_SOURCES = SidecarFile.cpp GeoFile.cpp
 
+bin_PROGRAMS =
+
 # HDF4 and HDFEOS2 is required for these.
 if USE_HDF4
 libstaremaster_la_SOURCES += Modis05L2GeoFile.cpp		\
@@ -17,10 +19,14 @@ STAREmaster.c
 
 # This is the command line utility to create STARE sidecar files for
 # data files. 
-bin_PROGRAMS = createSidecarFile
+bin_PROGRAMS += mk_stare
+
 LDADD = libstaremaster.la
-createSidecarFile_SOURCES = createSidecarFile.cpp
+mk_stare_SOURCES = createSidecarFile.cpp
 endif # USE_HDF4
+
+bin_PROGRAMS += print_stare
+print_stare_SOURCES = print_stare.cpp
 
 EXTRA_DIST = CMakeLists.txt
 

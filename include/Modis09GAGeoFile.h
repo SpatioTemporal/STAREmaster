@@ -21,10 +21,9 @@
 /**
  * This class reads HDF4 data files.
  */
-class Modis09GAGeoFile: public ModisGeoFile
-{
+class Modis09GAGeoFile : public ModisGeoFile {
 public:
-    bool fileExists(const std::string& name);
+    bool fileExists(const std::string &name);
 
     int readFile(const std::string fileName, int verbose, int build_level);
 };

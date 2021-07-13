@@ -20,14 +20,15 @@
 /**
  * This class reads HDF4 data files.
  */
-class Modis05L2GeoFile : public ModisGeoFile
-{
+class Modis05L2GeoFile : public ModisGeoFile {
 public:
     Modis05L2GeoFile();
+
     ~Modis05L2GeoFile();
-    
+
     int readFile(const std::string fileName, int verbose, int build_level,
-		 int cover_level, bool use_gring, int perimeter_stride);
+                 int cover_level, bool use_gring, int perimeter_stride);
+
     int getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon);
 
 };
