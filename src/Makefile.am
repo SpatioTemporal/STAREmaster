@@ -22,7 +22,7 @@ STAREmaster.c
 bin_PROGRAMS += mk_stare
 
 LDADD = libstaremaster.la
-mk_stare_SOURCES = createSidecarFile.cpp
+mk_stare_SOURCES = mk_stare.cpp
 endif # USE_HDF4
 
 bin_PROGRAMS += print_stare
