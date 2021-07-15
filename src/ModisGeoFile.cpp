@@ -17,14 +17,14 @@
  * @return a ModisGeoFile
  */
 ModisGeoFile::ModisGeoFile() {
-    cout << "ModisGeoFile constructor" << endl;
+    // cout << "ModisGeoFile constructor" << endl;
 }
 
 /** Destroy a ModisGeoFile.
  *
  */
 ModisGeoFile::~ModisGeoFile() {
-    cout << "ModisGeoFile destructor\n";
+    // cout << "ModisGeoFile destructor\n";
 }
 
 /**
