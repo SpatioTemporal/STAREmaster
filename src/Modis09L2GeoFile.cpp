@@ -27,6 +27,18 @@ using namespace std;
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
 
 /**
+ * Interpolate the 1km resolution lat/lon to 250m. Based on python
+ * code from
+ * https://github.com/SpatioTemporal/GeoData/tree/master/geodata/modis_coarse_to_fine_geolocation.
+ *
+ */
+int
+modis_1km_to_250m_geolocation()
+{
+    return 0;
+}
+
+/**
  * Read a HDF4 MODIS L2 MOD09 file.
  *
  * @param fileName the data file name.
