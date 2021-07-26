@@ -23,7 +23,8 @@ main() {
     GeoFile gf_in;
     Modis09L2GeoFile gf;
     SidecarFile sf;
-    std::string fileName = "/home/ed/Downloads/MOD09.A2021181.0010.006.2021182175943.hdf";
+    // std::string fileName = "/home/ed/Downloads/MOD09.A2021181.0010.006.2021182175943.hdf";
+    std::string fileName = "/home/ed/Downloads/MOD09.A2021185.2250.006.2021187021111.hdf";
     std::string fileNameOut = "tst_interp_sidecar.nc";
     int gf_format;
     int verbose = 1;
@@ -34,9 +35,9 @@ main() {
     if (gf.readFile(fileName, 1, 5))
         return ERR;
 
-//     // Create the sidecar file.
-//     if (sf.createFile(fileNameOut, 1, NULL))
-//         return ERR;
+     // Create the sidecar file.
+     if (sf.createFile(fileNameOut, 1, NULL))
+         return ERR;
 
 //     // Write the sidecar file.
 //     if (sf.writeSTAREIndex(1, 5, gf.geo_num_i1[0], gf.geo_num_j1[0],

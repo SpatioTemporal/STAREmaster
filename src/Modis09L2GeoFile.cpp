@@ -26,6 +26,179 @@ using namespace std;
 #define MAX_ALONG_250 (MAX_ALONG_500 * 2)
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
 
+double
+itk_1km_to_250m(double i_tk_1km) {
+    return 1.5 + 4. * i_tk_1km;
+}
+
+//    return the 1km grid index along track of a 250m pixel
+double
+itk_250m_to_1km (double i_tk_250m ) {
+    return (i_tk_250m - 1.5) / 4.;
+}
+
+//    return the 250m grid index cross track of a 1km pixel
+float
+isc_1km_to_250m (float i_sc_1km ) {
+    return 4. * i_sc_1km;
+}
+
+// return the 1km grid index cross track of a 250m pixel
+float
+isc_250m_to_1km (float i_sc_250m ) {
+    return i_sc_250m / 4.;
+}
+
+// Width = 2330, nscan_lines = 1354
+// return the (lat,lon) of a 250m pixel specified with its indexes, when the geolocation datasets are given at 1km resolution
+// @param itk_250m grid index of the 250m pixel along-track
+// @param isc_250m grid index of the 250m pixel cross-track
+// @param lat_1km latitudes dataset at 1km resolution
+// @param lon_1km longitudes dataset at 1km resolution
+// @return the ( lat, lon ) of the 250m pixel  [ itk_250m, isc_250m ]
+int
+get_250m_pix_pos (double itk_250m, double isc_250m, float *lat_1km,
+		  float *lon_1km, float *lat, float *lon) {
+
+    // # change date meridian case sentinel
+    int is_crossing_change_date = 0;
+
+    // # check 250m indexes validity
+    int sz_sc_1km  = MAX_ACROSS;
+    int sz_sc_250m = MAX_ACROSS_250;
+
+    int sz_tk_1km = MAX_ALONG;
+    int sz_tk_250m = 4 * sz_tk_1km;
+    if ((isc_250m < 0) || (isc_250m > sz_sc_250m - 1))
+	return -1;
+    if ((itk_250m < 0) || (itk_250m > sz_tk_250m - 1))
+	return -1;
+
+    // --- set the bounding 1km pixels to take for interpolation
+    // set the (track,scan) indexes of the 1km pixel in the 250m grid
+    double itk_1km = itk_250m_to_1km(itk_250m);
+    double isc_1km = isc_250m_to_1km(isc_250m);
+
+    printf("i_250m=[%.2f, %.2f] -> i_1km=[%.2f, %.2f]\n", itk_250m, isc_250m,
+	   itk_1km, isc_1km);
+
+    // the width of one scan, in number of pixels, at 250m resolution
+    int w_scan_250m = 40;
+    int itk_top_1km;
+    int itk_bottom_1km;
+    // extra/interpolation 1km pixels along track
+    // if ((itk_250m % w_scan_250m) <= 1) { // extrapolate start of scan
+    // 	itk_top_1km    = ceil(itk_1km);
+    // 	itk_bottom_1km = itk_top_1km + 1;
+    // elif ( itk_250m % w_scan_250m ) >= 38 : # extrapolate end of scan
+    //     itk_top_1km    = math.floor ( itk_1km )
+    //     itk_bottom_1km = itk_top_1km - 1
+    // else : # general case : middle of scan
+    //     itk_top_1km    = math.floor ( itk_1km )
+    //     itk_bottom_1km = itk_top_1km + 1
+    // # - extra/interpolation 1km pixels along track
+    // if ( isc_1km >= 1353. ) : # extrapolate end of scan line
+    //     isc_left_1km  = math.floor ( isc_1km ) - 1
+    //     isc_right_1km = math.floor ( isc_1km )
+    // else : # general case : interpolation
+    //     isc_left_1km  = math.floor ( isc_1km )
+    //     isc_right_1km = isc_left_1km + 1
+    // }
+
+    // #print "itk_top_1km=%d itk_bottom_1km=%d isc_left_1km=%d isc_right_1km=%d"%(itk_top_1km, itk_bottom_1km, isc_left_1km, isc_right_1km)
+
+    // # --- set the 1km track lines position ; left border ---
+    // lat_left_250m, lon_left_250m   = get_y_pos_1km_to_250m (
+    //             isc_left_1km, itk_top_1km, itk_bottom_1km,
+    //             lat_1km, lon_1km,
+    //             itk_250m )
+    // # --- set the 1km track lines position ; right border ---
+    // lat_right_250m, lon_right_250m = get_y_pos_1km_to_250m (
+    //             isc_right_1km, itk_top_1km, itk_bottom_1km,
+    //             lat_1km, lon_1km,
+    //             itk_250m )
+
+    // #print "left_250m=[%f,%f] right_250m=[%f,%f]"%(lat_left_250m, lon_left_250m, lat_right_250m, lon_right_250m)
+
+    // # check for change date meridian case
+    // if  abs ( lon_right_250m  - lon_left_250m  ) > 180. :
+    //     is_crossing_change_date = True
+    //     # all negative longitudes will be incremented of 360 before interpolation
+    //     if lon_left_250m < 0. :
+    //         lon_left_250m += 360.
+    //     if lon_right_250m < 0. :
+    //         lon_right_250m += 360.
+
+    // # for each track line position, interpolate along scan to retrieve the 250m geolocation
+    // lat, lon = get_x_pos_1km_to_250m ( lat_left_250m,  lon_left_250m,  isc_left_1km,
+    //                                  lat_right_250m, lon_right_250m, isc_right_1km,
+    //                                  isc_250m )
+    // #print "geolocation = [%f, %f]"%(lat,lon)
+
+    // # in case of change date crossing, turn values > 180. to negative
+    // if lon > 180.:
+    //     lon -= 360.
+    // elif lon < -180.:
+    //     lon += 360.
+    // return lat, lon
+    return 0;
+}
+
+int
+get_y_pos_1km_to_250m (float isc_1km, float itk_p1_1km, float itk_p2_1km,
+		       float *lat_1km, float *lon_1km, float itk_250m,
+		       float *lat_left_250m, float *lon_left_250m) {
+    // return the position of 250m pixel defined by its along-track index between 2 successive 1km pixels on a same cross-track line
+    // @warning If the 2 pixels are crossing the changing date meridian, the negative longitude will be returned
+    // with an increment of 360 to manage correctly the interpolation
+    // @param isc_1km index of the cross-track line in the 1km grid
+    // @param itk_p1_1km index of the first along-track pixel in the 1km grid
+    // @param itk_p2_1km index of the second along-track pixel in the 1km grid
+    // @param lat_1km latitudes dataset at 1km resolution
+    // @param lon_1km longitudes dataset at 1km resolution
+    // @param itk_250m index of the along-track 250m along-track pixel to interpolate
+    // @return (lat,lon) of the pixel at [itk_250m, isc_1km], interpolated between the 2 successive 1km pixels p1 and p2
+    // make sure P1 and P1 are 2 successive pixels along-track
+    if (abs(itk_p1_1km - itk_p2_1km) != 1)
+	return -1;
+
+    // // lat, lon of the 1km bounding pixels
+    // p1_1km_lat = lat_1km [ itk_p1_1km, isc_1km ]
+    // p1_1km_lon = lon_1km [ itk_p1_1km, isc_1km ]
+    // p2_1km_lat = lat_1km [ itk_p2_1km, isc_1km ]
+    // p2_1km_lon = lon_1km [ itk_p2_1km, isc_1km ]
+
+    // # check for change date meridian particular case
+
+    // # change date meridian case sentinel
+    // if abs ( p1_1km_lon - p2_1km_lon ) > 180. :
+    //     if p1_1km_lon < 0. :
+    //         p1_1km_lon += 360.
+    //     elif p2_1km_lon < 0. :
+    //         p2_1km_lon += 360.
+
+    // # coordinates of p1, p2 in the 250m grid
+    // itk_p1_250m = itk_1km_to_250m ( itk_p1_1km )
+    // itk_p2_250m = itk_1km_to_250m ( itk_p2_1km )
+
+    // #print "itk_p1_250m=%f itk_p2_250m=%f"%( itk_p1_250m, itk_p2_250m )
+
+    // # linear interpolation on the position
+    // alpha_lon = ( p2_1km_lon - p1_1km_lon ) / ( itk_p2_250m - itk_p1_250m )
+    // alpha_lat = ( p2_1km_lat - p1_1km_lat ) / ( itk_p2_250m - itk_p1_250m )
+    // lon = p1_1km_lon + alpha_lon * ( itk_250m - itk_p1_250m )
+    // lat = p1_1km_lat + alpha_lat * ( itk_250m - itk_p1_250m )
+
+    // # in case of change date crossing, turn values > 180. to negative
+    // if lon > 180. :
+    //     lon -= 360.
+    // elif lon < -180. :
+    //     lon += 360.
+
+    // return lat, lon
+    return 0;
+}
+
 /**
  * Interpolate the 1km resolution lat/lon to 250m. Based on python
  * code from
@@ -33,8 +206,10 @@ using namespace std;
  *
  */
 int
-modis_1km_to_250m_geolocation()
+interp_lat(float32 *latitude, int i, int j, int m, int n, double *lat_out)
 {
+    *lat_out = latitude[m * MAX_ACROSS + n];
+    printf("lat_out = %g\n", *lat_out);
     return 0;
 }
 
@@ -140,6 +315,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     int finest_resolution = 0;
 
     // Calculate STARE index for each point.
+    STARE index1(level, build_level);
 
 #if 0
 #pragma omp parallel reduction(max : finest_resolution)
@@ -172,7 +348,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
 #if 1
     {
-        STARE index1(level, build_level);
 
         // geo_lat1, _lon1 and _index1 are each three arrays of MAX_ALONG by MAX_ACROSS
         // values that will hold the lat, lon, and index values. 'latitude' and longitude'
@@ -307,16 +482,84 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             if (i && !(i % 4)) m++;
             int n = 0;
             for (int j = 0; j < MAX_ACROSS_250; j++) {
+		int ret;
+		double lat_delta, lon_delta;
                 if (j && !(j % 4)) n++;
-                geo_lat1[2][i * MAX_ACROSS_250 + j] = latitude[m * MAX_ACROSS + n];
-                geo_lon1[2][i * MAX_ACROSS_250 + j] = longitude[m * MAX_ACROSS + n];
+		// if ((ret = interp_lat(latitude, i, j, m, n, &geo_lat1[2][i * MAX_ACROSS_250 + j])))
+		//     return ret;
+		if (n == 0)
+		{
+		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
+		}
+		else
+		{
+		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]);
+		}
+		if (m == 0)
+		{
+		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+		}
+		else
+		{
+		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
+		}
+		if (i < 10 && j < 10)
+		    printf("i %d j %d lat_delta %g lon_delta %g\n", i, j, lat_delta, lon_delta);
+
+		// Deal with meridian.
+		if (lon_delta >= 0.4)
+		{
+		    lon_delta = 360 - abs(lon_delta);
+		}
+		if (lon_delta >= 0.4)
+		{
+		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
+		    printf("m %d n %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n,
+			   longitude[m * MAX_ACROSS + n], longitude[m * MAX_ACROSS + n - 1]);
+		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]) %g\n",
+			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]));
+		    printf("abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])) %g\n",
+			   abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])));
+		    printf("abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
+			   abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
+		    return 99;
+		}
+		if (lat_delta >= 0.4)
+		{
+		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
+		    return 99;
+		}
+		geo_lat1[2][i * MAX_ACROSS_250 + j] = latitude[m * MAX_ACROSS + n] +
+		    (j % 4) * lat_delta / 4;
+		geo_lon1[2][i * MAX_ACROSS_250 + j] = longitude[m * MAX_ACROSS + n] +
+		    (j % 4) * lon_delta / 4;
 
                 // Calculate the stare indices.
-                geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
-                // geo_index1[2][i * MAX_ACROSS_250 + j] = index.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                // 								     (double)longitude[m * MAX_ACROSS + n], level);
+                //geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
+		geo_index1[2][i * MAX_ACROSS_250 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
+                 								     (double)longitude[m * MAX_ACROSS + n], level);
             }
         }
+
+	{
+	    int m = 0;
+	    for (int i = 0; i < 10; i++) {
+		if (i && !(i % 4)) m++;
+		int n = 0;
+		for (int j = 0; j < 10; j++) {
+		    if (j && !(j % 4)) n++;
+		    // printf("latitude[%d]=%g\n", i * m * MAX_ACROSS + n + j, latitude[m * MAX_ACROSS + n]);
+		    // printf("geo_lat1[2][%d]=%g\n", i * MAX_ACROSS_250 + j, geo_lat1[2][i * MAX_ACROSS_250 + j]);
+		}
+	    }
+	}
+	
+        // for (int i = 0; i < 10; i++) {
+        //     for (int j = 0; j < 10; j++) {
+	// 	printf("geo_lon1[2][%d]=%g\n", i * MAX_ACROSS_250 + j, geo_lon1[2][i * MAX_ACROSS_250 + j]);
+	//     }
+	// }
+
 
         d_stare_index_name.push_back("250m");
         stare_cover_name.push_back("250m");
