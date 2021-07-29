@@ -9,8 +9,8 @@
 include_directories(include)
 include_directories(.)
 
-add_executable(createSidecarFile
-		src/createSidecarFile.cpp
+add_executable(mk_stare
+		src/mk_stare.cpp
 		src/SidecarFile.cpp
 		src/GeoFile.cpp
 		src/Modis05L2GeoFile.cpp
