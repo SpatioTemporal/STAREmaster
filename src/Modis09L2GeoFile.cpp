@@ -45,7 +45,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     int32 dimsize;
     int32 ngeofields;
     int32 ndatafields;
-    char fieldlist[MAX_NAME + 1];
+    char fieldlist[MAX_NAME * 10 + 1];
     int32 rank[MAX_DIMS];
     int32 numbertype[MAX_DIMS];
     int32 nmaps;
@@ -261,10 +261,65 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             int n = 0;
             for (int j = 0; j < MAX_ACROSS_500; j++) {
                 if (j && !(j % 2)) n++;
-                geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n];
-                geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n];
+		int ret;
+		double lat_delta, lon_delta;
+		// if ((ret = interp_lat(latitude, i, j, m, n, &geo_lat1[1][i * MAX_ACROSS_250 + j])))
+		//     return ret;
+		if (n == 0)
+		{
+		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
+		}
+		else
+		{
+		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]);
+		}
+		if (m == 0)
+		{
+		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+		}
+		else
+		{
+		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
+		}
+		if (i < 10 && j < 10)
+		    printf("i %d j %d lat_delta %g lon_delta %g\n", i, j, lat_delta, lon_delta);
 
-                geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
+		// Deal with meridian.
+		if (lon_delta >= 0.4)
+		{
+		    lon_delta = 360 - abs(lon_delta);
+		}
+		if (lon_delta >= 0.4)
+		{
+		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
+		    printf("m %d n %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n,
+			   longitude[m * MAX_ACROSS + n], longitude[m * MAX_ACROSS + n - 1]);
+		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]) %g\n",
+			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]));
+		    printf("abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])) %g\n",
+			   abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])));
+		    printf("abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
+			   abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
+		    return 99;
+		}
+		if (lat_delta >= 0.4)
+		{
+		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
+		    return 99;
+		}
+		geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n] +
+		    (j % 2) * lat_delta / 2;
+		geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n] +
+		    (j % 2) * lon_delta / 2;
+
+                // Calculate the stare indices.
+                //geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
+		geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
+                 								     (double)longitude[m * MAX_ACROSS + n], level);
+                // geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n];
+                // geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n];
+
+                // geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
             }
         }
 
