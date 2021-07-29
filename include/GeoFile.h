@@ -50,6 +50,8 @@ public:
     int d_ncid; ///< id of the open netCDF4 file    
     int *geo_num_i1; /**< Number of I. */
     int *geo_num_j1; /**< Number of J. */
+    vector<int> geo_num_i; /**< Number of I. */
+    vector<int> geo_num_j; /**< Number of J. */
     double **geo_lat1; /**< Array of 'index sets' (e.g., 2) latitude values. */
     double **geo_lon1; /**< Array of 'index sets' longitude values. */
     unsigned long long **geo_index1; /**< Array of 'index sets' of STARE indices. */
