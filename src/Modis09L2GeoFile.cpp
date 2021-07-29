@@ -130,7 +130,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     // Calculate STARE index for each point.
     STARE index1(level, build_level);
 
-#if 0
+#ifdef USE_OPENMP
 #pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
@@ -157,9 +157,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 #endif
         }
     }
-#endif
 
-#if 1
+#else
     {
 
         // geo_lat1, _lon1 and _index1 are each three arrays of MAX_ALONG by MAX_ACROSS
@@ -184,7 +183,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 #endif
     }
-#endif
+#endif /* USE_OPENMP */
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
