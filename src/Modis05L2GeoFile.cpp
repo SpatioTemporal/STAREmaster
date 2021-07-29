@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef HAVE_OPENMP
+#ifdef USE_OPENMP
 #include <omp.h>
 #endif
 

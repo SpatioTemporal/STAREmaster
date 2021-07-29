@@ -73,9 +73,9 @@ AC_DEFINE_UNQUOTED([TEST_LARGE], ["$TEST_LARGE"], [Place to find large test file
 # disable it, even if it is present.
 AC_MSG_CHECKING([whether OpenMP is desired])
 AC_ARG_ENABLE([openmp],
-              [AS_HELP_STRING([--disable-openmp],
-                              [disable OpenMP.])])
-test "x$enable_openmp" = xno || enable_openmp=yes
+              [AS_HELP_STRING([--enable-openmp],
+                              [enable OpenMP.])])
+test "x$enable_openmp" = xyes || enable_openmp=no
 AC_MSG_RESULT([$enable_openmp])
 
 # Does the user want to build documentation?
@@ -137,11 +137,13 @@ fi
 AC_MSG_CHECKING([LIBS])
 AC_MSG_RESULT([$LIBS])
 
-# Is open_mp available? If so, use it if the user didn't disable it.
+# Did the user enable openmp? If so, confirm it is available, and set flags.
 if test "$enable_openmp" = yes; then
    AX_OPENMP([have_openmp=yes], [have_openmp=no])
    if test "x$have_openmp" = xyes; then
       CXXFLAGS="$CXXFLAGS $OPENMP_CXXFLAGS"
+   else
+      AC_MSG_ERROR([--enable-openmp used, but OpenMP is not available on this system.])
    fi
 
    AC_DEFINE([USE_OPENMP], [1], [true if OpenMP is in use])

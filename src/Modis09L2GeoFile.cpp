@@ -106,7 +106,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         return SSC_ENOMEM;
     if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
         return SSC_ENOMEM;
-#if 1
+
     // Get lat and lon values.
     string LONGITUDE = "Longitude";
     if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
@@ -114,7 +114,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     string LATITUDE = "Latitude";
     if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
-#endif
+
     geo_num_i1[0] = MAX_ALONG;
     geo_num_j1[0] = MAX_ACROSS;
     if (!(geo_lat1[0] = (double *) calloc(geo_num_i1[0] * geo_num_j1[0], sizeof(double))))
@@ -130,7 +130,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     // Calculate STARE index for each point.
     STARE index1(level, build_level);
 
-#if 0
+#ifdef USE_OPENMP
 #pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
@@ -157,9 +157,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 #endif
         }
     }
-#endif
 
-#if 1
+#else
     {
 
         // geo_lat1, _lon1 and _index1 are each three arrays of MAX_ALONG by MAX_ACROSS
@@ -178,13 +177,11 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 #if 0
         for (unsigned long i = 0; i < MAX_ALONG; ++i)
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-#endif
-#if 0
         for (unsigned long i = 0; i < MAX_ALONG; ++i)
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 #endif
     }
-#endif
+#endif /* USE_OPENMP */
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
@@ -260,11 +257,10 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             if (i && !(i % 2)) m++;
             int n = 0;
             for (int j = 0; j < MAX_ACROSS_500; j++) {
-                if (j && !(j % 2)) n++;
 		int ret;
 		double lat_delta, lon_delta;
-		// if ((ret = interp_lat(latitude, i, j, m, n, &geo_lat1[1][i * MAX_ACROSS_250 + j])))
-		//     return ret;
+
+                if (j && !(j % 2)) n++;
 		if (n == 0)
 		{
 		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
@@ -313,13 +309,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    (j % 2) * lon_delta / 2;
 
                 // Calculate the stare indices.
-                //geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
 		geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
                  								     (double)longitude[m * MAX_ACROSS + n], level);
-                // geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n];
-                // geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n];
-
-                // geo_index1[1][i * MAX_ACROSS_500 + j] = geo_index1[0][m * MAX_ACROSS + n];
             }
         }
 
@@ -422,13 +413,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	    }
 	}
 	
-        // for (int i = 0; i < 10; i++) {
-        //     for (int j = 0; j < 10; j++) {
-	// 	printf("geo_lon1[2][%d]=%g\n", i * MAX_ACROSS_250 + j, geo_lon1[2][i * MAX_ACROSS_250 + j]);
-	//     }
-	// }
-
-
         d_stare_index_name.push_back("250m");
         stare_cover_name.push_back("250m");
         var_name[2].push_back("250m Surface Reflectance Band 1");
