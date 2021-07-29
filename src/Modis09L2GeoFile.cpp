@@ -65,10 +65,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     d_num_index = 3;
-    // if (!(geo_num_i1 = (int *) malloc(d_num_index * sizeof(int))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_num_j1 = (int *) malloc(d_num_index * sizeof(int))))
-    //     return SSC_ENOMEM;
     if (!(geo_lat1 = (double **) malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
     if (!(geo_lon1 = (double **) malloc(d_num_index * sizeof(double *))))
@@ -115,8 +111,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
 
-    // geo_num_i1[0] = MAX_ALONG;
-    // geo_num_j1[0] = MAX_ACROSS;
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
     if (!(geo_lat1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
@@ -244,8 +238,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         return SSC_EHDF4ERR;
 
     {
-        // geo_num_i1[1] = MAX_ALONG_500;
-        // geo_num_j1[1] = MAX_ACROSS_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
         if (!(geo_lat1[1] = (double *) calloc(geo_num_i.at(1) * geo_num_j.at(1), sizeof(double))))
@@ -330,8 +322,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         var_name[1].push_back("500m Surface Reflectance Band 7");
     }
     {
-        // geo_num_i1[2] = MAX_ALONG_250;
-        // geo_num_j1[2] = MAX_ACROSS_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
         if (!(geo_lat1[2] = (double *) calloc(geo_num_i.at(2) * geo_num_j.at(2), sizeof(double))))

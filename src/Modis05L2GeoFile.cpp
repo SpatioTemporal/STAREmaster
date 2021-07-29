@@ -192,10 +192,6 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    // if (!(geo_num_i1 = (int *)malloc(d_num_index * sizeof(int))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_num_j1 = (int *)malloc(d_num_index * sizeof(int))))
-    //     return SSC_ENOMEM;
     if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
         return SSC_ENOMEM;
     if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
@@ -230,8 +226,6 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     if (SWreadfield(swathid, (char *) ssc_lat_name.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
 
-    // geo_num_i1[0] = MAX_ALONG;
-    // geo_num_j1[0] = MAX_ACROSS;
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
     if (!(geo_lat1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
