@@ -203,8 +203,8 @@ main(int argc, char *argv[]) {
     // Write the sidecar file.
     for (int i = 0; i < gf->d_num_index; i++)
     {
-	if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i1[i],
-                               gf->geo_num_j1[i], gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i],
+	if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i.at(i),
+                               gf->geo_num_j.at(i), gf->geo_lat1[i], gf->geo_lon1[i], gf->geo_index1[i],
                                gf->var_name[i], gf->d_stare_index_name.at(i))) {
             cerr << "Error writing STARE index.\n";
             return 99;
