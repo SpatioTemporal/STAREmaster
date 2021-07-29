@@ -1,2 +1,2 @@
 set -e
-../src/createSidecarFile -d MOD09 -r `pwd` @TEST_LARGE@/MYD09.A2020058.1515.006.2020060020205.hdf
+../src/mk_stare -d MOD09 -r `pwd` @TEST_LARGE@/MOD09.A2021181.0010.006.2021182175943.hdf
