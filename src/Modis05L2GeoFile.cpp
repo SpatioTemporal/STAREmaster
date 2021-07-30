@@ -228,11 +228,11 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    if (!(geo_lat1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
+    if (!(geo_lat1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
         return SSC_ENOMEM;
-    if (!(geo_lon1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
+    if (!(geo_lon1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
         return SSC_ENOMEM;
-    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
+    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
                                                         sizeof(unsigned long long))))
         return SSC_ENOMEM;
 
