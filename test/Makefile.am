@@ -22,7 +22,7 @@ TESTS += run_tests.sh
 
 # If large test files are available this will run those tests.
 if LARGE_FILE_TESTS
-TESTS += run_large_file_tests.sh ./tst_interp
+TESTS += run_large_file_tests.sh 
 check_PROGRAMS += tst_interp
 tst_interp_SOURCES = tst_interp.cpp
 endif
