@@ -244,16 +244,20 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 #pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
+	vector<double> lats;
+	vector<double> lons;
 #pragma omp for
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
                 geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
                 geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
+		lats.push_back(latitude[i][j]);
+		lons.push_back(longitude[i][j]);
 
                 // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
                                                                                   (double) longitude[i][j], level);
-            }
+            } // next j
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 
             for (int j = 0; j < MAX_ACROSS; j++) {
@@ -262,7 +266,9 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                     finest_resolution = test_resolution;
                 }
             }
-        }
+        } // next i
+	geo_lat.push_back(lats);
+	geo_lon.push_back(lons);
     }
 
     // Now set up and calculate STARE cover
