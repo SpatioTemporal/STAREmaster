@@ -120,7 +120,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     STARE index1(level, build_level);
     vector<double> lats;
     vector<double> lons;
-    vector<long long> geo_index_1;
+    vector<unsigned long long int> geo_index_1;
 
 #ifdef USE_OPENMP
 #pragma omp parallel reduction(max : finest_resolution)
@@ -137,7 +137,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
                                                                                                      j], level);
 		geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
 								   (double) longitude[i * MAX_ACROSS + j],
-								   level););
+								   level));
             }
 #if 0
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
@@ -237,7 +237,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     {
 	vector<double> lats_500;
 	vector<double> lons_500;
-	vector<long long> geo_index_500;
+	vector<unsigned long long int> geo_index_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
         if (!(geo_index1[1] = (unsigned long long *) calloc(geo_num_i[1] * geo_num_j[1],
@@ -323,7 +323,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     {
 	vector<double> lats_250;
 	vector<double> lons_250;
-	vector<long long> geo_index_250;
+	vector<unsigned long long int> geo_index_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
         if (!(geo_index1[2] = (unsigned long long *) calloc(geo_num_i.at(2) * geo_num_j.at(2),

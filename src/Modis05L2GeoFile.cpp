@@ -239,7 +239,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 //#pragma omp for
 	vector<double> lats;
 	vector<double> lons;
-	vector<long long int> geo_index_1;
+	vector<unsigned long long int> geo_index_1;
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
                 // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
