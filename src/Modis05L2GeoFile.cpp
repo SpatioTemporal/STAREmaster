@@ -192,10 +192,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
-        return SSC_ENOMEM;
-    if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
-        return SSC_ENOMEM;
+    // if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
+    //     return SSC_ENOMEM;
+    // if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
+    //     return SSC_ENOMEM;
     if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
@@ -228,10 +228,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    if (!(geo_lat1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
-        return SSC_ENOMEM;
-    if (!(geo_lon1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
-        return SSC_ENOMEM;
+    // if (!(geo_lat1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
+    //     return SSC_ENOMEM;
+    // if (!(geo_lon1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
+    //     return SSC_ENOMEM;
     if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
                                                         sizeof(unsigned long long))))
         return SSC_ENOMEM;
@@ -249,8 +249,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 #pragma omp for
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
-                geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
-                geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
+                // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
+                // geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
 		lats.push_back(latitude[i][j]);
 		lons.push_back(longitude[i][j]);
 

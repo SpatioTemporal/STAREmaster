@@ -86,8 +86,8 @@ GeoFile::GeoFile() {
     // geo_num_j1 = nullptr;
     geo_cover1 = nullptr;
     geo_num_cover_values1 = nullptr;
-    geo_lat1 = nullptr;
-    geo_lon1 = nullptr;
+    // geo_lat1 = nullptr;
+    // geo_lon1 = nullptr;
     geo_index1 = nullptr;
 }
 
@@ -95,19 +95,19 @@ GeoFile::GeoFile() {
  *
  */
 GeoFile::~GeoFile() {
-    if (geo_lat1) {
-        for (int i = 0; i < d_num_index; i++)
-            if (geo_lat1[i])
-                free(geo_lat1[i]);
-        free(geo_lat1);
-    }
+    // if (geo_lat1) {
+    //     for (int i = 0; i < d_num_index; i++)
+    //         if (geo_lat1[i])
+    //             free(geo_lat1[i]);
+    //     free(geo_lat1);
+    // }
 
-    if (geo_lon1) {
-        for (int i = 0; i < d_num_index; i++)
-            if (geo_lon1[i])
-                free(geo_lon1[i]);
-        free(geo_lon1);
-    }
+    // if (geo_lon1) {
+    //     for (int i = 0; i < d_num_index; i++)
+    //         if (geo_lon1[i])
+    //             free(geo_lon1[i]);
+    //     free(geo_lon1);
+    // }
 
     if (geo_index1) {
         for (int i = 0; i < d_num_index; i++)
