@@ -11,9 +11,9 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef USE_OPENMP
-#include <omp.h>
-#endif
+// #ifdef USE_OPENMP
+// #include <omp.h>
+// #endif
 
 #define MAX_NAME 256
 #define MAX_DIMS 16
@@ -241,10 +241,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     STARE index(level, build_level);
 
     // Calculate STARE index for each point.
-#pragma omp parallel reduction(max : finest_resolution)
+//#pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
-#pragma omp for
+//#pragma omp for
 	vector<double> lats;
 	vector<double> lons;
         for (int i = 0; i < MAX_ALONG; i++) {
