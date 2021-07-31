@@ -126,16 +126,19 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // Calculate STARE index for each point.
     STARE index1(level, build_level);
+    vector<double> lats;
+    vector<double> lons;
 
 #ifdef USE_OPENMP
 #pragma omp parallel reduction(max : finest_resolution)
     {
-        STARE index1(level, build_level);
 #pragma omp for
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
                 geo_lat1[0][i * MAX_ACROSS + j] = latitude[i * MAX_ACROSS + j];
                 geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
+		lats.push_back(latitude[i * MAX_ACROSS + j]);
+		lons.push_back(longitude[i * MAX_ACROSS + j]);
 
                 // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
@@ -152,7 +155,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
                 }
             }
 #endif
-        }
+        } // next i
     }
 
 #else
@@ -166,6 +169,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         for (unsigned long i = 0; i < length; ++i) {
             geo_lat1[0][i] = (double) latitude[i];
             geo_lon1[0][i] = (double) longitude[i];
+	    lats.push_back(latitude[i]);
+	    lons.push_back(longitude[i]);
 
             // Calculate the stare indices.
             geo_index1[0][i] = index1.ValueFromLatLonDegrees(geo_lat1[0][i], geo_lon1[0][i], level);
@@ -179,6 +184,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 #endif
     }
 #endif /* USE_OPENMP */
+
+    geo_lat.push_back(lats);
+    geo_lon.push_back(lons);
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
@@ -238,6 +246,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         return SSC_EHDF4ERR;
 
     {
+	vector<double> lats_500;
+	vector<double> lons_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
         if (!(geo_lat1[1] = (double *) calloc(geo_num_i.at(1) * geo_num_j.at(1), sizeof(double))))
@@ -304,6 +314,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    (j % 2) * lat_delta / 2;
 		geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n] +
 		    (j % 2) * lon_delta / 2;
+		lats_500.push_back(latitude[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
+		lons_500.push_back(longitude[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
                 // Calculate the stare indices.
 		geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
@@ -311,6 +323,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             }
         }
 
+	geo_lat.push_back(lats_500);
+	geo_lon.push_back(lons_500);
         d_stare_index_name.push_back("500m");
         stare_cover_name.push_back("500m");
         var_name[1].push_back("500m Surface Reflectance Band 1");
@@ -322,6 +336,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         var_name[1].push_back("500m Surface Reflectance Band 7");
     }
     {
+	vector<double> lats_250;
+	vector<double> lons_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
         if (!(geo_lat1[2] = (double *) calloc(geo_num_i.at(2) * geo_num_j.at(2), sizeof(double))))
@@ -389,6 +405,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    (j % 4) * lat_delta / 4;
 		geo_lon1[2][i * MAX_ACROSS_250 + j] = longitude[m * MAX_ACROSS + n] +
 		    (j % 4) * lon_delta / 4;
+		lats_250.push_back(latitude[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0);
+		lons_250.push_back(longitude[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
 
                 // Calculate the stare indices.
                 //geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
@@ -396,6 +414,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
                  								     (double)longitude[m * MAX_ACROSS + n], level);
             }
         }
+	geo_lat.push_back(lats_250);
+	geo_lon.push_back(lons_250);
+
 
 	{
 	    int m = 0;
