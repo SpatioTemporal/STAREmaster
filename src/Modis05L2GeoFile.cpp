@@ -244,9 +244,9 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 #pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
+#pragma omp for
 	vector<double> lats;
 	vector<double> lons;
-#pragma omp for
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
                 // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
