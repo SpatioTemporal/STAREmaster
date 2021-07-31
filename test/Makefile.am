@@ -17,7 +17,7 @@ t2_SOURCES = t2.cpp
 
 # The script runs the t1 and also the createSidecarFile command line
 # utility and checks results.
-TESTS = run_tests.sh
+TESTS = t2 run_tests.sh
 
 # If large test files are available this will run those tests.
 if LARGE_FILE_TESTS
