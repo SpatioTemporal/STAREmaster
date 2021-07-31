@@ -65,10 +65,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     d_num_index = 3;
-    // if (!(geo_lat1 = (double **) malloc(d_num_index * sizeof(double *))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_lon1 = (double **) malloc(d_num_index * sizeof(double *))))
-    //     return SSC_ENOMEM;
     if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
@@ -113,10 +109,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    // if (!(geo_lat1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_lon1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
-    //     return SSC_ENOMEM;
     if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
 							sizeof(unsigned long long))))
         return SSC_ENOMEM;
@@ -135,8 +127,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 #pragma omp for
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
-                // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i * MAX_ACROSS + j];
-                // geo_lon1[0][i * MAX_ACROSS + j] = longitude[i * MAX_ACROSS + j];
 		lats.push_back(latitude[i * MAX_ACROSS + j]);
 		lons.push_back(longitude[i * MAX_ACROSS + j]);
 
@@ -160,15 +150,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
 #else
     {
-
-        // geo_lat1, _lon1 and _index1 are each three arrays of MAX_ALONG by MAX_ACROSS
-        // values that will hold the lat, lon, and index values. 'latitude' and longitude'
-        // are arrays of lat and lon values.
-
         unsigned long length = MAX_ALONG * MAX_ACROSS;
         for (unsigned long i = 0; i < length; ++i) {
-            // geo_lat1[0][i] = (double) latitude[i];
-            // geo_lon1[0][i] = (double) longitude[i];
 	    lats.push_back(latitude[i]);
 	    lons.push_back(longitude[i]);
 
@@ -250,10 +233,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<double> lons_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
-        // if (!(geo_lat1[1] = (double *) calloc(geo_num_i.at(1) * geo_num_j.at(1), sizeof(double))))
-        //     return SSC_ENOMEM;
-        // if (!(geo_lon1[1] = (double *) calloc(geo_num_i.at(1) * geo_num_j.at(1), sizeof(double))))
-        //     return SSC_ENOMEM;
         if (!(geo_index1[1] = (unsigned long long *) calloc(geo_num_i[1] * geo_num_j[1],
                                                             sizeof(unsigned long long))))
             return SSC_ENOMEM;
@@ -310,10 +289,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
 		    return 99;
 		}
-		// geo_lat1[1][i * MAX_ACROSS_500 + j] = latitude[m * MAX_ACROSS + n] +
-		//     (j % 2) * lat_delta / 2;
-		// geo_lon1[1][i * MAX_ACROSS_500 + j] = longitude[m * MAX_ACROSS + n] +
-		//     (j % 2) * lon_delta / 2;
 		lats_500.push_back(latitude[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
 		lons_500.push_back(longitude[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
@@ -340,10 +315,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<double> lons_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
-        // if (!(geo_lat1[2] = (double *) calloc(geo_num_i.at(2) * geo_num_j.at(2), sizeof(double))))
-        //     return SSC_ENOMEM;
-        // if (!(geo_lon1[2] = (double *) calloc(geo_num_i.at(2) * geo_num_j.at(2), sizeof(double))))
-        //     return SSC_ENOMEM;
         if (!(geo_index1[2] = (unsigned long long *) calloc(geo_num_i.at(2) * geo_num_j.at(2),
                                                             sizeof(unsigned long long))))
             return SSC_ENOMEM;
@@ -357,8 +328,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		int ret;
 		double lat_delta, lon_delta;
                 if (j && !(j % 4)) n++;
-		// if ((ret = interp_lat(latitude, i, j, m, n, &geo_lat1[2][i * MAX_ACROSS_250 + j])))
-		//     return ret;
 		if (n == 0)
 		{
 		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
@@ -401,10 +370,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
 		    return 99;
 		}
-		// geo_lat1[2][i * MAX_ACROSS_250 + j] = latitude[m * MAX_ACROSS + n] +
-		//     (j % 4) * lat_delta / 4;
-		// geo_lon1[2][i * MAX_ACROSS_250 + j] = longitude[m * MAX_ACROSS + n] +
-		//     (j % 4) * lon_delta / 4;
 		lats_250.push_back(latitude[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0);
 		lons_250.push_back(longitude[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
 
@@ -426,7 +391,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		for (int j = 0; j < 10; j++) {
 		    if (j && !(j % 4)) n++;
 		    // printf("latitude[%d]=%g\n", i * m * MAX_ACROSS + n + j, latitude[m * MAX_ACROSS + n]);
-		    // printf("geo_lat1[2][%d]=%g\n", i * MAX_ACROSS_250 + j, geo_lat1[2][i * MAX_ACROSS_250 + j]);
 		}
 	    }
 	}

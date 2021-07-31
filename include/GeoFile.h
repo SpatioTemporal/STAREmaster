@@ -52,8 +52,6 @@ public:
     vector<int> geo_num_j; /**< Number of J. */
     vector<vector<double>> geo_lat;
     vector<vector<double>> geo_lon;
-    double **geo_lat1; /**< Array of 'index sets' (e.g., 2) latitude values. */
-    double **geo_lon1; /**< Array of 'index sets' longitude values. */
     unsigned long long **geo_index1; /**< Array of 'index sets' of STARE indices. */
 
     int num_cover;

@@ -4,6 +4,7 @@ set -x
 
 echo "*** running test t1..."
 ./t1
+./t2
 
 echo "*** creating CDL of t1 sidecar file..."
 ncdump t1_sidecar.nc > t1_sidecar_out.cdl

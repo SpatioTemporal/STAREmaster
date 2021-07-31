@@ -14,11 +14,10 @@ if USE_HDF4
 check_PROGRAMS = t1 t2
 t1_SOURCES = t1.cpp
 t2_SOURCES = t2.cpp
-TESTS = t2
 
 # The script runs the t1 and also the createSidecarFile command line
 # utility and checks results.
-TESTS += run_tests.sh
+TESTS = run_tests.sh
 
 # If large test files are available this will run those tests.
 if LARGE_FILE_TESTS
