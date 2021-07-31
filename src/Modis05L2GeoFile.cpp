@@ -11,9 +11,9 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef USE_OPENMP
-#include <omp.h>
-#endif
+// #ifdef USE_OPENMP
+// #include <omp.h>
+// #endif
 
 #define MAX_NAME 256
 #define MAX_DIMS 16
@@ -192,10 +192,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
-        return SSC_ENOMEM;
-    if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
-        return SSC_ENOMEM;
+    // if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
+    //     return SSC_ENOMEM;
+    // if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
+    //     return SSC_ENOMEM;
     if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
@@ -228,11 +228,11 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    if (!(geo_lat1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
-        return SSC_ENOMEM;
-    if (!(geo_lon1[0] = (double *) calloc(geo_num_i.at(0) * geo_num_j.at(0), sizeof(double))))
-        return SSC_ENOMEM;
-    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
+    // if (!(geo_lat1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
+    //     return SSC_ENOMEM;
+    // if (!(geo_lon1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
+    //     return SSC_ENOMEM;
+    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
                                                         sizeof(unsigned long long))))
         return SSC_ENOMEM;
 
@@ -241,19 +241,23 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     STARE index(level, build_level);
 
     // Calculate STARE index for each point.
-#pragma omp parallel reduction(max : finest_resolution)
+//#pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
-#pragma omp for
+//#pragma omp for
+	vector<double> lats;
+	vector<double> lons;
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
-                geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
-                geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
+                // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
+                // geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
+		lats.push_back(latitude[i][j]);
+		lons.push_back(longitude[i][j]);
 
                 // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
                                                                                   (double) longitude[i][j], level);
-            }
+            } // next j
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 
             for (int j = 0; j < MAX_ACROSS; j++) {
@@ -262,7 +266,9 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                     finest_resolution = test_resolution;
                 }
             }
-        }
+        } // next i
+	geo_lat.push_back(lats);
+	geo_lon.push_back(lons);
     }
 
     // Now set up and calculate STARE cover

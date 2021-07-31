@@ -184,7 +184,7 @@ SidecarFile::writeSTAREIndex(int verbose, int build_level, int i, int j,
 
     // Add attribute with list of variables.
     for (int i = 0; i < (int) var_name.size(); i++) {
-        var_att.append(var_name.at(i).c_str());
+        var_att.append(var_name[i].c_str());
         if (i < (int) var_name.size() - 1)
             var_att.append(", ");
     }

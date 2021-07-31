@@ -89,6 +89,7 @@ jobs:
       run: |
         export CXXFLAGS=-fpermissive
         ./configure --enable-openmp
-        make -j distcheck
+        make -j
+        make check
 
 

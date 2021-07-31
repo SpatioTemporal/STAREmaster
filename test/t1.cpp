@@ -44,8 +44,8 @@ main() {
         return ERR;
 
     // Write the sidecar file.
-    if (sf.writeSTAREIndex(1, 5, gf.geo_num_i.at(0), gf.geo_num_j.at(0),
-                           gf.geo_lat1[0], gf.geo_lon1[0], gf.geo_index1[0], gf.var_name[0], "1km"))
+    if (sf.writeSTAREIndex(1, 5, gf.geo_num_i[0], gf.geo_num_j[0],
+                           &gf.geo_lat[0][0], &gf.geo_lon[0][0], gf.geo_index1[0], gf.var_name[0], "1km"))
         return ERR;
 
     // Close the sidecar file.
