@@ -192,10 +192,6 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    // if (!(geo_lat1 = (double **)malloc(d_num_index * sizeof(double *))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_lon1 = (double **)malloc(d_num_index * sizeof(double *))))
-    //     return SSC_ENOMEM;
     if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
@@ -228,10 +224,6 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    // if (!(geo_lat1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
-    //     return SSC_ENOMEM;
-    // if (!(geo_lon1[0] = (double *) calloc(geo_num_i[0] * geo_num_j[0], sizeof(double))))
-    //     return SSC_ENOMEM;
     if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
                                                         sizeof(unsigned long long))))
         return SSC_ENOMEM;
@@ -247,6 +239,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 //#pragma omp for
 	vector<double> lats;
 	vector<double> lons;
+	vector<unsigned long long int> geo_index_1;
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
                 // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
@@ -257,6 +250,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                 // Calculate the stare indices.
                 geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
                                                                                   (double) longitude[i][j], level);
+                geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i][j],
+								    (double) longitude[i][j], level));
             } // next j
             index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 
@@ -269,6 +264,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
         } // next i
 	geo_lat.push_back(lats);
 	geo_lon.push_back(lons);
+	geo_index.push_back(geo_index_1);
     }
 
     // Now set up and calculate STARE cover

@@ -205,8 +205,9 @@ main(int argc, char *argv[]) {
     {
 	double *lats = &gf->geo_lat[i][0];
 	double *lons = &gf->geo_lon[i][0];
+	unsigned long long int *geo_idx = &gf->geo_index[i][0];
 	if (sf.writeSTAREIndex(arg.verbose, arg.build_level, gf->geo_num_i[i],
-                               gf->geo_num_j[i], lats, lons, gf->geo_index1[i],
+                               gf->geo_num_j[i], lats, lons, geo_idx,
                                gf->var_name[i], gf->d_stare_index_name[i])) {
             cerr << "Error writing STARE index.\n";
             return 99;
