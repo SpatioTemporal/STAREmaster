@@ -218,7 +218,7 @@ main(int argc, char *argv[]) {
     for (int i = 0; i < gf->num_cover; i++) {
         std::cout << "writing cover i = " << i << ", name = " <<
                   gf->stare_cover_name.at(i) << std::endl;
-        if (sf.writeSTARECover(arg.verbose, gf->geo_num_cover_values[i], gf->geo_cover1[i],
+        if (sf.writeSTARECover(arg.verbose, gf->geo_num_cover_values[i], &gf->geo_cover[i][0],
                                gf->stare_cover_name.at(i))) {
             cerr << "Error writing STARE cover.\n";
             return 99;

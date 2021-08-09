@@ -192,14 +192,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    // if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
-    //     return SSC_ENOMEM;
 
     num_cover = 1;
-    // if (!(geo_num_cover_values1 = (int *) malloc(num_cover * sizeof(int))))
-    //     return SSC_ENOMEM;
-    if (!(geo_cover1 = (unsigned long long **) malloc(num_cover * sizeof(unsigned long long *))))
-        return SSC_ENOMEM;
 
     // Open the swath file.
     if ((swathfileid = SWopen((char *) fileName.c_str(), DFACC_RDONLY)) < 0)
@@ -403,11 +397,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     if (verbose) std::cout << "cover size = " << cover.size() << "\n";
 
     geo_num_cover_values.push_back(cover.size());
-    if (!(geo_cover1[0] = (unsigned long long *) calloc(geo_num_cover_values[0],
-                                                        sizeof(unsigned long long))))
-        return SSC_ENOMEM;
-    for (int k = 0; k < geo_num_cover_values[0]; ++k)
-        geo_cover1[0][k] = cover[k];
+    vector<unsigned long long int> geo_cover_1;
+    for (int k = 0; k < geo_num_cover_values[0]; ++k) 
+	geo_cover_1.push_back(cover[k]);
+    geo_cover.push_back(geo_cover_1);
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
