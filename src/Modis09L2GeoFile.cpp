@@ -68,8 +68,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     // if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
     //     return SSC_ENOMEM;
 
-    if (!(geo_num_cover_values1 = (int *) malloc(d_num_index * sizeof(int))))
-        return SSC_ENOMEM;
+    // if (!(geo_num_cover_values1 = (int *) malloc(d_num_index * sizeof(int))))
+    //     return SSC_ENOMEM;
 
     d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
     stare_cover_name.push_back("1km");

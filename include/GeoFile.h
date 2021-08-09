@@ -55,9 +55,10 @@ public:
     vector<vector<unsigned long long int>> geo_index;
     // unsigned long long **geo_index1; /**< Array of 'index sets' of STARE indices. */
 
-    int num_cover;
+    int num_cover; /**< Number of covers. */
     unsigned long long **geo_cover1; /**< Array of 'index sets' of STARE covers. */
     int *geo_num_cover_values1;
+    vector<int> geo_num_cover_values; /**< Size of each cover. */
     vector<string> var_name[MAX_NUM_INDEX]; /**< Names of vars that use this index. */
     STARE_SpatialIntervals cover;
 
