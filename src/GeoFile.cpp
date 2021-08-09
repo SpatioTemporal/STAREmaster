@@ -82,31 +82,12 @@ Options:
  */
 GeoFile::GeoFile() {
     d_num_index = 0;
-    geo_cover1 = nullptr;
-    // geo_num_cover_values1 = nullptr;
-    // geo_index1 = nullptr;
 }
 
 /** Destroy a GeoFile.
  *
  */
 GeoFile::~GeoFile() {
-    // if (geo_index1) {
-    //     for (int i = 0; i < d_num_index; i++)
-    //         if (geo_index1[i])
-    //             free(geo_index1[i]);
-    //     free(geo_index1);
-    // }
-
-    for (int i = 0; i < num_cover; i++) {
-        if (geo_cover1)
-            free(geo_cover1[i]);
-    }
-
-    if (geo_cover1)
-        free(geo_cover1);
-    // if (geo_num_cover_values1)
-    //     free(geo_num_cover_values1);
 }
 
 string

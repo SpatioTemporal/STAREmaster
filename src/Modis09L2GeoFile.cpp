@@ -63,14 +63,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
-    // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     d_num_index = 3;
-    // if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
-    //     return SSC_ENOMEM;
-
-    // if (!(geo_num_cover_values1 = (int *) malloc(d_num_index * sizeof(int))))
-    //     return SSC_ENOMEM;
-
     d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
     stare_cover_name.push_back("1km");
     var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
@@ -109,9 +102,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    // if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
-    // 							sizeof(unsigned long long))))
-    //     return SSC_ENOMEM;
 
     int level = 27;
     int finest_resolution = 0;
