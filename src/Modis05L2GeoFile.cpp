@@ -192,8 +192,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
                   " with build level " << build_level << "\n";
 
     d_num_index = 1;
-    if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
-        return SSC_ENOMEM;
+    // if (!(geo_index1 = (unsigned long long **)malloc(d_num_index * sizeof(unsigned long long *))))
+    //     return SSC_ENOMEM;
 
     num_cover = 1;
     if (!(geo_num_cover_values1 = (int *) malloc(num_cover * sizeof(int))))
@@ -224,9 +224,9 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
-                                                        sizeof(unsigned long long))))
-        return SSC_ENOMEM;
+    // if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
+    //                                                     sizeof(unsigned long long))))
+    //     return SSC_ENOMEM;
 
     int level = 27;
     int finest_resolution = 0;
@@ -248,15 +248,15 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 		lons.push_back(longitude[i][j]);
 
                 // Calculate the stare indices.
-                geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
-                                                                                  (double) longitude[i][j], level);
+                // geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
+                //                                                                   (double) longitude[i][j], level);
                 geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i][j],
 								    (double) longitude[i][j], level));
             } // next j
-            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index_1[i * MAX_ACROSS]), MAX_ACROSS);
 
             for (int j = 0; j < MAX_ACROSS; j++) {
-                int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
+                int test_resolution = geo_index_1[i * MAX_ACROSS + j] & 31; // LevelMask
                 if (test_resolution > finest_resolution) {
                     finest_resolution = test_resolution;
                 }

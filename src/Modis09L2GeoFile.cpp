@@ -65,8 +65,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // TODO Make these vector<vector<float32>>. jhrg 6/9/21
     d_num_index = 3;
-    if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
-        return SSC_ENOMEM;
+    // if (!(geo_index1 = (unsigned long long **) malloc(d_num_index * sizeof(unsigned long long *))))
+    //     return SSC_ENOMEM;
 
     if (!(geo_num_cover_values1 = (int *) malloc(d_num_index * sizeof(int))))
         return SSC_ENOMEM;
@@ -109,9 +109,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
-							sizeof(unsigned long long))))
-        return SSC_ENOMEM;
+    // if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i.at(0) * geo_num_j.at(0),
+    // 							sizeof(unsigned long long))))
+    //     return SSC_ENOMEM;
 
     int level = 27;
     int finest_resolution = 0;
@@ -132,22 +132,22 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		lons.push_back(longitude[i * MAX_ACROSS + j]);
 
                 // Calculate the stare indices.
-                geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
-                                                                                  (double) longitude[i * MAX_ACROSS +
-                                                                                                     j], level);
+                // geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
+                //                                                                   (double) longitude[i * MAX_ACROSS +
+                //                                                                                      j], level);
 		geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
 								   (double) longitude[i * MAX_ACROSS + j],
 								   level));
             }
 #if 0
-            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-            // finest_resolution is never used. jhrg 6/9/21
-            for (int j = 0; j < MAX_ACROSS; j++) {
-                int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
-                if (test_resolution > finest_resolution) {
-                    finest_resolution = test_resolution;
-                }
-            }
+            // index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+            // // finest_resolution is never used. jhrg 6/9/21
+            // for (int j = 0; j < MAX_ACROSS; j++) {
+            //     int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
+            //     if (test_resolution > finest_resolution) {
+            //         finest_resolution = test_resolution;
+            //     }
+            // }
 #endif
         } // next i
     }
@@ -160,15 +160,15 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	    lons.push_back(longitude[i]);
 
             // Calculate the stare indices.
-            geo_index1[0][i] = index1.ValueFromLatLonDegrees(lats[i], lons[i], level);
+            // geo_index1[0][i] = index1.ValueFromLatLonDegrees(lats[i], lons[i], level);
 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
         }
 
 #if 0
-        for (unsigned long i = 0; i < MAX_ALONG; ++i)
-            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-        for (unsigned long i = 0; i < MAX_ALONG; ++i)
-            index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
+        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
+        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
+        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
 #endif
     }
 #endif /* USE_OPENMP */
@@ -240,9 +240,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<unsigned long long int> geo_index_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
-        if (!(geo_index1[1] = (unsigned long long *) calloc(geo_num_i[1] * geo_num_j[1],
-                                                            sizeof(unsigned long long))))
-            return SSC_ENOMEM;
+        // if (!(geo_index1[1] = (unsigned long long *) calloc(geo_num_i[1] * geo_num_j[1],
+        //                                                     sizeof(unsigned long long))))
+        //     return SSC_ENOMEM;
 
         // Calculate STARE index for each point.
         int m = 0;
@@ -300,8 +300,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		lons_500.push_back(longitude[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
                 // Calculate the stare indices.
-		geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                 								     (double)longitude[m * MAX_ACROSS + n], level);
+		// geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
+                //  								     (double)longitude[m * MAX_ACROSS + n], level);
 		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
 								      (double)longitude[m * MAX_ACROSS + n], level));
             }
@@ -326,9 +326,9 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<unsigned long long int> geo_index_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
-        if (!(geo_index1[2] = (unsigned long long *) calloc(geo_num_i.at(2) * geo_num_j.at(2),
-                                                            sizeof(unsigned long long))))
-            return SSC_ENOMEM;
+        // if (!(geo_index1[2] = (unsigned long long *) calloc(geo_num_i.at(2) * geo_num_j.at(2),
+        //                                                     sizeof(unsigned long long))))
+        //     return SSC_ENOMEM;
 
         // Calculate STARE index for each point.
         int m = 0;
@@ -386,8 +386,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
                 // Calculate the stare indices.
                 //geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
-		geo_index1[2][i * MAX_ACROSS_250 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                 								     (double)longitude[m * MAX_ACROSS + n], level);
+		// geo_index1[2][i * MAX_ACROSS_250 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
+                //  								     (double)longitude[m * MAX_ACROSS + n], level);
 		geo_index_250.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
 								      (double)longitude[m * MAX_ACROSS + n], level));
             }

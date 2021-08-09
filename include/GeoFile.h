@@ -53,7 +53,7 @@ public:
     vector<vector<double>> geo_lat;
     vector<vector<double>> geo_lon;
     vector<vector<unsigned long long int>> geo_index;
-    unsigned long long **geo_index1; /**< Array of 'index sets' of STARE indices. */
+    // unsigned long long **geo_index1; /**< Array of 'index sets' of STARE indices. */
 
     int num_cover;
     unsigned long long **geo_cover1; /**< Array of 'index sets' of STARE covers. */
