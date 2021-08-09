@@ -83,7 +83,7 @@ Options:
 GeoFile::GeoFile() {
     d_num_index = 0;
     geo_cover1 = nullptr;
-    geo_num_cover_values1 = nullptr;
+    // geo_num_cover_values1 = nullptr;
     // geo_index1 = nullptr;
 }
 
@@ -105,8 +105,8 @@ GeoFile::~GeoFile() {
 
     if (geo_cover1)
         free(geo_cover1);
-    if (geo_num_cover_values1)
-        free(geo_num_cover_values1);
+    // if (geo_num_cover_values1)
+    //     free(geo_num_cover_values1);
 }
 
 string

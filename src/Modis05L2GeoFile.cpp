@@ -196,8 +196,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     //     return SSC_ENOMEM;
 
     num_cover = 1;
-    if (!(geo_num_cover_values1 = (int *) malloc(num_cover * sizeof(int))))
-        return SSC_ENOMEM;
+    // if (!(geo_num_cover_values1 = (int *) malloc(num_cover * sizeof(int))))
+    //     return SSC_ENOMEM;
     if (!(geo_cover1 = (unsigned long long **) malloc(num_cover * sizeof(unsigned long long *))))
         return SSC_ENOMEM;
 
@@ -402,11 +402,11 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     if (verbose) std::cout << "cover size = " << cover.size() << "\n";
 
-    geo_num_cover_values1[0] = cover.size();
-    if (!(geo_cover1[0] = (unsigned long long *) calloc(geo_num_cover_values1[0],
+    geo_num_cover_values.push_back(cover.size());
+    if (!(geo_cover1[0] = (unsigned long long *) calloc(geo_num_cover_values[0],
                                                         sizeof(unsigned long long))))
         return SSC_ENOMEM;
-    for (int k = 0; k < geo_num_cover_values1[0]; ++k)
+    for (int k = 0; k < geo_num_cover_values[0]; ++k)
         geo_cover1[0][k] = cover[k];
 
     // Learn about dims for this swath.
