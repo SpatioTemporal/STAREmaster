@@ -25,6 +25,7 @@ using namespace std;
 #define MAX_ACROSS_500 2708
 #define MAX_ALONG_250 (MAX_ALONG_500 * 2)
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
+#define NUM_PIXELS 40
 
 /**
  * Read a HDF4 MODIS L2 MOD09 file.
@@ -122,9 +123,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		lons.push_back(longitude[i * MAX_ACROSS + j]);
 
                 // Calculate the stare indices.
-                // geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
-                //                                                                   (double) longitude[i * MAX_ACROSS +
-                //                                                                                      j], level);
 		geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
 								   (double) longitude[i * MAX_ACROSS + j],
 								   level));
@@ -150,7 +148,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	    lons.push_back(longitude[i]);
 
             // Calculate the stare indices.
-            // geo_index1[0][i] = index1.ValueFromLatLonDegrees(lats[i], lons[i], level);
 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
         }
 
@@ -230,9 +227,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<unsigned long long int> geo_index_500;
         geo_num_i.push_back(MAX_ALONG_500);
         geo_num_j.push_back(MAX_ACROSS_500);
-        // if (!(geo_index1[1] = (unsigned long long *) calloc(geo_num_i[1] * geo_num_j[1],
-        //                                                     sizeof(unsigned long long))))
-        //     return SSC_ENOMEM;
 
         // Calculate STARE index for each point.
         int m = 0;
@@ -290,8 +284,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		lons_500.push_back(longitude[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
                 // Calculate the stare indices.
-		// geo_index1[1][i * MAX_ACROSS_500 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                //  								     (double)longitude[m * MAX_ACROSS + n], level);
 		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
 								      (double)longitude[m * MAX_ACROSS + n], level));
             }
@@ -316,35 +308,38 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	vector<unsigned long long int> geo_index_250;
         geo_num_i.push_back(MAX_ALONG_250);
         geo_num_j.push_back(MAX_ACROSS_250);
-        // if (!(geo_index1[2] = (unsigned long long *) calloc(geo_num_i.at(2) * geo_num_j.at(2),
-        //                                                     sizeof(unsigned long long))))
-        //     return SSC_ENOMEM;
 
         // Calculate STARE index for each point.
         int m = 0;
         for (int i = 0; i < MAX_ALONG_250; i++) {
             if (i && !(i % 4)) m++;
             int n = 0;
+	    int edge = 1; // True if on the bounrery between 40-pixel scans.
             for (int j = 0; j < MAX_ACROSS_250; j++) {
 		int ret;
 		double lat_delta, lon_delta;
-                if (j && !(j % 4)) n++;
-		if (n == 0)
-		{
+                if (j && !(j % 4)) {
+		    n++;
+		    edge = 0;
+		    if (!(n % NUM_PIXELS))
+			edge++;
+		    // printf("i %d j %d n %d edge %d\n", i, j, n, edge);		    
+		}
+
+		// Determine longitude delta.
+		if (edge)
 		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
-		}
 		else
-		{
 		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]);
-		}
-		if (m == 0)
+
+		// Determine latitude delta.
 		{
-		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+		    if (m == 0)
+			lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+		    else
+			lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
 		}
-		else
-		{
-		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
-		}
+
 		if (i < 10 && j < 10)
 		    printf("i %d j %d lat_delta %g lon_delta %g\n", i, j, lat_delta, lon_delta);
 
@@ -356,10 +351,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		if (lon_delta >= 0.4)
 		{
 		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
-		    printf("m %d n %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n,
+		    printf("m %d n %d edge %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n, edge,
 			   longitude[m * MAX_ACROSS + n], longitude[m * MAX_ACROSS + n - 1]);
 		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]) %g\n",
 			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]));
+		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
+			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
 		    printf("abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])) %g\n",
 			   abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])));
 		    printf("abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
@@ -375,9 +372,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		lons_250.push_back(longitude[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
 
                 // Calculate the stare indices.
-                //geo_index1[2][i * MAX_ACROSS_250 + j] = geo_index1[0][m * MAX_ACROSS + n];
-		// geo_index1[2][i * MAX_ACROSS_250 + j] = index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-                //  								     (double)longitude[m * MAX_ACROSS + n], level);
 		geo_index_250.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
 								      (double)longitude[m * MAX_ACROSS + n], level));
             }
