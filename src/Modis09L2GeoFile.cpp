@@ -88,18 +88,29 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if ((swathid = SWattach(swathfileid, (char *) MODIS_SWATH_TYPE_L2.c_str())) < 0)
         return SSC_EHDF4ERR;
 
-    if (!(longitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
-        return SSC_ENOMEM;
-    if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
-        return SSC_ENOMEM;
-
     // Get lat and lon values.
-    string LONGITUDE = "Longitude";
-    if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
-        return SSC_EHDF4ERR;
-    string LATITUDE = "Latitude";
-    if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
-        return SSC_EHDF4ERR;
+    vector<double> lats;
+    vector<double> lons;
+    {
+	if (!(longitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	    return SSC_ENOMEM;
+	if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	    return SSC_ENOMEM;
+	
+	string LONGITUDE = "Longitude";
+	if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
+	    return SSC_EHDF4ERR;
+	string LATITUDE = "Latitude";
+	if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
+	    return SSC_EHDF4ERR;
+
+        for (int i = 0; i < MAX_ALONG; i++) {
+            for (int j = 0; j < MAX_ACROSS; j++) {
+		lats.push_back(latitude[i * MAX_ACROSS + j]);
+		lons.push_back(longitude[i * MAX_ACROSS + j]);
+	    }
+	}
+    }
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
@@ -109,56 +120,18 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // Calculate STARE index for each point.
     STARE index1(level, build_level);
-    vector<double> lats;
-    vector<double> lons;
     vector<unsigned long long int> geo_index_1;
 
-#ifdef USE_OPENMP
-#pragma omp parallel reduction(max : finest_resolution)
-    {
-#pragma omp for
-        for (int i = 0; i < MAX_ALONG; i++) {
-            for (int j = 0; j < MAX_ACROSS; j++) {
-		lats.push_back(latitude[i * MAX_ACROSS + j]);
-		lons.push_back(longitude[i * MAX_ACROSS + j]);
-
-                // Calculate the stare indices.
-		geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
-								   (double) longitude[i * MAX_ACROSS + j],
-								   level));
-            }
-#if 0
-            // index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-            // // finest_resolution is never used. jhrg 6/9/21
-            // for (int j = 0; j < MAX_ACROSS; j++) {
-            //     int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
-            //     if (test_resolution > finest_resolution) {
-            //         finest_resolution = test_resolution;
-            //     }
-            // }
-#endif
-        } // next i
-    }
-
-#else
     {
         unsigned long length = MAX_ALONG * MAX_ACROSS;
         for (unsigned long i = 0; i < length; ++i) {
-	    lats.push_back(latitude[i]);
-	    lons.push_back(longitude[i]);
+	    // lats.push_back(latitude[i]);
+	    // lons.push_back(longitude[i]);
 
             // Calculate the stare indices.
 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
         }
-
-#if 0
-        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
-        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
-        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-#endif
     }
-#endif /* USE_OPENMP */
 
     geo_lat.push_back(lats);
     geo_lon.push_back(lons);
