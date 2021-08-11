@@ -40,8 +40,6 @@ int
 Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_level) {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
-    float32 *longitude;
-    float32 *latitude;
     char dimnames[MAX_NAME + 1];
     int32 dimsize;
     int32 ngeofields;
@@ -88,18 +86,35 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if ((swathid = SWattach(swathfileid, (char *) MODIS_SWATH_TYPE_L2.c_str())) < 0)
         return SSC_EHDF4ERR;
 
-    if (!(longitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
-        return SSC_ENOMEM;
-    if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
-        return SSC_ENOMEM;
-
     // Get lat and lon values.
-    string LONGITUDE = "Longitude";
-    if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
-        return SSC_EHDF4ERR;
-    string LATITUDE = "Latitude";
-    if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
-        return SSC_EHDF4ERR;
+    vector<double> lats;
+    vector<double> lons;
+    {
+	float32 *longitude;
+	float32 *latitude;
+	
+	if (!(longitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	    return SSC_ENOMEM;
+	if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	    return SSC_ENOMEM;
+	
+	string LONGITUDE = "Longitude";
+	if (SWreadfield(swathid, (char *) LONGITUDE.c_str(), NULL, NULL, NULL, longitude))
+	    return SSC_EHDF4ERR;
+	string LATITUDE = "Latitude";
+	if (SWreadfield(swathid, (char *) LATITUDE.c_str(), NULL, NULL, NULL, latitude))
+	    return SSC_EHDF4ERR;
+
+        for (int i = 0; i < MAX_ALONG; i++) {
+            for (int j = 0; j < MAX_ACROSS; j++) {
+		lats.push_back(latitude[i * MAX_ACROSS + j]);
+		lons.push_back(longitude[i * MAX_ACROSS + j]);
+	    }
+	}
+
+	free(longitude);
+	free(latitude);
+    }
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
@@ -109,56 +124,18 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     // Calculate STARE index for each point.
     STARE index1(level, build_level);
-    vector<double> lats;
-    vector<double> lons;
     vector<unsigned long long int> geo_index_1;
 
-#ifdef USE_OPENMP
-#pragma omp parallel reduction(max : finest_resolution)
-    {
-#pragma omp for
-        for (int i = 0; i < MAX_ALONG; i++) {
-            for (int j = 0; j < MAX_ACROSS; j++) {
-		lats.push_back(latitude[i * MAX_ACROSS + j]);
-		lons.push_back(longitude[i * MAX_ACROSS + j]);
-
-                // Calculate the stare indices.
-		geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i * MAX_ACROSS + j],
-								   (double) longitude[i * MAX_ACROSS + j],
-								   level));
-            }
-#if 0
-            // index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-            // // finest_resolution is never used. jhrg 6/9/21
-            // for (int j = 0; j < MAX_ACROSS; j++) {
-            //     int test_resolution = geo_index1[0][i * MAX_ACROSS + j] & 31; // LevelMask
-            //     if (test_resolution > finest_resolution) {
-            //         finest_resolution = test_resolution;
-            //     }
-            // }
-#endif
-        } // next i
-    }
-
-#else
     {
         unsigned long length = MAX_ALONG * MAX_ACROSS;
         for (unsigned long i = 0; i < length; ++i) {
-	    lats.push_back(latitude[i]);
-	    lons.push_back(longitude[i]);
+	    // lats.push_back(latitude[i]);
+	    // lons.push_back(longitude[i]);
 
             // Calculate the stare indices.
 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
         }
-
-#if 0
-        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
-        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-        // for (unsigned long i = 0; i < MAX_ALONG; ++i)
-        //     index1.adaptSpatialResolutionEstimatesInPlace(&(geo_index1[0][i * MAX_ACROSS]), MAX_ACROSS);
-#endif
     }
-#endif /* USE_OPENMP */
 
     geo_lat.push_back(lats);
     geo_lon.push_back(lons);
@@ -240,19 +217,19 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
                 if (j && !(j % 2)) n++;
 		if (n == 0)
 		{
-		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
+		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]);
 		}
 		else
 		{
-		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]);
+		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]);
 		}
 		if (m == 0)
 		{
-		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n + MAX_ACROSS]);
 		}
 		else
 		{
-		    lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
+		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n - MAX_ACROSS]);
 		}
 		if (i < 10 && j < 10)
 		    printf("i %d j %d lat_delta %g lon_delta %g\n", i, j, lat_delta, lon_delta);
@@ -265,14 +242,14 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		if (lon_delta >= 0.4)
 		{
 		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
-		    printf("m %d n %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n,
-			   longitude[m * MAX_ACROSS + n], longitude[m * MAX_ACROSS + n - 1]);
-		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]) %g\n",
-			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]));
-		    printf("abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])) %g\n",
-			   abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])));
-		    printf("abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
-			   abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
+		    printf("m %d n %d lons[m * MAX_ACROSS + n] %g lons[m * MAX_ACROSS + n - 1] %g\n", m, n,
+			   lons[m * MAX_ACROSS + n], lons[m * MAX_ACROSS + n - 1]);
+		    printf("(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]) %g\n",
+			   (lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]));
+		    printf("abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])) %g\n",
+			   abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])));
+		    printf("abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]) %g\n",
+			   abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]));
 		    return 99;
 		}
 		if (lat_delta >= 0.4)
@@ -280,12 +257,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
 		    return 99;
 		}
-		lats_500.push_back(latitude[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
-		lons_500.push_back(longitude[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
+		lats_500.push_back(lats[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
+		lons_500.push_back(lons[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
                 // Calculate the stare indices.
-		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-								      (double)longitude[m * MAX_ACROSS + n], level));
+		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)lats[m * MAX_ACROSS + n],
+								      (double)lons[m * MAX_ACROSS + n], level));
             }
         }
 
@@ -328,16 +305,16 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
 		// Determine longitude delta.
 		if (edge)
-		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]);
+		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]);
 		else
-		    lon_delta = abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]);
+		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]);
 
-		// Determine latitude delta.
+		// Determine lats delta.
 		{
 		    if (m == 0)
-			lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n + MAX_ACROSS]);
+			lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n + MAX_ACROSS]);
 		    else
-			lat_delta = abs(latitude[m * MAX_ACROSS + n] - latitude[m * MAX_ACROSS + n - MAX_ACROSS]);
+			lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n - MAX_ACROSS]);
 		}
 
 		if (i < 10 && j < 10)
@@ -351,16 +328,16 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		if (lon_delta >= 0.4)
 		{
 		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
-		    printf("m %d n %d edge %d longitude[m * MAX_ACROSS + n] %g longitude[m * MAX_ACROSS + n - 1] %g\n", m, n, edge,
-			   longitude[m * MAX_ACROSS + n], longitude[m * MAX_ACROSS + n - 1]);
-		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]) %g\n",
-			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1]));
-		    printf("(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
-			   (longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
-		    printf("abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])) %g\n",
-			   abs((longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n - 1])));
-		    printf("abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]) %g\n",
-			   abs(longitude[m * MAX_ACROSS + n] - longitude[m * MAX_ACROSS + n + 1]));
+		    printf("m %d n %d edge %d lons[m * MAX_ACROSS + n] %g lons[m * MAX_ACROSS + n - 1] %g\n", m, n, edge,
+			   lons[m * MAX_ACROSS + n], lons[m * MAX_ACROSS + n - 1]);
+		    printf("(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]) %g\n",
+			   (lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]));
+		    printf("(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]) %g\n",
+			   (lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]));
+		    printf("abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])) %g\n",
+			   abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])));
+		    printf("abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]) %g\n",
+			   abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]));
 		    return 99;
 		}
 		if (lat_delta >= 0.4)
@@ -368,12 +345,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
 		    return 99;
 		}
-		lats_250.push_back(latitude[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0);
-		lons_250.push_back(longitude[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
+		lats_250.push_back(lats[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0);
+		lons_250.push_back(lons[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
 
                 // Calculate the stare indices.
-		geo_index_250.push_back(index1.ValueFromLatLonDegrees((double)latitude[m * MAX_ACROSS + n],
-								      (double)longitude[m * MAX_ACROSS + n], level));
+		geo_index_250.push_back(index1.ValueFromLatLonDegrees((double)lats[m * MAX_ACROSS + n],
+								      (double)lons[m * MAX_ACROSS + n], level));
             }
         }
 	geo_lat.push_back(lats_250);
@@ -388,7 +365,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		int n = 0;
 		for (int j = 0; j < 10; j++) {
 		    if (j && !(j % 4)) n++;
-		    // printf("latitude[%d]=%g\n", i * m * MAX_ACROSS + n + j, latitude[m * MAX_ACROSS + n]);
+		    // printf("lats[%d]=%g\n", i * m * MAX_ACROSS + n + j, lats[m * MAX_ACROSS + n]);
 		}
 	    }
 	}
@@ -403,9 +380,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         var_name[2].push_back("250m Surface Reflectance Band 6");
         var_name[2].push_back("250m Surface Reflectance Band 7");
     }
-
-    free(longitude);
-    free(latitude);
 
     return 0;
 }
