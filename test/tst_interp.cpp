@@ -32,7 +32,7 @@ main() {
     std::cout << "Howdy!\n";
 
     // Read the file.
-    if (gf.readFile(fileName, 1, 5))
+    if (gf.readFile(fileName, 1, 5, 5, 1, 1))
         return ERR;
 
      // Create the sidecar file.

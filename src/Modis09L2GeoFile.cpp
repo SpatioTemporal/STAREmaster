@@ -27,17 +27,32 @@ using namespace std;
 #define MAX_ACROSS_250 (MAX_ACROSS_500 * 2)
 #define NUM_PIXELS 40
 
+/** Construct a Modis09L2GeoFile.
+ *
+ * @return a Modis09L2GeoFile
+ */
+Modis09L2GeoFile::Modis09L2GeoFile() {
+
+    // This is the name of the attribute in the HDF4 file that
+    // contains the GRING info.
+    am0_str = "CoreMetadata.0";
+}
+
 /**
  * Read a HDF4 MODIS L2 MOD09 file.
  *
  * @param fileName the data file name.
  * @param verbose non-zero for verbose output to stdout.
  * @param build_level STARE build level.
+ * @param cover_level STARE cover level.
+ * @param use_gring if true, use g-ring data for cover calculation.
+ * @param perimeter_stride perimeter stride.
  *
  * @return 0 for no error, error code otherwise.
  */
 int
-Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_level) {
+Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_level,
+			   int cover_level, bool use_gring, int perimeter_stride) {
     int32 swathfileid, swathid;
     int32 ndims, dimids[MAX_DIMS];
     char dimnames[MAX_NAME + 1];
@@ -58,10 +73,58 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     char attrlist[MAX_NAME + 1] = "";
     int32 nswath;
     char swathlist[MAX_NAME + 1];
+    int ret;
     
     if (verbose) std::cout << "Reading HDF4 file " << fileName <<
 		     " with build level " << build_level << "\n";
 
+    num_cover = 1;
+    stare_cover_name.push_back("1km");
+    LatLonDegrees64ValueVector perimeter; // Resize below
+    int pk; // perimeter counter
+
+    // Get the GRing info. After this call, gring_lat and gring_lon
+    // contain the 4 gring values for lat and lon.
+    float gring_lat[SSC_NUM_GRING], gring_lon[SSC_NUM_GRING];
+    if ((ret = getGRing(fileName, verbose, gring_lat, gring_lon))) {
+	cerr << "Error with GRing, maybe retry with --walk_perimeter 1.\n";
+	return ret;
+    }
+    
+    // Note the hardcoded 4 for the 4 corners or the gring.
+    perimeter.resize(4); // Use 4 here until we find a granule with more than 4.
+    pk = 3;
+    for (int i = 0; i < 4; ++i) {
+	perimeter[pk].lat = gring_lat[i];
+	perimeter[pk].lon = gring_lon[i];
+	--pk;
+    }
+
+    if (verbose)
+        std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
+
+    int finest_resolution = 0;
+    if (cover_level == -1)
+        this->cover_level = finest_resolution;
+    else
+        this->cover_level = cover_level;
+
+    if (verbose)
+        std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
+
+    int level = 27;
+    STARE index(level, build_level);
+
+    cover = index.NonConvexHull(perimeter, this->cover_level);
+
+    if (verbose) std::cout << "cover size = " << cover.size() << "\n";
+
+    geo_num_cover_values.push_back(cover.size());
+    vector<unsigned long long int> geo_cover_1;
+    for (int k = 0; k < geo_num_cover_values[0]; ++k) 
+	geo_cover_1.push_back(cover[k]);
+    geo_cover.push_back(geo_cover_1);
+    
     d_num_index = 3;
     d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
     stare_cover_name.push_back("1km");
@@ -119,8 +182,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
 
-    int level = 27;
-    int finest_resolution = 0;
+    level = 27;
 
     // Calculate STARE index for each point.
     STARE index1(level, build_level);

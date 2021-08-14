@@ -25,6 +25,12 @@ public:
     ~ModisGeoFile();
 
     int determineFormat(const std::string fileName, int *gf_format);
+    int getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon);
+
+    // This is the name of the attribute in the HDF4 file that
+    // contains the GRING info.
+    string am0_str;
+    
 };
 
 #endif /* MODIS_GEO_FILE_H_ */
