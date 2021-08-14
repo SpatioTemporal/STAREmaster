@@ -90,12 +90,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     vector<double> lats;
     vector<double> lons;
     {
-	float32 *longitude;
-	float32 *latitude;
+	float *longitude;
+	float *latitude;
 	
-	if (!(longitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	if (!(longitude = (float *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float))))
 	    return SSC_ENOMEM;
-	if (!(latitude = (float32 *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float32))))
+	if (!(latitude = (float *) calloc(MAX_ALONG * MAX_ACROSS, sizeof(float))))
 	    return SSC_ENOMEM;
 	
 	string LONGITUDE = "Longitude";
