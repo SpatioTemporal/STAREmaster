@@ -70,13 +70,11 @@ ModisGeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat
     string sm;
     string lon_str = "GRINGPOINTLONGITUDE";
     string lat_str = "GRINGPOINTLATITUDE";
-    size_t lon_pos, lat_pos;
     int32 num_datasets, num_global_attrs;
     string grlon, grlat;
     int32 sd_id;
     int32 data_type, count;
     int32 am0_idx;
-    size_t sz, off = 0;
     const int LON_INC = 126;
     const int LAT_INC = 125;
     const int LON_LEN = 71;
@@ -111,16 +109,28 @@ ModisGeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat
 
     // Find the positions of the longitude and latitude GRing info in
     // the ArchiveMetadata.0 text string.
+    size_t lon_pos, lat_pos;
+    size_t end_lon_pos, end_lat_pos;
+    string close_paren_str = ")";
+    string open_paren_str = "(";
+
+    // Find GRINGPOINTLONGITUDE section.
     lon_pos = sm.find(lon_str, 0);
-    lat_pos = sm.find(lat_str, 0);
+    // Find start of longitude list.
+    lon_pos = sm.find(open_paren_str, lon_pos) + 1;
+    end_lon_pos = sm.find(close_paren_str, lon_pos);
     if (verbose)
-        cout << "lon_pos " << lon_pos << " lat_pos " << lat_pos << "\n";
+        cout << "lon_pos " << lon_pos << " end_lon_pos " << end_lon_pos << " lat_pos " << lat_pos <<
+	    " end_lat_pos " << end_lat_pos << "\n";
 
     // Pull the longitude GRing values from the ArchiveMetadata.0 text
     // string.
-    grlon = sm.substr(lon_pos + LON_INC, LON_LEN);
+    grlon = sm.substr(lon_pos, end_lon_pos - lon_pos - 1);
     if (verbose)
-        cout << grlon << "\n";
+        cout << "grlon " << grlon << "\n";
+
+    // Get four float values from the text string.
+    size_t sz, off = 0;
     for (int i = 0; i < SSC_NUM_GRING; i++) {
         gring_lon[i] = stof(grlon.substr(off), &sz);
         off += sz + 2;
@@ -130,9 +140,14 @@ ModisGeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat
 
     // Pull the latitude GRing values from the ArchiveMetadata.0 text
     // string.
-    grlat = sm.substr(lat_pos + LAT_INC, LAT_LEN);
+    lat_pos = sm.find(lat_str, 0);
+    cout << "sm.substr(lat_pos, 256) " << sm.substr(lat_pos, 256) << "\n";
+    lat_pos = sm.find(open_paren_str, lat_pos) + 1;
+    cout << "sm.substr(lat_pos, 256) " << sm.substr(lat_pos, 256) << "\n";
+    end_lat_pos = sm.find(close_paren_str, lat_pos);
+    grlat = sm.substr(lat_pos, end_lat_pos - lat_pos - 1);
     if (verbose)
-        cout << grlat << "\n";
+        cout << "grlat " << grlat << "\n";
     off = 0;
     for (int i = 0; i < SSC_NUM_GRING; i++) {
         gring_lat[i] = stof(grlat.substr(off), &sz);
