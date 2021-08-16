@@ -170,7 +170,8 @@ main(int argc, char *argv[]) {
 
     if (arg.data_type == MOD09) {
         gf = new Modis09L2GeoFile();
-        if (((Modis09L2GeoFile *) gf)->readFile(argv[optind], arg.verbose, arg.build_level)) {
+        if (((Modis09L2GeoFile *) gf)->readFile(argv[optind], arg.verbose, arg.build_level,
+						arg.cover_level, arg.cover_gring, arg.stride)) {
             cerr << "Error reading MOD09 L2 file.\n";
             return 99;
         }

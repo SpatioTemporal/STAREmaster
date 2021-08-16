@@ -29,7 +29,6 @@ public:
     int readFile(const std::string fileName, int verbose, int build_level,
                  int cover_level, bool use_gring, int perimeter_stride);
 
-    int getGRing(const std::string fileName, int verbose, float *gring_lat, float *gring_lon);
 
 };
 
