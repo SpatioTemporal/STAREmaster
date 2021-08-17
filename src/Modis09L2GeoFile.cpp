@@ -172,21 +172,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
     level = 27;
 
-    // Calculate STARE index for each point.
-    STARE index1(level, build_level);
-    vector<unsigned long long int> geo_index_1;
-
-    {
-        unsigned long length = MAX_ALONG * MAX_ACROSS;
-        for (unsigned long i = 0; i < length; ++i) {
-	    // lats.push_back(latitude[i]);
-	    // lons.push_back(longitude[i]);
-
-            // Calculate the stare indices.
-	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
-        }
-    }
-
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
         return SSC_EHDF4ERR;
@@ -244,45 +229,60 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if (SWclose(swathfileid) < 0)
         return SSC_EHDF4ERR;
 
+    STARE index1(level, build_level);
+    vector<unsigned long long int> geo_index_1;
+
+    // // Calculate STARE index for each point.
+    // {
+    //     unsigned long length = MAX_ALONG * MAX_ACROSS;
+    //     for (unsigned long i = 0; i < length; ++i) {
+    // 	    // lats.push_back(latitude[i]);
+    // 	    // lons.push_back(longitude[i]);
+
+    //         // Calculate the stare indices.
+    // 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
+    //     }
+    // }
+
     vector<double> lats_500;
     vector<double> lons_500;
     vector<unsigned long long int> geo_index_500;
-    {
+    // {
 
-        // Calculate STARE index for each point.
-        int m = 0;
-        for (int i = 0; i < MAX_ALONG_500; i++) {
-            if (i && !(i % 2)) m++;
-            int n = 0;
-            for (int j = 0; j < MAX_ACROSS_500; j++) {
-		int ret;
-		double lat_delta, lon_delta;
+    //     // Calculate STARE index for each point.
+    //     int m = 0;
+    //     for (int i = 0; i < MAX_ALONG_500; i++) {
+    //         if (i && !(i % 2)) m++;
+    //         int n = 0;
+    //         for (int j = 0; j < MAX_ACROSS_500; j++) {
+    // 		int ret;
+    // 		double lat_delta, lon_delta;
 
-                if (j && !(j % 2)) n++;
-		if (n == 0)
-		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]);
-		else
-		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]);
+    //             if (j && !(j % 2)) n++;
+    // 		if (n == 0)
+    // 		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]);
+    // 		else
+    // 		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]);
 
-		if (m == 0)
-		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n + MAX_ACROSS]);
-		else
-		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n - MAX_ACROSS]);
+    // 		if (m == 0)
+    // 		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n + MAX_ACROSS]);
+    // 		else
+    // 		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n - MAX_ACROSS]);
 
-		// Deal with meridian.
-		if (lon_delta >= 0.4)
-		    lon_delta = 360 - abs(lon_delta);
+    // 		// Deal with meridian.
+    // 		if (lon_delta >= 0.4)
+    // 		    lon_delta = 360 - abs(lon_delta);
 
-		lats_500.push_back(lats[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
-		lons_500.push_back(lons[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
+    // 		lats_500.push_back(lats[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
+    // 		lons_500.push_back(lons[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
-                // Calculate the stare indices.
-		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)lats[m * MAX_ACROSS + n],
-								      (double)lons[m * MAX_ACROSS + n], level));
-            }
-        }
+    //             // Calculate the stare indices.
+    // 		geo_index_500.push_back(index1.ValueFromLatLonDegrees((double)lats[m * MAX_ACROSS + n],
+    // 								      (double)lons[m * MAX_ACROSS + n], level));
+    //         }
+    //     }
 
-    }
+    // }
 
     vector<double> lats_250;
     vector<double> lons_250;
@@ -302,8 +302,8 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    edge = 0;
 		    if (!(n % NUM_PIXELS))
 			edge++;
-		    // printf("i %d j %d n %d edge %d\n", i, j, n, edge);		    
 		}
+		// printf("i %d j %d m %d n %d edge %d i%%4 %d j%%4 %d\n", i, j, m, n, edge, i%4, j%4);		    
 
 		// Determine longitude delta.
 		if (edge)
@@ -347,12 +347,31 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
 		    return 99;
 		}
-		lats_250.push_back(lats[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0);
-		lons_250.push_back(lons[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0);
+		double this_lat, this_lon;
+		this_lat = lats[m * MAX_ACROSS + n] + (j % 4) * lat_delta / 4.0;
+		this_lon = lons[m * MAX_ACROSS + n] + (j % 4) * lon_delta / 4.0;
 
                 // Calculate the stare indices.
-		geo_index_250.push_back(index1.ValueFromLatLonDegrees((double)lats[m * MAX_ACROSS + n],
-								      (double)lons[m * MAX_ACROSS + n], level));
+		unsigned long long int this_index;
+		this_index = index1.ValueFromLatLonDegrees(this_lat, this_lon, level);
+
+		// Store these values for 250m grid.
+		lats_250.push_back(this_lat);
+		lons_250.push_back(this_lon);
+		geo_index_250.push_back(this_index);
+
+		// For every other point, store the values on the 500m grid.
+		if (!i%2 && !j%2) {
+		    lats_500.push_back(this_lat);
+		    lons_500.push_back(this_lon);
+		    geo_index_500.push_back(this_index);
+		}
+
+		// For every forth point, store the values on the 1km grid.
+		if (!i%4 && !j%4) {
+		    geo_index_1.push_back(this_index);
+		}
+
             }
         }
 
