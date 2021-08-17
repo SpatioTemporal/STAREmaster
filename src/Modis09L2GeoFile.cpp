@@ -126,16 +126,7 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     geo_cover.push_back(geo_cover_1);
     
     d_num_index = 3;
-    d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
     stare_cover_name.push_back("1km");
-    var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
-    var_name[0].push_back("1km Atmospheric Optical Depth Band 3");
-    var_name[0].push_back("1km Atmospheric Optical Depth Band 8");
-    var_name[0].push_back("1km Atmospheric Optical Depth Model");
-    var_name[0].push_back("1km water_vapor");
-    var_name[0].push_back("1km Atmospheric Optical Depth Band QA");
-    var_name[0].push_back("1km Atmospheric Optical Depth Band CM");
-
     // Open the swath file.
     if ((swathfileid = SWopen((char *) fileName.c_str(), DFACC_RDONLY)) < 0)
         return SSC_EHDF4ERR;
@@ -179,9 +170,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	free(latitude);
     }
 
-    geo_num_i.push_back(MAX_ALONG);
-    geo_num_j.push_back(MAX_ACROSS);
-
     level = 27;
 
     // Calculate STARE index for each point.
@@ -198,10 +186,6 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 	    geo_index_1.push_back(index1.ValueFromLatLonDegrees(lats[i], lons[i], level));
         }
     }
-
-    geo_lat.push_back(lats);
-    geo_lon.push_back(lons);
-    geo_index.push_back(geo_index_1);
 
     // Learn about dims for this swath.
     if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
@@ -260,12 +244,10 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
     if (SWclose(swathfileid) < 0)
         return SSC_EHDF4ERR;
 
+    vector<double> lats_500;
+    vector<double> lons_500;
+    vector<unsigned long long int> geo_index_500;
     {
-	vector<double> lats_500;
-	vector<double> lons_500;
-	vector<unsigned long long int> geo_index_500;
-        geo_num_i.push_back(MAX_ALONG_500);
-        geo_num_j.push_back(MAX_ACROSS_500);
 
         // Calculate STARE index for each point.
         int m = 0;
@@ -278,47 +260,19 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 
                 if (j && !(j % 2)) n++;
 		if (n == 0)
-		{
 		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]);
-		}
 		else
-		{
 		    lon_delta = abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]);
-		}
+
 		if (m == 0)
-		{
 		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n + MAX_ACROSS]);
-		}
 		else
-		{
 		    lat_delta = abs(lats[m * MAX_ACROSS + n] - lats[m * MAX_ACROSS + n - MAX_ACROSS]);
-		}
-		if (i < 10 && j < 10)
-		    printf("i %d j %d lat_delta %g lon_delta %g\n", i, j, lat_delta, lon_delta);
 
 		// Deal with meridian.
 		if (lon_delta >= 0.4)
-		{
 		    lon_delta = 360 - abs(lon_delta);
-		}
-		if (lon_delta >= 0.4)
-		{
-		    printf("i %d j %d lon_delta %g\n", i, j, lon_delta);
-		    printf("m %d n %d lons[m * MAX_ACROSS + n] %g lons[m * MAX_ACROSS + n - 1] %g\n", m, n,
-			   lons[m * MAX_ACROSS + n], lons[m * MAX_ACROSS + n - 1]);
-		    printf("(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]) %g\n",
-			   (lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1]));
-		    printf("abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])) %g\n",
-			   abs((lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n - 1])));
-		    printf("abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]) %g\n",
-			   abs(lons[m * MAX_ACROSS + n] - lons[m * MAX_ACROSS + n + 1]));
-		    return 99;
-		}
-		if (lat_delta >= 0.4)
-		{
-		    printf("i %d j %d lat_delta %g\n", i, j, lat_delta);
-		    return 99;
-		}
+
 		lats_500.push_back(lats[m * MAX_ACROSS + n] + (j % 2) * lat_delta / 2.0);
 		lons_500.push_back(lons[m * MAX_ACROSS + n] + (j % 2) * lon_delta / 2.0);
 
@@ -328,26 +282,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
             }
         }
 
-	geo_lat.push_back(lats_500);
-	geo_lon.push_back(lons_500);
-	geo_index.push_back(geo_index_500);
-        d_stare_index_name.push_back("500m");
-        stare_cover_name.push_back("500m");
-        var_name[1].push_back("500m Surface Reflectance Band 1");
-        var_name[1].push_back("500m Surface Reflectance Band 2");
-        var_name[1].push_back("500m Surface Reflectance Band 3");
-        var_name[1].push_back("500m Surface Reflectance Band 4");
-        var_name[1].push_back("500m Surface Reflectance Band 5");
-        var_name[1].push_back("500m Surface Reflectance Band 6");
-        var_name[1].push_back("500m Surface Reflectance Band 7");
     }
-    {
-	vector<double> lats_250;
-	vector<double> lons_250;
-	vector<unsigned long long int> geo_index_250;
-        geo_num_i.push_back(MAX_ALONG_250);
-        geo_num_j.push_back(MAX_ACROSS_250);
 
+    vector<double> lats_250;
+    vector<double> lons_250;
+    vector<unsigned long long int> geo_index_250;
+    {
         // Calculate STARE index for each point.
         int m = 0;
         for (int i = 0; i < MAX_ALONG_250; i++) {
@@ -415,25 +355,39 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
 								      (double)lons[m * MAX_ACROSS + n], level));
             }
         }
-	geo_lat.push_back(lats_250);
-	geo_lon.push_back(lons_250);
-	geo_index.push_back(geo_index_250);
 
+	// Settings for 1 km.
+	d_stare_index_name.push_back("1km");  //Added jhrg 6/9/21
+	var_name[0].push_back("1km Atmospheric Optical Depth Band 1");
+	var_name[0].push_back("1km Atmospheric Optical Depth Band 3");
+	var_name[0].push_back("1km Atmospheric Optical Depth Band 8");
+	var_name[0].push_back("1km Atmospheric Optical Depth Model");
+	var_name[0].push_back("1km water_vapor");
+	var_name[0].push_back("1km Atmospheric Optical Depth Band QA");
+	var_name[0].push_back("1km Atmospheric Optical Depth Band CM");
+	geo_num_i.push_back(MAX_ALONG);
+	geo_num_j.push_back(MAX_ACROSS);
+	geo_lat.push_back(lats);
+	geo_lon.push_back(lons);
+	geo_index.push_back(geo_index_1);
 
-	{
-	    int m = 0;
-	    for (int i = 0; i < 10; i++) {
-		if (i && !(i % 4)) m++;
-		int n = 0;
-		for (int j = 0; j < 10; j++) {
-		    if (j && !(j % 4)) n++;
-		    // printf("lats[%d]=%g\n", i * m * MAX_ACROSS + n + j, lats[m * MAX_ACROSS + n]);
-		}
-	    }
-	}
-	
+	// Settings for 500m.
+        d_stare_index_name.push_back("500m");
+        var_name[1].push_back("500m Surface Reflectance Band 1");
+        var_name[1].push_back("500m Surface Reflectance Band 2");
+        var_name[1].push_back("500m Surface Reflectance Band 3");
+        var_name[1].push_back("500m Surface Reflectance Band 4");
+        var_name[1].push_back("500m Surface Reflectance Band 5");
+        var_name[1].push_back("500m Surface Reflectance Band 6");
+        var_name[1].push_back("500m Surface Reflectance Band 7");
+	geo_num_i.push_back(MAX_ALONG_500);
+        geo_num_j.push_back(MAX_ACROSS_500);
+	geo_lat.push_back(lats_500);
+	geo_lon.push_back(lons_500);
+	geo_index.push_back(geo_index_500);
+
+	// Settings for 250m
         d_stare_index_name.push_back("250m");
-        stare_cover_name.push_back("250m");
         var_name[2].push_back("250m Surface Reflectance Band 1");
         var_name[2].push_back("250m Surface Reflectance Band 2");
         var_name[2].push_back("250m Surface Reflectance Band 3");
@@ -441,6 +395,12 @@ Modis09L2GeoFile::readFile(const std::string fileName, int verbose, int build_le
         var_name[2].push_back("250m Surface Reflectance Band 5");
         var_name[2].push_back("250m Surface Reflectance Band 6");
         var_name[2].push_back("250m Surface Reflectance Band 7");
+        geo_num_i.push_back(MAX_ALONG_250);
+        geo_num_j.push_back(MAX_ACROSS_250);
+	geo_lat.push_back(lats_250);
+	geo_lon.push_back(lons_250);
+	geo_index.push_back(geo_index_250);
+	
     }
 
     return 0;
