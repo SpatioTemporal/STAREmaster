@@ -22,8 +22,6 @@ main() {
     int gf_format;
     int verbose = 1;
 
-    std::cout << "Howdy!\n";
-
     // Test getting sidecarFileName.
     if (gf.sidecar_filename("bb") != "bb_stare.nc")
         return ERR;

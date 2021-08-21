@@ -107,7 +107,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     if ((nswath = SWinqswath((char *) fileName.c_str(), swathlist, &strbufsize)) < 0)
         return SSC_EHDF4ERR;
-    if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";
+    // if (verbose) std::cout << "nswath " << nswath << " " << swathlist << "\n";
 
     // Attach to a swath.
     string ssc_mod05 = SSC_MOD05;
@@ -115,6 +115,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
         return SSC_EHDF4ERR;
 
     // Get lat and lon values.
+    if (verbose) std::cout << "Reading lat/lon values...\n";
     string ssc_lon_name = SSC_LON_NAME;
     if (SWreadfield(swathid, (char *) ssc_lon_name.c_str(), NULL, NULL, NULL, longitude))
         return SSC_EHDF4ERR;
@@ -122,14 +123,21 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
     if (SWreadfield(swathid, (char *) ssc_lat_name.c_str(), NULL, NULL, NULL, latitude))
         return SSC_EHDF4ERR;
 
+    // Detach from the swath.
+    if (SWdetach(swathid) < 0)
+        return SSC_EHDF4ERR;
+
+    // Save size of grid.
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
 
+    // Construct STARE object.
     int level = 27;
     int finest_resolution = 0;
     STARE index(level, build_level);
 
     // Calculate STARE index for each point.
+    if (verbose) std::cout << "Calculating STARE index for each point...\n";    
 //#pragma omp parallel reduction(max : finest_resolution)
     {
         STARE index1(level, build_level);
@@ -172,11 +180,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
         pk = 2 * MAX_ALONG + 2 * MAX_ACROSS - 4 - 1;
         perimeter.resize(2 * MAX_ALONG + 2 * MAX_ACROSS - 4); // Walk the perimeter. Note pk below.
 
-        if (verbose) std::cout << "perimeter_stride " << this->perimeter_stride << "\n" << std::flush;
-
         if (perimeter_stride > 0) { // Maybe redundant if-block
 
-            if (verbose) std::cout << "calculating perimeter" << "\n" << std::flush;
+            if (verbose) std::cout << "calculating perimeter: perimeter_stride = " <<
+			     this->perimeter_stride << "\n" << std::flush;
 
             { // Go along the 'bottom' CCW. Do the full side.
                 int i = 0;
@@ -265,6 +272,7 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
         // Get the GRing info. After this call, gring_lat and gring_lon
         // contain the 4 gring values for lat and lon.
+	if (verbose) std::cout << "Getting GRING info from HDF4 file...\n";	
         if ((ret = getGRing(fileName, verbose, gring_lat, gring_lon))) {
             cerr << "Error with GRing, maybe retry with --walk_perimeter 1.\n";
             return ret;
@@ -279,84 +287,25 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
             --pk;
         }
     }
-
     if (verbose)
         std::cout << "perimeter size = " << perimeter.size() << ", pk = " << pk << "\n" << std::flush;
 
+    // Calculating cover.
+    if (verbose)
+        std::cout << "Calculating cover: cover_level = " << this->cover_level << "\n" << std::flush;
     if (cover_level == -1)
         this->cover_level = finest_resolution;
     else
         this->cover_level = cover_level;
-
-    if (verbose)
-        std::cout << "cover_level = " << this->cover_level << "\n" << std::flush;
-
     cover = index.NonConvexHull(perimeter, this->cover_level);
+    if (verbose) std::cout << "Cover calculated, cover size = " << cover.size() << "\n";
 
-    if (verbose) std::cout << "cover size = " << cover.size() << "\n";
-
+    // Remember the cover info.
     geo_num_cover_values.push_back(cover.size());
     vector<unsigned long long int> geo_cover_1;
     for (int k = 0; k < geo_num_cover_values[0]; ++k) 
 	geo_cover_1.push_back(cover[k]);
     geo_cover.push_back(geo_cover_1);
-
-    // Learn about dims for this swath.
-    if ((ndims = SWinqdims(swathid, dimnames, dimids)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose)
-        std::cout << "ndims " << ndims << " " << dimnames << "\n";
-
-    std::stringstream ss(dimnames);
-    std::vector<std::string> result;
-    while (ss.good()) {
-        std::string substr;
-        getline(ss, substr, ',');
-        result.push_back(substr);
-
-        // Get a dimsize.
-        if ((dimsize = SWdiminfo(swathid, (char *) substr.c_str())) < 0)
-            return SSC_EHDF4ERR;
-        if (verbose) std::cout << "dim " << substr << " dimsize " << dimsize << "\n";
-
-    }
-
-    // for (std::size_t i = 0; i < result.size(); i++)
-    //     std::cout << result[i] << std::endl;
-
-    if ((ngeofields = SWinqgeofields(swathid, fieldlist, rank, numbertype)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose) std::cout << "ngeofields " << ngeofields << " " << fieldlist << "\n";
-
-    if ((ndatafields = SWinqdatafields(swathid, fieldlist, rank, numbertype)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose) std::cout << "ndatafields " << ndatafields << " " << fieldlist << "\n";
-
-    if ((nmaps = SWinqmaps(swathid, dimmap, offset, increment)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose) std::cout << "nmaps " << nmaps << " " << dimmap << "\n";
-
-    if ((nidxmaps = SWinqidxmaps(swathid, idxmap, idxsizes)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose) std::cout << "nidxmaps " << nidxmaps << " " << idxmap << "\n";
-
-    if ((nattr = SWinqattrs(swathid, attrlist, &strbufsize)) < 0)
-        return SSC_EHDF4ERR;
-    if (verbose)
-        std::cout << "nattr " << nattr << " " << attrlist << " strbufsize " <<
-                  strbufsize << "\n";
-
-    // if (SWmapinfo(swathid, "Latitude", "Cell_Across_Swath_5km/Cell_Across_Swath_1km",
-    //            offset, increment))
-    //  return SSC_EHDF4ERR;
-
-    // Detach from the swath.
-    if (SWdetach(swathid) < 0)
-        return SSC_EHDF4ERR;
-
-    // Close the swath file.
-    if (SWclose(swathfileid) < 0)
-        return SSC_EHDF4ERR;
 
     return 0;
 }
