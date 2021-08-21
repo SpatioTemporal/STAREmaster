@@ -25,8 +25,9 @@ LDADD = libstaremaster.la
 mk_stare_SOURCES = mk_stare.cpp
 endif # USE_HDF4
 
-bin_PROGRAMS += print_stare
+bin_PROGRAMS += print_stare check_sidecar
 print_stare_SOURCES = print_stare.cpp
+check_sidecar_SOURCES = check_sidecar.cpp
 
 EXTRA_DIST = CMakeLists.txt
 
