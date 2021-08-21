@@ -80,7 +80,6 @@ ModisGeoFile::getGRing(const std::string fileName, int verbose, float *gring_lat
     const int LON_LEN = 71;
     const int LAT_LEN = 70;
     int ret;
-    verbose=1;
 
     // Open the HDF4 SD API for this file.
     if ((sd_id = SDstart(fileName.c_str(), DFACC_READ)) == -1)
