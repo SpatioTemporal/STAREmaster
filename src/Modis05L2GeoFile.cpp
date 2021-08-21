@@ -124,9 +124,6 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     geo_num_i.push_back(MAX_ALONG);
     geo_num_j.push_back(MAX_ACROSS);
-    // if (!(geo_index1[0] = (unsigned long long *) calloc(geo_num_i[0] * geo_num_j[0],
-    //                                                     sizeof(unsigned long long))))
-    //     return SSC_ENOMEM;
 
     int level = 27;
     int finest_resolution = 0;
@@ -142,14 +139,10 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 	vector<unsigned long long int> geo_index_1;
         for (int i = 0; i < MAX_ALONG; i++) {
             for (int j = 0; j < MAX_ACROSS; j++) {
-                // geo_lat1[0][i * MAX_ACROSS + j] = latitude[i][j];
-                // geo_lon1[0][i * MAX_ACROSS + j] = longitude[i][j];
 		lats.push_back(latitude[i][j]);
 		lons.push_back(longitude[i][j]);
 
                 // Calculate the stare indices.
-                // geo_index1[0][i * MAX_ACROSS + j] = index1.ValueFromLatLonDegrees((double) latitude[i][j],
-                //                                                                   (double) longitude[i][j], level);
                 geo_index_1.push_back(index1.ValueFromLatLonDegrees((double) latitude[i][j],
 								    (double) longitude[i][j], level));
             } // next j
@@ -328,8 +321,8 @@ Modis05L2GeoFile::readFile(const std::string fileName, int verbose,
 
     }
 
-    for (std::size_t i = 0; i < result.size(); i++)
-        std::cout << result[i] << std::endl;
+    // for (std::size_t i = 0; i < result.size(); i++)
+    //     std::cout << result[i] << std::endl;
 
     if ((ngeofields = SWinqgeofields(swathid, fieldlist, rank, numbertype)) < 0)
         return SSC_EHDF4ERR;
