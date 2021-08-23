@@ -9,6 +9,8 @@
 #include <iostream>
 #include <sstream>
 #include <bitset>
+#include "netcdf.h"
+#include "SidecarFile.h"
 
 using namespace std;
 
@@ -70,6 +72,34 @@ int main(int argc, char *argv[])
     if (arg.err_code) {
         return arg.err_code;
     }
+
+    // Read the sidecar file.
+    SidecarFile sf;
+    int ncid;
+    int num_index;
+    vector <string> stare_index_name, variables;
+    vector <size_t> size_i, size_j;
+    vector<int> stare_varid;
+    int ret;
+    
+    if ((ret = sf.read_sidecar_file(argv[optind], arg.verbose, num_index, stare_index_name, size_i,
+				    size_j, variables, stare_varid, ncid)))
+	return ret;
+	
+    // int ncid;
+    // int ret;
+
+    // Open sidecar file.
+    // if (arg.verbose)
+    // 	cout << "Opening sidecar file " << argv[optind] << "\n";
+    // if ((ret = nc_open(argv[optind], NC_NOWRITE, &ncid)))
+    // 	return ret;
+    
+    // // Close sidecar file.
+    // if (arg.verbose)
+    // 	cout << "Closing sidecar file.\n";
+    // if ((ret = nc_close(ncid)))
+    // 	return ret;
 
     return 0;
 }
