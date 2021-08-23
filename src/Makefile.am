@@ -18,16 +18,16 @@ Modis09L2GeoFile.cpp Modis09GAGeoFile.cpp ModisGeoFile.cpp	\
 STAREmaster.c
 
 # This is the command line utility to create STARE sidecar files for
-# data files. 
-bin_PROGRAMS += mk_stare
+# data files, and another to check sidecar files. 
+bin_PROGRAMS += mk_stare  check_sidecar
+check_sidecar_SOURCES = check_sidecar.cpp
 
 LDADD = libstaremaster.la
 mk_stare_SOURCES = mk_stare.cpp
 endif # USE_HDF4
 
-bin_PROGRAMS += print_stare check_sidecar
+bin_PROGRAMS += print_stare
 print_stare_SOURCES = print_stare.cpp
-check_sidecar_SOURCES = check_sidecar.cpp
 
 EXTRA_DIST = CMakeLists.txt
 
