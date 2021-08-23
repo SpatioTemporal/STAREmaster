@@ -50,4 +50,10 @@ diff -b -w MOD05_L2.A2005349.2125.061.2017294065400_stare_no_hist_inst_out.cdl r
 echo "*** creating sidecar file for MOD05 with cover from GRING..."
 ../src/mk_stare -g data/MOD05_L2.A2005349.2125.061.2017294065400.hdf
 
+echo "*** Checking sidecar file for MOD05 with cover from GRING..."
+../src/check_sidecar data/MOD05_L2.A2005349.2125.061.2017294065400_stare.nc
+
+echo "*** SUCCESS!"
+
+
 
